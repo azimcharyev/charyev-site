@@ -237,7 +237,12 @@
      те самые провалы между вкладками, плашкой и ценой. */
   .service-card__body { display: flex; flex-direction: column; gap: calc(16 * var(--mpx)); }
   .service-card__lead:empty { display: none; }
-  .service-card__summary { margin-top: 0; gap: calc(16 * var(--mpx)); }
+  /* На десктопе описание уходит вниз через order, здесь сбрасываем — в
+     мобильной сетке порядок DOM (описание, features, summary) — то, что нужно. */
+  .service-card__features,
+  .service-card__lead,
+  .service-card__summary { order: 0; margin-top: 0; }
+  .service-card__summary { gap: calc(16 * var(--mpx)); }
   .service-card__description { margin-bottom: 0; font-size: max(12px, calc(14 * var(--mpx))); line-height: 1.2; }
   .service-card__features {
     padding: calc(20 * var(--mpx));

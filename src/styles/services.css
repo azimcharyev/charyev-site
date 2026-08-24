@@ -19,7 +19,10 @@
   background: var(--surface);
 }
 .services__nav { display: none; }
-.services__cards { width: 100%; height: auto; display: flex; align-items: stretch; justify-content: space-between; }
+/* flex:1 — чтобы ряд карточек тянулся на всю внутреннюю высоту шелла,
+   иначе карточки садятся своей естественной высотой к верху, а внизу
+   остаётся пустая полоса (шелл в landscape зафиксирован по высоте). */
+.services__cards { width: 100%; height: auto; flex: 1 1 auto; display: flex; align-items: stretch; justify-content: space-between; }
 .service-card { width: calc(452 * var(--px)); display: flex; flex-direction: column; align-items: flex-start; }
 /* Шапка карточки. На десктопе в ней только заголовок, на мобильном справа
    встаёт пилюля «Тарифы» — см. портретный блок в responsive.css. */
@@ -55,12 +58,21 @@
 .service-card__features li { display: flex; align-items: center; gap: calc(16 * var(--px)); min-height: calc(18 * var(--px)); font-size: calc(18 * var(--px)); line-height: 1; }
 .service-card__features li span { white-space: pre-line; }
 .service-card__features img { flex: 0 0 auto; width: calc(12 * var(--px)); height: calc(12 * var(--px)); }
-/* Группы-обёртки нужны мобильной раскладке (см. responsive.css). На десктопе
-   они прозрачны для вёрстки: колонка внутри колонки, отступы у детей прежние.
-   Вниз карточку прижимает теперь summary, а не сама цена. */
+/* Порядок на десктопе: features сверху, потом описание («промежуточный
+   текст»), потом summary с ценой и кнопкой. margin-top:auto на описании
+   утягивает и его, и следующий за ним summary в самый низ карточки — так
+   цена, кнопка и подпись всегда стоят у нижней кромки шелла, а не
+   плавают серединой. Если описания нет (тариф без него — например,
+   «Быстрый старт» у «Контента»), .service-card__lead схлопывается и
+   auto переходит на summary. Порядок сбрасывается в портретной сетке
+   (responsive.css), там раскладка своя. */
 .service-card__lead,
 .service-card__summary { width: 100%; display: flex; flex-direction: column; }
-.service-card__summary { margin-top: auto; }
+.service-card__features { order: 1; }
+.service-card__lead { order: 2; margin-top: auto; }
+.service-card__summary { order: 3; margin-top: 0; }
+.service-card__lead:empty { display: none; }
+.service-card__lead:empty ~ .service-card__summary { margin-top: auto; }
 .service-card__price { display: flex; flex-direction: column; gap: calc(16 * var(--px)); padding-top: calc(20 * var(--px)); }
 .service-card__price span { color: var(--muted); font-size: calc(18 * var(--px)); line-height: 1; }
 .service-card__price strong { font-size: calc(40 * var(--px)); line-height: 1; font-weight: 500; }
