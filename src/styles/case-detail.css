@@ -1,0 +1,225 @@
+.case-page {
+  --case-radius: calc(40 * var(--px));
+  min-height: calc(1744 * var(--px));
+  overflow: visible;
+  padding: calc(60 * var(--px)) calc(40 * var(--px));
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: calc(20 * var(--px));
+  /* Без своего фона — см. комментарий в services.css. */
+  animation: case-page-in .65s var(--ease) backwards;
+}
+
+/* Горизонтальный кейс раскладывается иначе (макет Figma, node 351:503): кадр
+   во всю ширину сверху, под ним карточка на всю ширину, ниже — остров кнопок
+   по центру. Вертикальный кейс остаётся колонкой слева и сеткой кадров справа.
+
+   У коротких горизонтальных кейсов нет двух высоких рядов по 792 px, поэтому
+   страница держится не ниже экрана — иначе футер висел бы посреди первого
+   кадра. */
+.case-page--horizontal {
+  min-height: 100svh;
+  flex-direction: column;
+  /* Колонка контента шириной с футер: он и блок услуг держат 1255 единиц
+     макета, и кейс не должен выбиваться. В самом макете кадр 1648, но тогда
+     страница шире футера на 341 px и стык бросается в глаза. */
+  align-items: center;
+  gap: calc(40 * var(--px));
+  padding: calc(60 * var(--px)) calc(40 * var(--px));
+}
+.case-page--horizontal .case-page__media,
+.case-page--horizontal .case-page__sidebar { width: calc(1255 * var(--px)); }
+/* В разметке сайдбар идёт первым, а по макету сверху кадр — меняем местами
+   порядком, чтобы не трогать структуру ради одной раскладки. */
+.case-page--horizontal .case-page__media { order: -1; gap: calc(40 * var(--px)); }
+.case-page--horizontal .case-page__media-row--horizontal { aspect-ratio: 1648 / 716; }
+.case-page--horizontal .case-page__sidebar {
+  position: static;
+  /* У сайдбара свой align-self: flex-start из вертикальной раскладки — он
+     перебивает центровку контейнера, и карточка липла к левому краю. */
+  align-self: center;
+  max-height: none;
+  overflow: visible;
+  align-items: center;
+  gap: calc(20 * var(--px));
+}
+/* Карточка — сетка в две колонки: заголовок с описанием во всю ширину,
+   блоки фактов встают рядом. Так обходимся без обёртки в разметке. */
+.case-page--horizontal .case-page__card {
+  width: 100%;
+  padding: calc(40 * var(--px));
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(20 * var(--px));
+  border-radius: calc(60 * var(--px));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.case-page--horizontal .case-page__summary { grid-column: 1 / -1; }
+.case-page--horizontal .case-page__summary h1 { font-size: calc(50 * var(--px)); }
+.case-page--horizontal .case-page__intro { width: calc(754 * var(--px)); font-size: calc(18 * var(--px)); }
+.case-page--horizontal .case-page__fact { padding: calc(20 * var(--px)); gap: calc(20 * var(--px)); border-radius: calc(20 * var(--px)); }
+.case-page--horizontal .case-page__fact h2 { font-size: calc(30 * var(--px)); }
+.case-page--horizontal .case-page__fact li { font-size: calc(18 * var(--px)); }
+/* Остров по центру и по содержимому, а не во всю ширину сайдбара. */
+.case-page--horizontal .case-page__nav { width: max-content; }
+.case-page--horizontal .case-page__back { background: rgba(63, 97, 96, .4); }
+
+.case-page__sidebar {
+  position: sticky;
+  top: calc(60 * var(--px));
+  align-self: flex-start;
+  width: calc(405 * var(--px));
+  max-height: calc(100svh - (120 * var(--px)));
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 * var(--px));
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.case-page__sidebar::-webkit-scrollbar { display: none; }
+
+.case-page__card {
+  width: 100%;
+  padding: calc(30 * var(--px));
+  display: flex;
+  flex-direction: column;
+  gap: calc(14 * var(--px));
+  border-radius: var(--case-radius);
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+}
+
+.case-page__summary { display: flex; flex-direction: column; gap: calc(14 * var(--px)); }
+.case-page__summary h1 { font-size: calc(44 * var(--px)); line-height: .96; font-weight: 500; }
+.case-page__intro { width: 100%; font-size: calc(16 * var(--px)); line-height: 1.08; }
+
+.case-page__fact {
+  width: 100%;
+  padding: calc(14 * var(--px));
+  display: flex;
+  flex-direction: column;
+  gap: calc(12 * var(--px));
+  border-radius: calc(20 * var(--px));
+  background: var(--surface-soft);
+}
+
+.case-page__fact h2 { font-size: calc(26 * var(--px)); line-height: 1; font-weight: 500; }
+.case-page__fact ul { display: flex; flex-direction: column; gap: calc(12 * var(--px)); }
+.case-page__fact li { display: flex; align-items: flex-start; gap: calc(12 * var(--px)); font-size: calc(16 * var(--px)); line-height: 1.08; }
+.case-page__fact li img { flex: 0 0 auto; width: calc(10 * var(--px)); height: calc(10 * var(--px)); margin-top: calc(3 * var(--px)); }
+.case-page__fact li span { max-width: calc(600 * var(--px)); }
+
+@media (orientation: landscape) {
+  .case-page__card--dense {
+    padding: calc(26 * var(--px));
+    gap: calc(11 * var(--px));
+  }
+
+  .case-page__card--dense .case-page__summary { gap: calc(11 * var(--px)); }
+  .case-page__card--dense .case-page__summary h1 { font-size: calc(40 * var(--px)); }
+  .case-page__card--dense .case-page__intro,
+  .case-page__card--dense .case-page__fact li { font-size: calc(14 * var(--px)); }
+  .case-page__card--dense .case-page__fact { padding: calc(12 * var(--px)); gap: calc(10 * var(--px)); }
+  .case-page__card--dense .case-page__fact h2 { font-size: calc(24 * var(--px)); }
+  .case-page__card--dense .case-page__fact ul { gap: calc(10 * var(--px)); }
+}
+
+.case-page__nav {
+  width: 100%;
+  padding: calc(12 * var(--px));
+  display: flex;
+  align-items: center;
+  gap: calc(10 * var(--px));
+  border-radius: var(--case-radius);
+  background: var(--surface-soft);
+}
+
+/* Кнопка «Описание» и подложка под ней — только для мобильной раскладки: на
+   десктопе описание лежит слева отдельной колонкой и прятать его не за чем. */
+.case-page__about,
+.case-page__scrim { display: none; }
+
+/* Кнопка со ссылкой на ролик — вторая в острове горизонтального кейса. */
+.case-page__link {
+  /* Ширина из макета, а не по содержимому: у разных кейсов названия разной
+     длины, и остров бы дышал от страницы к странице. */
+  width: calc(272 * var(--px));
+  height: calc(55 * var(--px));
+  padding: 0 calc(12 * var(--px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--px));
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .1);
+  font-size: calc(20 * var(--px));
+  font-weight: 300;
+  white-space: nowrap;
+  transition: background .25s ease, transform .25s var(--ease);
+}
+.case-page__link img { width: calc(24 * var(--px)); height: calc(24 * var(--px)); }
+.case-page__link:hover,
+.case-page__link:focus-visible { background: rgba(95, 163, 161, .55); transform: translateY(calc(-2 * var(--px))); }
+/* Пока адрес не задан — вид тот же, но без реакции на курсор: подсветка при
+   наведении обещала бы переход, которого нет. */
+.case-page__link.is-empty { cursor: default; }
+.case-page__link.is-empty:hover { background: rgba(255, 255, 255, .1); transform: none; }
+
+.case-page__back,
+.case-page__instagram {
+  height: calc(55 * var(--px));
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  transition: background .25s ease, transform .25s var(--ease);
+}
+
+.case-page__back {
+  width: calc(133 * var(--px));
+  justify-content: center;
+  background: rgba(63, 97, 96, .4);
+}
+.case-page__back img { width: calc(35 * var(--px)); height: calc(35 * var(--px)); }
+
+.case-page__instagram {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 calc(20 * var(--px));
+  gap: calc(12 * var(--px));
+  background: rgba(255, 255, 255, .1);
+  font-size: calc(20 * var(--px));
+}
+.case-page__instagram img { width: calc(24 * var(--px)); height: calc(24 * var(--px)); }
+.case-page__back:hover,
+.case-page__instagram:hover { background: rgba(95, 163, 161, .55); transform: translateY(calc(-2 * var(--px))); }
+
+.case-page__media { width: calc(830 * var(--px)); display: flex; flex-direction: column; gap: calc(40 * var(--px)); }
+.case-page__media-row { height: calc(792 * var(--px)); display: flex; gap: calc(20 * var(--px)); }
+.case-page__media-row--horizontal {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+.case-page__visual {
+  width: calc(405 * var(--px));
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--case-radius);
+  background: #151515;
+}
+.case-page__media-row--top .case-page__visual:last-child { width: calc(405 * var(--px)); border-radius: var(--case-radius); }
+.case-page__media-row--horizontal .case-page__visual {
+  width: 100%;
+  height: 100%;
+}
+.case-page__visual video,
+.case-page__visual img { width: 100%; height: 100%; display: block; object-fit: cover; pointer-events: none; }
+
+@keyframes case-page-in {
+  from { opacity: 0; transform: translateY(calc(24 * var(--px))); }
+  to { opacity: 1; transform: none; }
+}

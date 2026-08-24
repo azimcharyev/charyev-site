@@ -1,0 +1,25 @@
+.idea
+node_modules
+dist
+*.local
+
+# Рабочие копии Claude Code и общая папка исходников рядом с репозиторием.
+# Обе записи привязаны к корню: без ведущего слэша `Assets/` на Windows
+# (core.ignorecase) съедает и `src/assets/`.
+/.claude/worktrees/
+/Assets/
+
+# Оригиналы съёмок — сотни мегабайт, сайт их не использует: в вёрстке идут
+# облегчённые копии из src/assets/optimized. Оригиналы хранятся в Assets/
+# рядом с рабочей копией, пересобрать копии можно scripts/optimize-videos.ps1.
+src/assets/cases/**/*.mp4
+src/assets/cases/**/*.MP4
+src/assets/cases/**/*.mov
+src/assets/cases/**/*.MOV
+# Только исходники роликов. Раньше здесь была вся папка gallery, и под правило
+# попадали оптимизированные фото раздела «Фото» — в сборку они бы не уехали.
+src/assets/gallery/standalone/
+
+# Полноразмерные фото со съёмок — в вёрстке используются только *-web.jpg.
+src/assets/cases/**/*.jpg
+!src/assets/cases/**/*-web.jpg

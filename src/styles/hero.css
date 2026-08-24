@@ -1,0 +1,166 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: calc(968 * var(--px));
+  min-height: 0;
+  overflow: clip;
+  /* Фона нет намеренно: сквозь Hero виден слой свечения, который лежит за
+     всей страницей. Чёрный держит html. */
+  background: none;
+}
+
+/* Фоновое свечение и зерно поверх него.
+
+   Слои фиксированы и уведены на z-index -1, то есть за фон блоков. Почему не
+   внутри Hero: колонка .page уже окна, а .page и .hero оба overflow: clip —
+   свечение обрезалось по краям колонки и по низу секции ровными линиями.
+   Фиксированный слой меряется от вьюпорта, обрезка его не трогает, поэтому
+   свет доходит до краёв экрана сплошным.
+
+   Отрицательный z-index заодно решает вопрос с остальными секциями: у
+   «Услуг», «Кейсов» и футера свой непрозрачный фон, и они закрывают свечение
+   сами, без возни с порядком наложения.
+
+   Оба слоя гаснут по --hero-glow — его пишет useHeroParallax тем же кадром,
+   что уносит карточки. Значение по умолчанию 1: при prefers-reduced-motion
+   хук не запускается, переменная не появляется, и свет остаётся неподвижным.
+
+   Слои разделены, потому что зерну нужен свой режим наложения: одним фоном с
+   градиентом оно бы либо перекрывало его, либо тонуло. */
+.hero::before,
+.hero::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Пятно заканчивается на 72% — заметно раньше углов вьюпорта, поэтому у света
+   нет собственной границы ни на каком соотношении сторон. */
+.hero::before {
+  background: radial-gradient(
+    90% 72% at 50% 38%,
+    rgba(95, 163, 161, .26) 0%,
+    rgba(63, 97, 96, .15) 40%,
+    rgba(20, 42, 41, .06) 58%,
+    transparent 72%
+  );
+  opacity: var(--hero-glow, 1);
+}
+
+/* Зерно — feTurbulence прямо в data-URI: пары сотен байт вместо картинки,
+   и оно не тайлится видимым швом благодаря stitchTiles. feColorMatrix
+   обесцвечивает шум, иначе turbulence даёт цветную рябь. */
+.hero::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Раньше здесь стоял mix-blend-mode: soft-light. Он выглядел плёночнее, но
+     заставлял композитор пересчитывать наложение на всю площадь экрана каждый
+     кадр прокрутки — слой-то фиксированный и во весь вьюпорт. Обычная
+     полупрозрачная накладка обходится даром. */
+  opacity: calc(.09 * var(--hero-glow, 1));
+}
+
+.hero__content {
+  position: absolute;
+  z-index: 8;
+  left: calc(625.93 * var(--px));
+  top: calc(254 * var(--px));
+  width: calc(475 * var(--px));
+  pointer-events: none;
+  animation: hero-copy-in .9s var(--ease) backwards;
+}
+
+.hero__intro {
+  display: flex;
+  flex-direction: column;
+  gap: calc(28 * var(--px));
+}
+
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  font-size: calc(80 * var(--px));
+  line-height: .84;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+
+.hero__copy {
+  width: 100%;
+  font-size: calc(20 * var(--px));
+  line-height: 1.26;
+  font-weight: 340;
+  letter-spacing: -.018em;
+  text-wrap: pretty;
+}
+
+.hero__media-card {
+  position: absolute;
+  z-index: 1;
+  left: calc(var(--hero-x) * var(--px));
+  top: calc(var(--hero-y) * var(--px));
+  width: calc(var(--hero-width) * var(--px));
+  height: calc(var(--hero-height) * var(--px));
+  transform: translate3d(
+    calc(-50% + var(--parallax-x, 0px)),
+    calc(var(--parallax-y, 0px) + var(--parallax-scroll-y, 0px)),
+    0
+  );
+  will-change: transform;
+}
+
+.hero__media-card-frame {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: calc(20 * var(--px));
+  background: #151515;
+  transform: scale(1.1);
+  animation: hero-media-in .9s var(--ease) both;
+  animation-delay: var(--delay);
+}
+
+.hero__media-card--foreground {
+  z-index: 3;
+}
+
+.hero__media-card--foreground .hero__media-card-frame {
+  box-shadow: 0 calc(28 * var(--px)) calc(70 * var(--px)) rgba(0, 0, 0, .42);
+}
+
+.hero__media-card--midground {
+  z-index: 2;
+  opacity: .9;
+}
+
+.hero__media-card--midground .hero__media-card-frame {
+  box-shadow: 0 calc(22 * var(--px)) calc(58 * var(--px)) rgba(0, 0, 0, .38);
+}
+
+.hero__media-card--background {
+  z-index: 1;
+  opacity: .46;
+  filter: blur(calc(11 * var(--px))) brightness(.62) saturate(.64);
+  will-change: transform;
+}
+
+.hero__media-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+@keyframes hero-copy-in {
+  from { opacity: 0; transform: translateY(calc(20 * var(--px))); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes hero-media-in {
+  from { opacity: 0; transform: translateY(calc(20 * var(--px))) scale(1.04); }
+  to { opacity: 1; transform: scale(1.1); }
+}

@@ -1,0 +1,295 @@
+/* Высота — по содержимому. Раньше она задавалась числом, своим на каждую
+   категорию: сетка лежала вне потока (position: absolute), и секция сама
+   вырасти не могла. Числа приходилось подбирать вручную и они разъезжались с
+   содержимым — в «Фото» обрезалось шесть плиток из двенадцати, во «Видео» одна
+   из шести. Теперь сетка в потоке, а вне потока только колонка фильтров. */
+.cases {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  padding: calc(40 * var(--px)) 0;
+  overflow: clip;
+  /* Без своего фона — см. комментарий в services.css. */
+}
+
+/* Колонка фильтров тянется от своего верха до низа секции: высоту задают
+   отступы, а не число, поэтому она следует за содержимым сама.
+
+   Нижний отступ — поле секции (40) плюс половина ряда (716 / 2). Липкие
+   кнопки упираются в конец трека, и так они останавливаются на середине
+   последнего ряда плиток, а не у его нижнего края. */
+.cases__filter-track {
+  position: absolute;
+  z-index: 12;
+  left: calc(40 * var(--px));
+  top: calc(307 * var(--px));
+  bottom: calc(398 * var(--px));
+  width: calc(190 * var(--px));
+  pointer-events: none;
+}
+
+.cases__filters {
+  position: sticky;
+  top: calc(307 * var(--px));
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: calc(10 * var(--px));
+  pointer-events: auto;
+}
+
+.cases__filter-toggle,
+.cases__filter-close {
+  display: none;
+}
+
+.cases__filter-guard {
+  width: 100%;
+  height: calc(54 * var(--px));
+  display: flex;
+  align-items: center;
+  gap: calc(10 * var(--px));
+}
+
+.cases__filter-button {
+  flex: 0 0 auto;
+  width: calc(54 * var(--px));
+  height: calc(54 * var(--px));
+  display: grid;
+  place-items: center;
+  border-radius: calc(12 * var(--px));
+  background: rgba(95, 163, 161, .4);
+  transition: background .28s ease;
+}
+
+.cases__filter-icon {
+  display: block;
+  background: var(--accent);
+  -webkit-mask-image: var(--filter-icon);
+  mask-image: var(--filter-icon);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transition: background-color .2s ease;
+}
+
+.cases__filter-button[aria-pressed='true'] {
+  background: var(--accent);
+}
+
+.cases__filter-button[aria-pressed='true'] .cases__filter-icon { background: #fff; }
+
+.cases__filter-label {
+  overflow: hidden;
+  color: rgba(255, 255, 255, .4);
+  font-size: calc(16 * var(--px));
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 1;
+  transition: color .24s ease;
+}
+
+.cases__filter-guard:first-child .cases__filter-label {
+  width: calc(85 * var(--px));
+  white-space: normal;
+}
+
+.cases__filter-button[aria-pressed='true'] + .cases__filter-label {
+  color: #fff;
+}
+
+.cases__grid {
+  /* В потоке, чтобы секция росла под сетку. Отступ слева освобождает место
+     под колонку фильтров, которая лежит поверх. */
+  margin-left: calc(237 * var(--px));
+  width: calc(1255 * var(--px));
+  display: grid;
+  grid-template-columns: repeat(3, calc(405 * var(--px)));
+  grid-auto-rows: calc(716 * var(--px));
+  column-gap: calc(20 * var(--px));
+  row-gap: calc(40 * var(--px));
+  perspective: calc(1200 * var(--px));
+}
+
+.case-tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: calc(40 * var(--px));
+  background: #434343;
+  isolation: isolate;
+  animation: case-tile-in .6s var(--ease) both;
+  animation-delay: calc(var(--tile-index) * 55ms);
+  transform-origin: center;
+}
+
+.cases,
+.footer { content-visibility: auto; }
+
+/* auto — браузер запоминает настоящую высоту секции: она теперь разная у
+   каждой категории, и одно число тут только дёргало бы полосу прокрутки. */
+.cases { contain-intrinsic-size: auto calc(1552 * var(--px)); }
+.footer { contain-intrinsic-size: calc(622 * var(--px)); }
+
+.case-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  background: rgba(13, 13, 13, .62);
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+
+.case-tile--standalone { cursor: default; }
+.case-tile--standalone::after { display: none; }
+
+.case-tile--horizontal { grid-column: 1 / -1; }
+/* Плитка втрое шире обычной, и описание растягивалось в одну строку почти на
+   700 px — читать такую строку неудобно. Ограничиваем ширину так, чтобы текст
+   ложился в две; balance выравнивает их по длине. */
+.case-tile--horizontal .case-tile__copy { width: calc(480 * var(--px)); }
+.case-tile--horizontal .case-tile__copy > span { text-wrap: balance; }
+/* Кнопка отбита от описания тем же шагом, что описание от заголовка: у
+   .case-tile__overlay свой gap в 40, и подпись с кнопкой расходились вдвое
+   дальше, чем строки внутри подписи. */
+.case-tile--horizontal .case-tile__overlay { gap: calc(16 * var(--px)); }
+.case-tile--horizontal .case-tile__hint {
+  width: calc(84.24 * var(--px));
+  height: calc(84.2 * var(--px));
+}
+
+.case-tile > video,
+.case-tile > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+  transition: transform .75s var(--ease), filter .5s ease;
+}
+
+.case-tile > video { filter: brightness(.78) saturate(.88); }
+
+.case-tile__hint {
+  position: absolute;
+  z-index: 3;
+  left: calc(20 * var(--px));
+  top: calc(20 * var(--px));
+  width: calc(82 * var(--px));
+  height: calc(82 * var(--px));
+  display: grid;
+  place-items: center;
+  color: #fff;
+  transition: opacity .3s ease, transform .4s var(--ease);
+  will-change: opacity;
+}
+
+.case-tile__hint-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: case-hint-spin 12s linear infinite;
+  will-change: transform;
+}
+
+.case-tile__hint-ring text {
+  fill: currentColor;
+  font-size: 40px;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.case-tile__hint-eye {
+  width: calc(23 * var(--px));
+  height: calc(22 * var(--px));
+}
+
+.case-tile:not(.case-tile--standalone):hover > video,
+.case-tile:not(.case-tile--standalone):hover > img,
+.case-tile:not(.case-tile--standalone):focus-visible > video,
+.case-tile:not(.case-tile--standalone):focus-visible > img {
+  transform: scale(1.035);
+  filter: brightness(.38) saturate(.78);
+}
+
+.case-tile--standalone:hover > video { transform: scale(1.025); filter: brightness(.88) saturate(1); }
+
+.case-tile:not(.case-tile--standalone):hover::after,
+.case-tile:not(.case-tile--standalone):focus-visible::after { opacity: 1; }
+
+.case-tile:hover .case-tile__hint,
+.case-tile:focus-visible .case-tile__hint {
+  opacity: 0;
+  transform: translateY(calc(-4 * var(--px))) scale(.94);
+}
+
+.case-tile__overlay {
+  position: absolute;
+  z-index: 2;
+  left: calc(20 * var(--px));
+  right: calc(20 * var(--px));
+  bottom: calc(20 * var(--px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(40 * var(--px));
+  opacity: 0;
+  transform: translateY(calc(24 * var(--px)));
+  transition: opacity .35s ease, transform .48s var(--ease);
+}
+
+.case-tile__copy {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16 * var(--px));
+}
+
+.case-tile__copy strong {
+  font-size: calc(40 * var(--px));
+  line-height: .9;
+  font-weight: 500;
+}
+
+.case-tile__copy > span {
+  font-size: calc(18 * var(--px));
+  line-height: 1;
+}
+
+.case-tile__cta {
+  width: calc(270 * var(--px));
+  height: calc(56 * var(--px));
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(63, 97, 96, .4);
+  color: var(--accent);
+  font-size: calc(18 * var(--px));
+  line-height: 1;
+  font-weight: 500;
+}
+
+.case-tile:hover .case-tile__overlay,
+.case-tile:focus-visible .case-tile__overlay {
+  opacity: 1;
+  transform: none;
+}
+
+/* Стрелка нужна только мобильной карточке — см. портретный блок. */
+.case-tile__cta-arrow { display: none; }
+
+@keyframes case-tile-in {
+  from { opacity: 0; transform: translateY(calc(24 * var(--px))) rotateX(4deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes case-hint-spin {
+  to { transform: rotate(-1turn); }
+}

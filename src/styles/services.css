@@ -1,0 +1,88 @@
+.services {
+  width: 100%;
+  height: auto;
+  min-height: calc(891 * var(--px));
+  padding: calc(40 * var(--px));
+  display: flex;
+  align-items: center;
+  /* Своего фона нет: он тем же чёрным перекрывал свечение Hero и резал его
+     ровной линией по верхней кромке секции. Чёрный держит html, а свечение
+     гаснет само — см. .hero::before. */
+}
+.services__shell {
+  width: 100%;
+  height: auto;
+  padding: calc(40 * var(--px));
+  display: flex;
+  flex-direction: column;
+  border-radius: calc(60 * var(--px));
+  background: var(--surface);
+}
+.services__nav { display: none; }
+.services__cards { width: 100%; height: auto; display: flex; align-items: stretch; justify-content: space-between; }
+.service-card { width: calc(452 * var(--px)); display: flex; flex-direction: column; align-items: flex-start; }
+/* Шапка карточки. На десктопе в ней только заголовок, на мобильном справа
+   встаёт пилюля «Тарифы» — см. портретный блок в responsive.css. */
+/* Отступ висит на шапке, а не на заголовке: внутри флекс-строки margin-bottom
+   заголовка попадал бы в саму строку и общая высота съезжала на 5 px. */
+.service-card__head { width: 100%; margin-bottom: calc(20 * var(--px)); display: flex; align-items: center; justify-content: space-between; }
+.service-picker { display: none; }
+.service-card__title { font-size: calc(50 * var(--px)); line-height: 1; font-weight: 400; }
+.service-card__tabs { display: flex; flex-wrap: wrap; gap: calc(10 * var(--px)); margin-bottom: calc(20 * var(--px)); }
+.service-card__tab {
+  height: calc(38 * var(--px));
+  padding: 0 calc(20 * var(--px));
+  border-radius: calc(20 * var(--px));
+  background: var(--surface);
+  color: var(--text);
+  font-size: calc(18 * var(--px));
+  line-height: 1;
+  font-weight: 300;
+  transition: background .24s ease, color .24s ease;
+}
+.service-card__tab[aria-selected='true'] { background: #fff; color: #000; }
+.service-card__body { width: 100%; flex: 1 1 auto; display: flex; flex-direction: column; animation: service-swap .38s var(--ease) both; }
+.service-card__description { width: 100%; margin-bottom: calc(20 * var(--px)); font-size: calc(18 * var(--px)); line-height: 1.12; }
+.service-card__features {
+  width: 100%;
+  padding: calc(20 * var(--px));
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 * var(--px));
+  border-radius: calc(20 * var(--px));
+  background: var(--surface);
+}
+.service-card__features li { display: flex; align-items: center; gap: calc(16 * var(--px)); min-height: calc(18 * var(--px)); font-size: calc(18 * var(--px)); line-height: 1; }
+.service-card__features li span { white-space: pre-line; }
+.service-card__features img { flex: 0 0 auto; width: calc(12 * var(--px)); height: calc(12 * var(--px)); }
+/* Группы-обёртки нужны мобильной раскладке (см. responsive.css). На десктопе
+   они прозрачны для вёрстки: колонка внутри колонки, отступы у детей прежние.
+   Вниз карточку прижимает теперь summary, а не сама цена. */
+.service-card__lead,
+.service-card__summary { width: 100%; display: flex; flex-direction: column; }
+.service-card__summary { margin-top: auto; }
+.service-card__price { display: flex; flex-direction: column; gap: calc(16 * var(--px)); padding-top: calc(20 * var(--px)); }
+.service-card__price span { color: var(--muted); font-size: calc(18 * var(--px)); line-height: 1; }
+.service-card__price strong { font-size: calc(40 * var(--px)); line-height: 1; font-weight: 500; }
+.service-card__note { width: calc(416 * var(--px)); margin-top: calc(20 * var(--px)); font-size: calc(16 * var(--px)); line-height: 1; }
+.service-card__cta {
+  width: calc(270 * var(--px));
+  height: calc(56 * var(--px));
+  margin-top: calc(20 * var(--px));
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: calc(18 * var(--px));
+  font-weight: 500;
+  transition: filter .25s ease, transform .25s var(--ease);
+}
+.service-card__cta:hover { filter: brightness(1.12); transform: translateY(calc(-2 * var(--px))); }
+.service-card--production .service-card__tabs { gap: calc(13 * var(--px)); }
+.service-card--production .service-card__description { font-size: calc(16 * var(--px)); }
+.service-card--production .service-card__features { gap: calc(24 * var(--px)); }
+.service-card--production .service-card__features li { font-size: calc(20 * var(--px)); }
+
+@keyframes service-swap {
+  from { opacity: 0; transform: translateY(calc(12 * var(--px))); }
+  to { opacity: 1; transform: none; }
+}

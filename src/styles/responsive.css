@@ -1,0 +1,896 @@
+.hero__title { font-size: clamp(48px, calc(80 * var(--px)), 112px); }
+.hero__copy { font-size: clamp(14px, calc(20 * var(--px)), 28px); }
+.service-card__title { font-size: clamp(32px, calc(50 * var(--px)), 68px); }
+.service-card__tab,
+.service-card__description,
+.service-card__features li,
+.service-card__price span { font-size: clamp(12px, calc(18 * var(--px)), 24px); }
+.service-card--production .service-card__description,
+.service-card__note { font-size: clamp(11px, calc(16 * var(--px)), 21px); }
+.service-card__price strong { font-size: clamp(28px, calc(40 * var(--px)), 56px); }
+.service-card__cta { font-size: clamp(13px, calc(18 * var(--px)), 23px); }
+
+@media (orientation: landscape) {
+  .hero__title {
+    font-size: calc(80 * var(--px));
+  }
+
+  .hero__copy {
+    font-size: calc(20 * var(--px));
+  }
+
+  .services__shell {
+    width: calc(1255 * var(--px));
+    height: calc(830 * var(--px));
+    min-height: 0;
+    margin-inline: auto;
+  }
+
+  .services__cards {
+    min-height: 0;
+    justify-content: center;
+    gap: calc(62 * var(--px));
+  }
+
+  .service-card {
+    zoom: .72;
+  }
+
+  .service-card__title {
+    font-size: calc(62.5 * var(--px));
+  }
+
+  .service-card__tab,
+  .service-card__description,
+  .service-card__features li,
+  .service-card__price span {
+    font-size: calc(22.5 * var(--px));
+  }
+
+  .service-card--production .service-card__description,
+  .service-card__note {
+    font-size: calc(20 * var(--px));
+  }
+
+  .service-card--production .service-card__features li {
+    font-size: calc(25 * var(--px));
+  }
+
+  .service-card__price strong {
+    font-size: calc(50 * var(--px));
+  }
+
+  .service-card__cta {
+    font-size: calc(22.5 * var(--px));
+  }
+
+  .footer {
+    height: calc(493 * var(--px));
+    display: grid;
+    place-items: center;
+  }
+
+  .footer__shell {
+    width: calc(1255 * var(--px));
+    height: calc(413 * var(--px));
+    padding: calc(30 * var(--px));
+    border-radius: calc(46 * var(--px));
+    transform: none !important;
+    scale: none;
+    rotate: none;
+    animation: none;
+    transition: none;
+  }
+
+  .footer__contacts,
+  .footer__right {
+    height: calc(462 * var(--px));
+    zoom: .762;
+  }
+
+  .footer__copyright {
+    zoom: .762;
+  }
+}
+
+@media (orientation: portrait) {
+  /* Мобильный макет нарисован под ширину 440 (Figma, node 278:2304).
+     --mpx — «один пиксель этого макета», ровно та же идея, что --px на
+     десктопе, только другая база. Выше 440 не растём: раскладка встаёт по
+     центру, как десктопная упирается в 1920.
+
+     Кегли пишем через max(<пол>, calc(N * var(--mpx))): чистая пропорция на
+     320 px ужимает текст до нечитаемого (16 px макета превратились бы в 11,6).
+
+     Определяем на .page и .case-site, а не на :root — cqw считается только
+     внутри контейнера, а container-type объявлен у body. */
+  .page,
+  .case-site {
+    --mpx: calc(min(100cqw, 440px) / 440);
+    --portrait-edge: calc(20 * var(--mpx));
+    --portrait-gap: calc(20 * var(--mpx));
+  }
+
+  /* Выше 440 мобильная раскладка не растягивается, а встаёт колонкой по
+     центру — иначе на планшете в портрете карточка услуг и лента кейсов
+     упираются в свои 400, а Hero и футер разъезжаются на всю ширину. */
+  .page,
+  .case-site { width: min(100cqw, 440px); margin-inline: auto; }
+  .hero,
+  .services { width: 100%; height: 100svh; min-height: 0; }
+
+  /* Hero. Текстовый блок в макете (Figma, node 278:2308) прижат влево на 20 и
+     стоит выше центра — на 210 из 810 по высоте, отсюда top: 25.9%. */
+  .hero__content {
+    z-index: 8;
+    inset: 0;
+    width: 100%;
+    padding: 0;
+    display: block;
+  }
+  .hero__intro {
+    position: absolute;
+    left: calc(20 * var(--mpx));
+    top: 25.9%;
+    width: calc(400 * var(--mpx));
+    padding: calc(20 * var(--mpx));
+    gap: calc(20 * var(--mpx));
+  }
+  .hero__title { gap: calc(10 * var(--mpx)); font-size: max(30px, calc(50 * var(--mpx))); line-height: 1; }
+  .hero__copy { width: 100%; font-size: max(12px, calc(14 * var(--mpx))); line-height: 1.3; }
+
+  /* Шесть карточек по координатам макета (node 278:2306). Две верхние уходят
+     за край экрана — в макете у них отрицательный y.
+
+     Размеры считаем через --mpx, а не в процентах: проценты ширины и высоты
+     меряются от разных сторон, и на экране выше макета карточка вытянулась бы
+     (152x277 превратились бы в 129x278). По вертикали проценты как раз нужны —
+     композиция должна раскладываться на всю высоту экрана.
+
+     left — это центр карточки, а не левый край: у .hero__media-card есть сдвиг
+     translate(-50%). Поэтому здесь (x + width / 2) / 440. */
+  .hero__media-card { top: auto; bottom: auto; opacity: .9; filter: none; }
+  .hero__media-card-frame { border-radius: calc(20 * var(--mpx)); }
+  .hero__media-card--1 { z-index: 3; left: 21.4%; top: -13.8%; width: calc(152 * var(--mpx)); height: calc(277 * var(--mpx)); }
+  .hero__media-card--2 { z-index: 3; left: 77.3%; top: 4.3%; width: calc(120 * var(--mpx)); height: calc(219 * var(--mpx)); }
+  .hero__media-card--5 { z-index: 3; left: 21.4%; top: 53.3%; width: calc(120 * var(--mpx)); height: calc(219 * var(--mpx)); }
+  .hero__media-card--6 { z-index: 3; left: 76.5%; top: 55.1%; width: calc(155 * var(--mpx)); height: calc(287 * var(--mpx)); }
+  /* Дальний план: в макете эти две ничем не выделены, но на десктопе глубина
+     задаётся размытием — оставляем её, чтобы мобильный читался тем же языком. */
+  .hero__media-card--7,
+  .hero__media-card--8 { z-index: 1; opacity: .4; filter: blur(8px) brightness(.62) saturate(.7); }
+  .hero__media-card--7 { left: 59.1%; top: -7.3%; width: calc(94 * var(--mpx)); height: calc(171 * var(--mpx)); }
+  .hero__media-card--8 { left: 37.4%; top: 72.8%; width: calc(97 * var(--mpx)); height: calc(179 * var(--mpx)); }
+  .hero__media-card--3,
+  .hero__media-card--4,
+  .hero__media-card--9,
+  .hero__media-card--10,
+  .hero__media-card--11,
+  .hero__media-card--12,
+  .hero__media-card--13,
+  .hero__media-card--14 { display: none; }
+
+  /* Услуги. Размеры взяты из макета (Figma, node 278:2318) и пересчитаны через
+     --mpx: карточка 400 при экране 440, поля по 20, внутренний padding 20,
+     радиус 40, колонка с шагом 20. */
+  /* Карточка живёт по содержимому и стоит по центру экрана. Высоту ей ставит
+     useServiceCardHeight — точным значением, чтобы она плавно росла и
+     сжималась при смене тарифа, а не прыгала. Без скрипта высота остаётся
+     авто, и всё работает — только без анимации. */
+  .services { height: auto; min-height: 100svh; padding: 10px var(--portrait-edge); align-items: center; }
+  .services__shell {
+    width: 100%;
+    max-width: calc(400 * var(--mpx));
+    height: auto;
+    min-height: 0;
+    margin-inline: auto;
+    padding: calc(20 * var(--mpx));
+    border-radius: calc(40 * var(--mpx));
+  }
+  /* Селектор с .reveal намеренно: на шелле висит .reveal--scroll-card со своим
+     transition, и по специфичности он перебивал одиночный .services__shell —
+     высота менялась рывком. Появление блока при этом сохраняем. */
+  .services__shell,
+  .services__shell.reveal {
+    transition: opacity .85s var(--ease), height .42s var(--ease);
+  }
+  /* Ряда «Контент / Фото / Продакшн» в макете нет: секция там занята одной
+     карточкой, а категории переехали в панель под пилюлей «Тарифы». */
+  .services__nav { display: none; }
+  /* Высота ячейки — по активной карточке, поэтому неактивные убираем из
+     потока совсем. Иначе сетка держала бы размер по самой длинной услуге, и
+     под коротким тарифом оставалась бы пустота. */
+  .services__cards { flex: 0 0 auto; min-height: 0; display: grid; align-items: start; }
+  .service-card {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: auto;
+    gap: calc(16 * var(--mpx));
+  }
+  .service-card:not(.is-active) { display: none; }
+  /* Шаг между блоками задаёт gap самой карточки, поэтому отступ шапки снимаем. */
+  .service-card__head { margin-bottom: 0; align-items: center; gap: calc(10 * var(--mpx)); }
+  .service-card__title { font-size: max(24px, calc(40 * var(--mpx))); line-height: 1; }
+  .service-card__tabs { gap: calc(10 * var(--mpx)); margin-bottom: 0; }
+  .service-card__tab {
+    position: relative;
+    height: auto;
+    padding: calc(10 * var(--mpx)) calc(20 * var(--mpx));
+    border-radius: calc(20 * var(--mpx));
+    font-size: max(12px, calc(14 * var(--mpx)));
+    line-height: 1;
+  }
+  /* Пилюля по макету выходит на 34 px, пальцу нужно 44. Растим не саму кнопку,
+     а невидимую зону вокруг неё — иначе каждый ряд вкладок прибавляет 10 px и
+     карточка перестаёт помещаться. */
+  .service-card__tab::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: max(100%, 44px);
+    translate: 0 -50%;
+  }
+  /* Обычная колонка вплотную: карточка теперь по содержимому, растягивать
+     дорожками нечего. Раньше здесь была сетка 1fr в середине — она и давала
+     те самые провалы между вкладками, плашкой и ценой. */
+  .service-card__body { display: flex; flex-direction: column; gap: calc(16 * var(--mpx)); }
+  .service-card__lead:empty { display: none; }
+  .service-card__summary { margin-top: 0; gap: calc(16 * var(--mpx)); }
+  .service-card__description { margin-bottom: 0; font-size: max(12px, calc(14 * var(--mpx))); line-height: 1.2; }
+  .service-card__features {
+    padding: calc(20 * var(--mpx));
+    gap: calc(16 * var(--mpx));
+    border-radius: calc(20 * var(--mpx));
+  }
+  .service-card__features li,
+  .service-card--production .service-card__features li {
+    min-height: 0;
+    gap: calc(16 * var(--mpx));
+    font-size: max(13px, calc(16 * var(--mpx)));
+    line-height: 1.15;
+  }
+  .service-card__features img { width: calc(12 * var(--mpx)); height: calc(12 * var(--mpx)); }
+  .service-card--production .service-card__description,
+  .service-card__note { width: 100%; margin-top: 0; font-size: max(11px, calc(14 * var(--mpx))); line-height: 1.2; }
+  .service-card__price { gap: calc(16 * var(--mpx)); margin-top: 0; padding-top: 0; }
+  .service-card__price span { font-size: max(13px, calc(18 * var(--mpx))); }
+  .service-card__price strong { font-size: max(26px, calc(40 * var(--mpx))); }
+  .service-card__cta {
+    width: 100%;
+    height: calc(56 * var(--mpx));
+    min-height: 48px;
+    margin-top: 0;
+    border-radius: 999px;
+    font-size: max(14px, calc(18 * var(--mpx)));
+  }
+
+  /* Пилюля «Тарифы» — из макета: высота 40, радиус 100, фон rgba(63,97,96,.3),
+     иконка 24, подпись 14 акцентным.
+
+     Списка в макете нет, и рисовать его мы не будем: за пилюлей стоит обычный
+     <select>, растянутый поверх неё и прозрачный. Нажатие попадает по нему, и
+     список открывает сама система — на айфоне барабан Safari, на андроиде свой
+     диалог. Он рисуется поверх страницы средствами ОС, поэтому ощущается
+     частью телефона, а не сайта, и приносит с собой прокрутку, жесты и
+     доступность. */
+  .service-picker {
+    position: relative;
+    flex: 0 0 auto;
+    /* Ровно по макету, без запаса на палец: зону нажатия держит <select>. */
+    height: calc(40 * var(--mpx));
+    padding: 0 calc(12 * var(--mpx));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(4 * var(--mpx));
+    border-radius: 999px;
+    background: rgba(63, 97, 96, .3);
+    color: var(--accent);
+    font-size: max(12px, calc(14 * var(--mpx)));
+    white-space: nowrap;
+  }
+  .service-picker img { width: max(20px, calc(24 * var(--mpx))); height: max(20px, calc(24 * var(--mpx))); }
+  .service-picker__select {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    /* Пилюля по макету 40, пальцу нужно 44 — тянем сам контрол, он же и есть
+       зона нажатия. */
+    height: max(100%, 44px);
+    translate: 0 -50%;
+    appearance: none;
+    border: 0;
+    background: none;
+    /* Кегль меньше 16 заставил бы Safari зумить страницу по тапу. */
+    font-size: 16px;
+    opacity: 0;
+  }
+
+  /* Кейсы идут обычным потоком страницы: плитка 400x640 с шагом 20, как в
+     макете (node 278:2375). Раньше лента жила в собственном скролл-контейнере
+     со scroll-snap — от него и брался второй скролл внутри секции, который
+     перехватывал жест и не пускал страницу дальше. */
+  .cases {
+    height: auto;
+    min-height: 0;
+    padding: var(--portrait-edge) 0;
+    overflow: visible;
+    content-visibility: visible;
+  }
+  .cases__grid {
+    position: relative;
+    left: auto;
+    top: auto;
+    /* На десктопе отступ слева освобождает место под колонку фильтров, в
+       портрете её нет — иначе лента съехала бы на 51 px вправо. */
+    margin-left: 0;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(20 * var(--mpx));
+    perspective: 900px;
+  }
+  /* Плитка по макету node 331:468: кадр 400x640 целиком, подпись лежит на нём
+     снизу слева, справа — компактная пилюля со стрелкой. */
+  .case-tile {
+    width: calc(400 * var(--mpx));
+    height: calc(640 * var(--mpx));
+    overflow: hidden;
+    border-radius: calc(40 * var(--mpx));
+    background: #313131;
+    animation: none;
+    /* Когда доводка встала на карточке, соседи разъезжаются от неё: верхние
+       вверх, нижние вниз. Направление ставит useBlockSnap, величина живёт
+       здесь.
+
+       Именно трансформом, а не отступами: отступ над выделенной карточкой
+       сдвинул бы её саму вниз, и она слетела бы с центра, до которого только
+       что доехали. Трансформ вёрстку не трогает — высота страницы та же,
+       карточка стоит на месте, раздвигаются только соседи. */
+    translate: 0 calc(var(--spread-dir, 0) * 40 * var(--mpx));
+    transition: translate .5s var(--ease);
+  }
+  /* Горизонтальные ролики в ленте ничем не отличаются от остальных: та же
+     плитка 400×640, кадр обрезается по центру через object-fit: cover. Раньше
+     плитка сжималась до 228 px, сохраняя 16:9, и выпадала полоской из колонки
+     вертикальных карточек — вместе с ней приходилось ужимать и подпись.
+
+     Ширина и отступ подписи заданы для десктопа через --px (см. cases.css) и
+     по специфичности перебивают обычные портретные значения: колонка текста
+     схлопывалась до 104 px вместо 210, заголовок ломался надвое, а описание
+     растягивалось на семь строк. */
+  .case-tile--horizontal .case-tile__copy { width: calc(246 * var(--mpx)); }
+  .case-tile--horizontal .case-tile__overlay { gap: calc(14 * var(--mpx)); }
+  .case-tile > video,
+  .case-tile > img {
+    height: 100%;
+    border-radius: 0;
+  }
+
+  /* Меню формата. Габариты трека — 240x150, чтобы координаты разлёта ниже
+     считались от известных чисел. */
+  .cases__filter-track {
+    position: fixed;
+    z-index: 40;
+    left: 50%;
+    top: auto;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    width: calc(240 * var(--mpx));
+    height: calc(150 * var(--mpx));
+    margin: 0;
+    opacity: 0;
+    translate: -50% calc(100% + 30px);
+    pointer-events: none;
+    transition: opacity .3s ease, translate .45s var(--ease);
+  }
+  .cases__filter-track.is-visible {
+    opacity: 1;
+    translate: -50% 0;
+  }
+  /* Горизонтальные кейсы поднимают высоту секции и трека под десктопную сетку
+     (см. cases.css). В портрете это чужие числа: трек раздувался со 128 до
+     860 px и накрывал пол-экрана, а кружки внутри стоят по координатам трека
+     150 px и разъезжались. Селектор с .cases--video обязателен — у правила из
+     cases.css специфичность выше одиночного .cases__filter-track. */
+  .cases--video { height: auto; }
+  .cases--video .cases__filter-track { height: calc(150 * var(--mpx)); }
+  .cases__filter-toggle {
+    position: absolute;
+    left: calc(70 * var(--mpx));
+    bottom: 0;
+    width: calc(100 * var(--mpx));
+    height: calc(48 * var(--mpx));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(9 * var(--mpx));
+    border-radius: 999px;
+    background: rgba(49, 49, 49, .74);
+    backdrop-filter: blur(12px);
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity .2s ease, scale .32s var(--ease);
+  }
+  .cases__filter-toggle span {
+    width: calc(14 * var(--mpx));
+    height: calc(14 * var(--mpx));
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .cases__filters {
+    position: static;
+    width: 100%;
+    height: calc(90 * var(--mpx));
+    display: block;
+    opacity: 1;
+    pointer-events: none;
+  }
+  .cases__filter-track.is-open .cases__filters { pointer-events: auto; }
+
+  /* Разлёт. В закрытом состоянии каждый кружок лежит в центре пилюли сжатым,
+     при открытии разъезжается по местам. Смещение — от центра кружка до центра
+     пилюли, в координатах трека 240x150: пилюля центрируется в (120, 126),
+     кружки — в (210, 50), (120, 30) и (30, 50).
+
+     Позиционируем через left/top, а не через left:50% + translate: translate
+     здесь занят самой анимацией. */
+  .cases__filter-guard {
+    position: absolute;
+    width: calc(60 * var(--mpx));
+    height: calc(60 * var(--mpx));
+    display: block;
+    translate: var(--fly-x) var(--fly-y);
+    scale: .3;
+    opacity: 0;
+    transition: translate .34s var(--ease), scale .34s var(--ease), opacity .16s ease;
+  }
+  .cases__filter-guard:nth-child(1) {
+    left: calc(180 * var(--mpx));
+    top: calc(20 * var(--mpx));
+    --fly-x: calc(-90 * var(--mpx));
+    --fly-y: calc(76 * var(--mpx));
+  }
+  .cases__filter-guard:nth-child(2) {
+    left: calc(90 * var(--mpx));
+    top: 0;
+    --fly-x: 0px;
+    --fly-y: calc(96 * var(--mpx));
+  }
+  .cases__filter-guard:nth-child(3) {
+    left: 0;
+    top: calc(20 * var(--mpx));
+    --fly-x: calc(90 * var(--mpx));
+    --fly-y: calc(76 * var(--mpx));
+  }
+  /* На выходе кривая с перелётом — кружок выпрыгивает, а не выползает. */
+  .cases__filter-track.is-open .cases__filter-guard {
+    translate: 0 0;
+    scale: 1;
+    opacity: 1;
+    transition:
+      translate .42s cubic-bezier(.34, 1.42, .64, 1),
+      scale .42s cubic-bezier(.34, 1.42, .64, 1),
+      opacity .16s ease;
+  }
+  .cases__filter-track.is-open .cases__filter-guard:nth-child(3) { transition-delay: 0s; }
+  .cases__filter-track.is-open .cases__filter-guard:nth-child(2) { transition-delay: .05s; }
+  .cases__filter-track.is-open .cases__filter-guard:nth-child(1) { transition-delay: .1s; }
+
+  .cases__filter-button {
+    width: calc(60 * var(--mpx));
+    height: calc(60 * var(--mpx));
+    border-radius: 50%;
+    background: rgba(63, 97, 96, .78);
+  }
+  .cases__filter-guard:nth-child(1) .cases__filter-icon { width: calc(17 * var(--mpx)) !important; height: calc(25 * var(--mpx)) !important; }
+  .cases__filter-guard:nth-child(2) .cases__filter-icon { width: calc(25 * var(--mpx)) !important; height: calc(17 * var(--mpx)) !important; }
+  .cases__filter-guard:nth-child(3) .cases__filter-icon { width: calc(22 * var(--mpx)) !important; height: calc(22 * var(--mpx)) !important; }
+  .cases__filter-label { display: none; }
+  .cases__filter-close {
+    position: absolute;
+    left: calc(62 * var(--mpx));
+    bottom: 0;
+    width: calc(116 * var(--mpx));
+    height: calc(48 * var(--mpx));
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: #fff;
+    opacity: 0;
+    scale: .9;
+    pointer-events: none;
+    transition: opacity .2s ease, scale .3s var(--ease);
+  }
+  .cases__filter-close span,
+  .cases__filter-close span::after {
+    width: calc(26 * var(--mpx));
+    height: calc(3 * var(--mpx));
+    display: block;
+    border-radius: 999px;
+    background: #000;
+    rotate: 45deg;
+  }
+  .cases__filter-close span::after { content: ''; rotate: 90deg; }
+  /* Меню намеренно мелкое, поэтому пилюля 41 px и «закрыть» 37 px. Тап-зону
+     растим отдельно: абсолютный ::before выпадает из потока и не мешает ни
+     флексу пилюли, ни центровке крестика. */
+  .cases__filter-toggle::before,
+  .cases__filter-close::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: max(100%, 44px);
+    translate: 0 -50%;
+  }
+  .cases__filter-track.is-open .cases__filter-toggle { opacity: 0; scale: .7; pointer-events: none; }
+  .cases__filter-track.is-open .cases__filter-close {
+    opacity: 1;
+    scale: 1;
+    pointer-events: auto;
+    transition-delay: .1s;
+  }
+  /* Подпись снова лежит на кадре, поэтому ей нужна подложка. Затемнять кадр
+     целиком, как на десктопе, не хочется — тень только снизу, там где текст.
+     У самостоятельных роликов подписи нет, поэтому и тени им не надо: правило
+     :not обязательно, иначе оно перебивает исключение из cases.css — там
+     специфичность такая же, и решает порядок. */
+  .case-tile:not(.case-tile--standalone)::after {
+    display: block;
+    inset: auto 0 0;
+    height: 55%;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, .78));
+    opacity: 1;
+  }
+  .case-tile > video,
+  .case-tile > img,
+  .case-tile:hover > video,
+  .case-tile:hover > img,
+  .case-tile:focus-visible > video,
+  .case-tile:focus-visible > img { transform: none; filter: none; }
+  .case-tile__hint { display: none; }
+  /* Подпись и пилюля стоят в строку враспор внизу кадра. */
+  .case-tile__overlay {
+    left: calc(20 * var(--mpx));
+    right: calc(20 * var(--mpx));
+    bottom: calc(20 * var(--mpx));
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(14 * var(--mpx));
+    opacity: 1;
+    transform: none;
+  }
+  .case-tile__copy { width: calc(246 * var(--mpx)); gap: calc(10 * var(--mpx)); }
+  .case-tile__copy strong { font-size: max(16px, calc(24 * var(--mpx))); font-weight: 400; line-height: 1.05; }
+  .case-tile__copy > span { font-size: max(11px, calc(14 * var(--mpx))); font-weight: 300; line-height: 1.15; }
+  .case-tile__cta {
+    flex: 0 0 auto;
+    width: max(44px, calc(84.5 * var(--mpx)));
+    height: max(44px, calc(55 * var(--mpx)));
+    border-radius: 999px;
+    background: var(--accent);
+    /* Подпись здесь скрыта, кегль виден не будет — но без этой строки он
+       считается от десктопного --px и равен 3,9 px. Оставлять такую мину не
+       стоит: стоит однажды показать подпись, и она окажется нечитаемой. */
+    font-size: max(14px, calc(18 * var(--mpx)));
+  }
+  .case-tile__cta-label { display: none; }
+  /* В макете иконка — левый шеврон, развёрнутый зеркально. */
+  .case-tile__cta-arrow {
+    display: block;
+    width: calc(35 * var(--mpx));
+    height: calc(35 * var(--mpx));
+    scale: -1 1;
+  }
+  /* Футер по мобильному макету (Figma, node 328:781 — во фрейме он ошибочно
+     назван «кейс»). Шелл 400 с полями 30/40, радиус 40, фон .04, четыре группы
+     враспор. Телефон здесь — такая же карточка, как почта, поэтому классы
+     .footer__mail-* переиспользуются. */
+  .footer { height: auto; min-height: 100svh; padding: var(--portrait-edge); }
+  .footer__shell {
+    min-height: calc(100svh - (var(--portrait-edge) * 2));
+    padding: calc(40 * var(--mpx)) calc(30 * var(--mpx));
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(30 * var(--mpx));
+    border-radius: calc(40 * var(--mpx));
+    background: var(--surface-soft);
+  }
+  .footer__contacts,
+  .footer__right,
+  .footer__socials,
+  .footer__group,
+  .footer__mail,
+  .footer__phone-mobile { width: 100%; }
+  .footer__contacts { height: auto; align-items: center; justify-content: flex-start; gap: calc(30 * var(--mpx)); }
+  .footer__group { align-items: center; gap: calc(20 * var(--mpx)); }
+  .footer__group h2,
+  .footer__socials h2 { font-size: max(22px, calc(40 * var(--mpx))); font-weight: 500; text-align: center; }
+
+  /* Карточки почты и телефона. */
+  .footer__mail,
+  .footer__phone-mobile {
+    padding: calc(20 * var(--mpx));
+    display: flex;
+    align-items: center;
+    gap: calc(16 * var(--mpx));
+    border-radius: calc(60 * var(--mpx));
+    background: var(--surface);
+  }
+  .footer__mail-icon {
+    flex: 0 0 auto;
+    width: calc(70 * var(--mpx));
+    height: calc(70 * var(--mpx));
+    border-radius: calc(40 * var(--mpx));
+  }
+  .footer__mail-icon img { width: calc(30 * var(--mpx)); height: calc(30 * var(--mpx)); }
+  .footer__mail-copy { width: auto; min-width: 0; gap: calc(12 * var(--mpx)); }
+  .footer__mail-copy strong { font-size: max(13px, calc(18 * var(--mpx))); font-weight: 400; }
+  .footer__mail-copy small { color: rgba(255, 255, 255, .6); font-size: max(11px, calc(14 * var(--mpx))); }
+  .footer__phone-mobile .footer__mail-copy strong { font-size: max(14px, calc(20 * var(--mpx))); }
+  .footer__phone-mobile .footer__mail-copy small { font-size: max(12px, calc(16 * var(--mpx))); }
+  /* Десктопная карточка с QR: на мобильном её место занимает карточка выше. */
+  .footer__phone-card { display: none; }
+
+  /* Соцсети: четыре круга враспор, без подписей — так в макете. */
+  .footer__right { height: auto; align-items: center; gap: calc(30 * var(--mpx)); order: 2; }
+  .footer__socials { align-items: center; gap: calc(30 * var(--mpx)); }
+  .footer__social-grid {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: calc(10 * var(--mpx));
+  }
+  .footer__social-grid a {
+    flex: 0 0 auto;
+    width: calc(80 * var(--mpx));
+    height: calc(80 * var(--mpx));
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: calc(40 * var(--mpx));
+    /* Подписи скрыты, но кегль без этой строки считается от десктопного --px
+       и равен 5,2 px — см. комментарий у .case-tile__cta. */
+    font-size: max(13px, calc(17 * var(--mpx)));
+  }
+  .footer__social-grid a span { display: none; }
+  .footer__social-grid img { width: calc(40 * var(--mpx)); height: calc(40 * var(--mpx)); }
+  .footer__social-note { width: 100%; text-align: center; color: rgba(255, 255, 255, .6); font-size: max(11px, calc(14 * var(--mpx))); }
+
+  .footer__privacy {
+    align-self: center;
+    min-height: 44px;
+    /* В макете эта пилюля шире своей колонки — 359 против 340, — и строка в
+       20 помещается в одну. У нас колонка та же, но выйти за неё некуда,
+       поэтому боковые поля уже, а кегль на два пункта меньше: иначе
+       «Политика конфиденциальности» ломается надвое. */
+    padding: calc(20 * var(--mpx)) calc(14 * var(--mpx));
+    border-radius: calc(60 * var(--mpx));
+    text-align: center;
+    font-size: max(12px, calc(18 * var(--mpx)));
+  }
+  .footer__copyright {
+    position: static;
+    left: auto;
+    bottom: auto;
+    translate: none;
+    order: 3;
+    margin-top: 0;
+    align-self: center;
+    text-align: center;
+    font-size: max(12px, calc(18 * var(--mpx)));
+  }
+
+  /* Страница кейса (макет Figma, node 278:2380). Кадры идут столбцом во всю
+     колонку, а описание и навигация уходят поверх них: остров с кнопками
+     висит внизу всегда, описание выезжает по кнопке и размывает фон. */
+  .case-page {
+    --case-radius: calc(40 * var(--mpx));
+    width: 100%;
+    min-height: 100svh;
+    /* Снизу оставляем место под остров, иначе он накрывает последний кадр. */
+    padding: var(--portrait-edge) var(--portrait-edge) calc(120 * var(--mpx));
+    /* Единственный в потоке ребёнок — колонка кадров (карточка и остров
+       позиционируются от экрана). Кадров много — колонка выше экрана, свободного
+       места нет и центрирование ничего не меняет. Кадр один — он короче экрана,
+       и без этого прижимался бы к верхней кромке, оставляя под собой полосу
+       пустоты до острова. safe: при переполнении ведёт себя как flex-start,
+       иначе верх колонки ушёл бы за край экрана и стал недоступен. */
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+  }
+  /* Обёртка на мобильном не нужна: карточка и навигация позиционируются от
+     экрана сами, а сайдбар только мешал бы им своим потоком. */
+  .case-page__sidebar { display: contents; }
+
+  /* Описание — панель поверх кадров. */
+  .case-page__card {
+    position: fixed;
+    z-index: 50;
+    left: var(--portrait-edge);
+    right: var(--portrait-edge);
+    bottom: calc(100 * var(--mpx));
+    /* width из десктопных стилей перебивает right, и панель растягивалась на
+       весь экран мимо полей. */
+    width: auto;
+    max-width: none;
+    max-height: 68svh;
+    padding: calc(24 * var(--mpx));
+    gap: calc(20 * var(--mpx));
+    overflow-y: auto;
+    border-radius: var(--case-radius);
+    background: #1b1b1b;
+    opacity: 0;
+    translate: 0 calc(16 * var(--mpx));
+    pointer-events: none;
+    transition: opacity .25s ease, translate .32s var(--ease);
+  }
+  .case-site.is-about-open .case-page__card {
+    opacity: 1;
+    translate: 0;
+    pointer-events: auto;
+  }
+  .case-page__summary { gap: calc(14 * var(--mpx)); }
+  .case-page__summary h1 { font-size: max(24px, calc(40 * var(--mpx))); }
+  .case-page__intro { font-size: max(12px, calc(16 * var(--mpx))); line-height: 1.2; }
+  .case-page__fact { padding: calc(20 * var(--mpx)); gap: calc(14 * var(--mpx)); border-radius: calc(20 * var(--mpx)); }
+  .case-page__fact h2 { font-size: max(18px, calc(26 * var(--mpx))); }
+  .case-page__fact ul { gap: calc(12 * var(--mpx)); }
+  .case-page__fact li { gap: calc(12 * var(--mpx)); font-size: max(12px, calc(16 * var(--mpx))); line-height: 1.15; }
+  /* Текст пункта размечен десктопным max-width: calc(600 * var(--px)), а --px
+     в портрете равен 0,217 реального пикселя — строка обрывалась на 130 px и
+     ломалась после двух-трёх слов. Здесь текст тянется на всю ширину. */
+  .case-page__fact li span { max-width: none; }
+
+  /* Десктопная раскладка горизонтального кейса (case-detail.css, node 351:503)
+     написана через --px и по специфичности перебивает портретные правила: без
+     этого блока карточка описания растянулась бы на весь экран, факты встали
+     бы в две колонки, а заголовок сжался бы до 11 px. */
+  .case-page--horizontal {
+    padding: var(--portrait-edge) var(--portrait-edge) calc(120 * var(--mpx));
+  }
+  /* Колонка в 1255 единиц — десктопная ширина под футер. В портрете это 272 px
+     вместо полной колонки, поэтому возвращаем 100%. */
+  .case-page--horizontal .case-page__media,
+  .case-page--horizontal .case-page__sidebar { width: 100%; }
+  .case-page--horizontal .case-page__media { gap: calc(20 * var(--mpx)); }
+  .case-page--horizontal .case-page__card {
+    width: auto;
+    display: flex;
+    padding: calc(24 * var(--mpx));
+    gap: calc(20 * var(--mpx));
+    border-radius: var(--case-radius);
+  }
+  .case-page--horizontal .case-page__summary h1 { font-size: max(24px, calc(40 * var(--mpx))); }
+  .case-page--horizontal .case-page__intro { width: auto; font-size: max(12px, calc(16 * var(--mpx))); }
+  .case-page--horizontal .case-page__fact {
+    padding: calc(20 * var(--mpx));
+    gap: calc(14 * var(--mpx));
+    border-radius: calc(20 * var(--mpx));
+  }
+  .case-page--horizontal .case-page__fact h2 { font-size: max(18px, calc(26 * var(--mpx))); }
+  .case-page--horizontal .case-page__fact li { font-size: max(12px, calc(16 * var(--mpx))); }
+  .case-page--horizontal .case-page__nav { width: auto; }
+  /* Кнопка ссылки в мобильном острове: подпись прячем, места на неё нет. */
+  .case-page__link {
+    flex: 1 0 0;
+    min-width: 0;
+    height: max(48px, calc(55 * var(--mpx)));
+    padding: 0;
+    gap: 0;
+  }
+  .case-page__link span { display: none; }
+  .case-page__link img { width: calc(26 * var(--mpx)); height: calc(26 * var(--mpx)); }
+
+  /* Размытие фона под описанием. Отдельным слоем, а не фильтром на контенте:
+     фильтр на .case-page создал бы containing block и уронил бы fixed внутри
+     него — и карточка, и остров перестали бы держаться за экран. */
+  .case-page__scrim {
+    position: fixed;
+    z-index: 40;
+    inset: 0;
+    display: block;
+    padding: 0;
+    background: rgba(13, 13, 13, .45);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  /* Маркер размечен десктопным --px и в портрете схлопывался в 2 px. */
+  .case-page__fact li img {
+    width: max(8px, calc(10 * var(--mpx)));
+    height: max(8px, calc(10 * var(--mpx)));
+    margin-top: calc(3 * var(--mpx));
+  }
+  /* Остров с кнопками. Держится за низ экрана и лежит выше описания —
+     «всегда поверх контента». */
+  .case-page__nav {
+    position: fixed;
+    z-index: 60;
+    left: var(--portrait-edge);
+    right: var(--portrait-edge);
+    bottom: max(calc(20 * var(--mpx)), env(safe-area-inset-bottom));
+    width: auto;
+    padding: calc(12 * var(--mpx));
+    gap: calc(10 * var(--mpx));
+    border-radius: calc(40 * var(--mpx));
+    background: rgba(255, 255, 255, .05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .case-page__back,
+  .case-page__about,
+  .case-page__instagram {
+    height: max(48px, calc(55 * var(--mpx)));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+  }
+  /* Крайние кнопки делят остаток поровну, «Описание» держит свою ширину. */
+  .case-page__back,
+  .case-page__instagram { flex: 1 0 0; min-width: 0; width: auto; padding: 0; }
+  .case-page__back img { width: calc(35 * var(--mpx)); height: calc(35 * var(--mpx)); }
+  /* Закрытое состояние — бирюзовая пилюля с подписью. */
+  .case-page__about {
+    flex: 0 0 auto;
+    /* Ширина одна на оба состояния, чтобы остров не дёргался при открытии. */
+    width: calc(178 * var(--mpx));
+    min-width: 108px;
+    padding: 0;
+    background: var(--accent);
+    color: #fff;
+    font-size: max(14px, calc(20 * var(--mpx)));
+    font-weight: 300;
+    white-space: nowrap;
+    transition: background .24s ease;
+  }
+  .case-page__about-close { display: none; }
+
+  /* Открытое — белая пилюля с крестиком (макет, Component 41). */
+  .case-site.is-about-open .case-page__about { background: #fff; }
+  .case-site.is-about-open .case-page__about-label { display: none; }
+  .case-site.is-about-open .case-page__about-close { display: block; }
+  .case-page__about-close,
+  .case-page__about-close::after {
+    width: calc(26 * var(--mpx));
+    height: calc(3 * var(--mpx));
+    border-radius: 999px;
+    background: #000;
+    rotate: 45deg;
+  }
+  .case-page__about-close::after { content: ''; display: block; rotate: 90deg; }
+  .case-page__instagram { background: rgba(255, 255, 255, .1); gap: 0; font-size: 0; }
+  /* Подпись с ником в остров не помещается — остаётся только иконка. */
+  .case-page__instagram span { display: none; }
+  .case-page__instagram img { width: calc(33 * var(--mpx)); height: calc(33 * var(--mpx)); }
+
+  /* Кадры идут столбцом во всю колонку, пропорция из макета — 391x640. */
+  .case-page__media { width: 100%; gap: calc(20 * var(--mpx)); }
+  .case-page__media-row { width: 100%; height: auto; flex-direction: column; gap: calc(20 * var(--mpx)); }
+  .case-page__visual,
+  .case-page__media-row--top .case-page__visual:last-child {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 391 / 640;
+    border-radius: var(--case-radius);
+  }
+  /* На мобильном горизонтальный ролик показываем вертикально, как остальные
+     кадры: пропорция та же 391×640, лишнее срезает object-fit: cover. Иначе в
+     колонке из вертикальных карточек он выпадал полоской в 16:9. */
+  .case-page__media-row--horizontal,
+  .case-page__media-row--horizontal .case-page__visual {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 391 / 640;
+  }
+}

@@ -1,0 +1,83 @@
+@font-face {
+  font-family: 'Geologica';
+  src: url('../assets/fonts/Geologica.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #0d0d0d;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-soft: rgba(255, 255, 255, 0.05);
+  --text: #fff;
+  --muted: rgba(255, 255, 255, 0.4);
+  --accent: #5fa3a1;
+  --accent-soft: rgba(63, 97, 96, 0.2);
+  --ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+html { background: var(--bg); }
+* { box-sizing: border-box; }
+body {
+  container-type: inline-size;
+  margin: 0;
+  min-width: 320px;
+  overflow-x: clip;
+  overscroll-behavior-y: none;
+  /* Своего фона у body нет: он закрасил бы свечение Hero, которое лежит на
+     z-index -1, то есть между фоном страницы и фонами блоков. Чёрный держит
+     html — он же красит и полосы прокрутки. */
+  color: var(--text);
+  font-family: 'Geologica', 'Segoe UI', sans-serif;
+  font-variation-settings: 'CRSV' 0, 'SHRP' 0;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+h1, h2, h3, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+button, a { font: inherit; }
+button { color: inherit; border: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent); color: #fff; }
+
+.page {
+  /* One geometric scale keeps the 1728 × 968 composition readable from
+     compact landscape screens through Full HD, QHD and 4K. Width drives
+     regular displays; height becomes the safety limit on ultrawide screens. */
+  --px: min(calc(100cqw / 1728), calc(100svh / 968));
+  width: calc(1728 * var(--px));
+  margin-inline: auto;
+  overflow: clip;
+}
+
+.case-site {
+  --px: min(calc(100cqw / 1728), calc(100svh / 968));
+  width: calc(1728 * var(--px));
+  margin-inline: auto;
+  overflow: clip;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(calc(42 * var(--px)));
+  transition: opacity .85s var(--ease), transform .85s var(--ease);
+}
+.reveal.is-visible { opacity: 1; transform: none; }
+.reveal.reveal--scroll-card {
+  transform: none;
+  transition: opacity .85s var(--ease);
+}
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

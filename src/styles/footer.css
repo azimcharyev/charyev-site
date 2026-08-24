@@ -1,0 +1,145 @@
+.footer {
+  width: 100%;
+  height: calc(622 * var(--px));
+  padding: calc(40 * var(--px));
+  /* Без своего фона — см. комментарий в services.css. */
+}
+
+.footer__shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: calc(40 * var(--px));
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  overflow: hidden;
+  border-radius: calc(60 * var(--px));
+  background: var(--surface);
+}
+
+.footer__contacts,
+.footer__group,
+.footer__socials,
+.footer__right {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer__contacts { width: calc(605 * var(--px)); height: 100%; justify-content: space-between; }
+.footer__group--mail { gap: calc(20 * var(--px)); }
+.footer__group--phone { gap: calc(30 * var(--px)); }
+.footer__group h2,
+.footer__socials h2 { font-size: calc(50 * var(--px)); line-height: 1; font-weight: 500; }
+
+/* Ширина из макета, а не по содержимому: почта и телефон стоят друг под
+   другом, и разница в десяток пикселей между ними бросается в глаза. Раньше
+   обе карточки были max-content — телефон случайно совпадал с макетом, почта
+   отставала на 11 px. */
+.footer__mail,
+.footer__phone-card { width: calc(440 * var(--px)); }
+
+.footer__mail {
+  padding: calc(20 * var(--px));
+  display: flex;
+  align-items: center;
+  gap: calc(20 * var(--px));
+  border-radius: calc(60 * var(--px));
+  background: var(--surface);
+  transition: background .25s ease, transform .25s var(--ease);
+}
+
+.footer__mail-icon {
+  width: calc(78 * var(--px));
+  height: calc(78 * var(--px));
+  display: grid;
+  place-items: center;
+  border-radius: calc(40 * var(--px));
+  background: var(--surface);
+}
+.footer__mail-icon img { width: calc(38 * var(--px)); height: calc(38 * var(--px)); }
+.footer__mail-copy,
+.footer__phone-copy { display: flex; flex-direction: column; justify-content: center; gap: calc(12 * var(--px)); font-weight: 400; }
+.footer__mail-copy { width: calc(284 * var(--px)); white-space: nowrap; }
+.footer__mail-copy strong,
+.footer__phone-copy strong { font-size: calc(24 * var(--px)); line-height: 1; font-weight: 400; }
+.footer__mail-copy small { color: rgba(255, 255, 255, .6); font-size: calc(20 * var(--px)); line-height: 1; }
+
+.footer__phone-card {
+  padding: calc(30 * var(--px));
+  display: flex;
+  align-items: center;
+  gap: calc(20 * var(--px));
+  border-radius: calc(60 * var(--px));
+  background: var(--surface);
+  transition: background .25s ease, transform .25s var(--ease);
+}
+
+.footer__qr {
+  flex: 0 0 auto;
+  width: calc(118 * var(--px));
+  height: calc(118 * var(--px));
+}
+
+/* Мобильная замена QR-карточке. Показывается только в портрете — см.
+   responsive.css. */
+.footer__phone-mobile { display: none; }
+
+.footer__phone-copy { width: calc(242 * var(--px)); }
+/* Ширина по содержимому. Раньше здесь стояли 355 единиц — это они растягивали
+   карточку, пока та жила по max-content. С фиксированной шириной карточки
+   номер вылезал за её край на 55 px. */
+.footer__phone-copy small { color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--px)); line-height: 1; }
+
+.footer__right { height: 100%; align-items: flex-end; justify-content: space-between; }
+.footer__socials { gap: calc(30 * var(--px)); }
+.footer__social-grid { display: grid; grid-template-columns: repeat(2, max-content); gap: calc(20 * var(--px)); }
+.footer__social-grid a {
+  height: calc(80 * var(--px));
+  padding: calc(20 * var(--px));
+  display: flex;
+  align-items: center;
+  gap: calc(20 * var(--px));
+  border-radius: calc(40 * var(--px));
+  background: var(--surface);
+  font-size: calc(24 * var(--px));
+  line-height: 1;
+  transition: background .25s ease, transform .25s var(--ease);
+}
+.footer__social-grid img { width: calc(40 * var(--px)); height: calc(40 * var(--px)); }
+.footer__social-note { width: calc(355 * var(--px)); color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--px)); line-height: 1; }
+
+.footer__copyright {
+  position: absolute;
+  left: 50%;
+  bottom: calc(40 * var(--px));
+  translate: -50% 0;
+  color: #fff;
+  font-size: calc(24 * var(--px));
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.footer__mail:hover,
+.footer__phone-card:hover,
+.footer__social-grid a:hover,
+.footer__privacy:hover,
+.footer__mail:focus-visible,
+.footer__phone-card:focus-visible,
+.footer__social-grid a:focus-visible,
+.footer__privacy:focus-visible {
+  background: rgba(255, 255, 255, .12);
+  transform: translateY(calc(-2 * var(--px)));
+}
+
+.footer__privacy {
+  padding: calc(20 * var(--px));
+  display: flex;
+  align-items: center;
+  border-radius: calc(60 * var(--px));
+  background: var(--surface);
+  color: #fff;
+  font-size: calc(24 * var(--px));
+  line-height: normal;
+  transition: background .25s ease, transform .25s var(--ease);
+}
