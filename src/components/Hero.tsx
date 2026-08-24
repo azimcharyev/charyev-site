@@ -197,7 +197,14 @@ function createHeroLayout(): HeroCardLayout[] {
     placed.push(bestCandidate);
   }
 
-  return placed.sort(() => Math.random() - 0.5);
+  /* Не тасуем: индексы фиксируют слой (0-3 foreground, 4-5 midground, 6-13
+     background), а вместе с ним — играет карточка или показывает стоп-кадр.
+     На десктопе стекинг задаёт z-index по слою в hero.css, порядок в DOM
+     ничего не решает. На мобильном виден фиксированный набор индексов
+     (--1, --2, --5, --6 — играющие; --7, --8 — размытые фоновые), и без
+     тасовки рандом не подкидывает background в передний план — иначе
+     карточка стоит стоп-кадром там, где ей положено играть. */
+  return placed;
 }
 
 function pickRandomVideos() {
