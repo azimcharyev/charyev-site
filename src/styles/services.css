@@ -1,7 +1,10 @@
+/* Тарифы, десктоп (Figma, node 365:1192).
+   Панель 1648x983 при полях секции 40 — это вся ширина макета минус поля.
+   Внутри поля 40, шапка 123, отступ 40, ряд карточек 740. */
 .services {
   width: 100%;
   height: auto;
-  min-height: calc(891 * var(--px));
+  min-height: calc(1063 * var(--px));
   padding: calc(40 * var(--px));
   display: flex;
   align-items: center;
@@ -9,32 +12,108 @@
      ровной линией по верхней кромке секции. Чёрный держит html, а свечение
      гаснет само — см. .hero::before. */
 }
+
 .services__shell {
   width: 100%;
-  height: auto;
+  height: calc(983 * var(--px));
   padding: calc(40 * var(--px));
   display: flex;
   flex-direction: column;
+  gap: calc(40 * var(--px));
   border-radius: calc(60 * var(--px));
   background: var(--surface);
 }
-.services__nav { display: none; }
-/* flex:1 — чтобы ряд карточек тянулся на всю внутреннюю высоту шелла,
-   иначе карточки садятся своей естественной высотой к верху, а внизу
-   остаётся пустая полоса (шелл в landscape зафиксирован по высоте). */
-.services__cards { width: 100%; height: auto; flex: 1 1 auto; display: flex; align-items: stretch; justify-content: space-between; }
-.service-card { width: calc(452 * var(--px)); display: flex; flex-direction: column; align-items: flex-start; }
+
+.services__head {
+  flex: 0 0 auto;
+  height: calc(123 * var(--px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Макет обрезает строку по высоте прописной буквы: в Figma строка пункта
+   занимает 13 единиц при кегле 18, а не 20, как обычный строчный бокс. На
+   этом построена вся вертикаль карточки — без обрезки тринадцать пунктов
+   «Ведения соцсетей» не помещаются в карточку фиксированной высоты. Ниже,
+   в @supports, лежит запас для браузеров без text-box. */
+.services__title,
+.services__note,
+.service-card__title,
+.service-card__features li span,
+.service-card__price span,
+.service-card__price strong {
+  text-box: trim-both cap alphabetic;
+}
+
+.services__intro { display: flex; flex-direction: column; gap: calc(20 * var(--px)); }
+.services__title { font-size: calc(50 * var(--px)); line-height: 1; font-weight: 500; }
+.services__note {
+  width: calc(384 * var(--px));
+  font-size: calc(18 * var(--px));
+  line-height: 1.4;
+  font-weight: 300;
+}
+
+.services__nav { display: flex; align-items: center; gap: calc(10 * var(--px)); }
+
+.services__nav-button {
+  width: calc(133 * var(--px));
+  height: calc(55 * var(--px));
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(63, 97, 96, .4);
+  transition: background .24s ease, opacity .24s ease;
+}
+
+.services__nav-button img { width: calc(35 * var(--px)); height: calc(35 * var(--px)); }
+/* Стрелка одна на обе кнопки — вторая просто развёрнута. */
+.services__nav-button--next img { rotate: 180deg; }
+.services__nav-button:hover:not(:disabled) { background: rgba(63, 97, 96, .7); }
+/* Край ряда: кнопку не прячем, иначе шапка дёргается — гасим и отключаем. */
+.services__nav-button:disabled { opacity: .35; cursor: default; }
+
+/* Окно ряда. Направлений пять, видно три — остальное срезается по краю. */
+.services__viewport { flex: 1 1 auto; min-height: 0; overflow: clip; }
+
+.services__cards {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  gap: calc(106 * var(--px));
+  /* Шаг — карточка (452) плюс промежуток (106). */
+  translate: calc(var(--tariff-start, 0) * -558 * var(--px));
+  transition: translate .6s var(--ease);
+}
+
+.service-card {
+  flex: 0 0 auto;
+  width: calc(452 * var(--px));
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(20 * var(--px));
+}
+
 /* Шапка карточки. На десктопе в ней только заголовок, на мобильном справа
    встаёт пилюля «Тарифы» — см. портретный блок в responsive.css. */
-/* Отступ висит на шапке, а не на заголовке: внутри флекс-строки margin-bottom
-   заголовка попадал бы в саму строку и общая высота съезжала на 5 px. */
-.service-card__head { width: 100%; margin-bottom: calc(20 * var(--px)); display: flex; align-items: center; justify-content: space-between; }
+.service-card__head { width: 100%; display: flex; align-items: center; justify-content: space-between; }
 .service-picker { display: none; }
-.service-card__title { font-size: calc(50 * var(--px)); line-height: 1; font-weight: 400; }
-.service-card__tabs { display: flex; flex-wrap: wrap; gap: calc(10 * var(--px)); margin-bottom: calc(20 * var(--px)); }
+/* Ширина из макета: длинные названия («Маркетинговый анализ», «Ведение
+   соцсетей») переносятся на вторую строку, как нарисовано. */
+.service-card__title {
+  max-width: calc(419 * var(--px));
+  font-size: calc(40 * var(--px));
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.service-card__tabs { display: flex; flex-wrap: wrap; gap: calc(10 * var(--px)); }
 .service-card__tab {
-  height: calc(38 * var(--px));
-  padding: 0 calc(20 * var(--px));
+  padding: calc(10 * var(--px)) calc(20 * var(--px));
   border-radius: calc(20 * var(--px));
   background: var(--surface);
   color: var(--text);
@@ -44,8 +123,20 @@
   transition: background .24s ease, color .24s ease;
 }
 .service-card__tab[aria-selected='true'] { background: #fff; color: #000; }
-.service-card__body { width: 100%; flex: 1 1 auto; display: flex; flex-direction: column; animation: service-swap .38s var(--ease) both; }
-.service-card__description { width: 100%; margin-bottom: calc(20 * var(--px)); font-size: calc(18 * var(--px)); line-height: 1.12; }
+
+/* Список сверху, цена с кнопкой снизу. Карточка держит высоту макета, и низ
+   прижат к её нижней кромке в любом тарифе — от четырёх пунктов до тринадцати. */
+.service-card__body {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: calc(20 * var(--px));
+  animation: service-swap .38s var(--ease) both;
+}
+
 .service-card__features {
   width: 100%;
   padding: calc(20 * var(--px));
@@ -55,32 +146,19 @@
   border-radius: calc(20 * var(--px));
   background: var(--surface);
 }
-.service-card__features li { display: flex; align-items: center; gap: calc(16 * var(--px)); min-height: calc(18 * var(--px)); font-size: calc(18 * var(--px)); line-height: 1; }
-.service-card__features li span { white-space: pre-line; }
+.service-card__features li { display: flex; align-items: center; gap: calc(16 * var(--px)); font-size: calc(18 * var(--px)); line-height: 1.12; }
 .service-card__features img { flex: 0 0 auto; width: calc(12 * var(--px)); height: calc(12 * var(--px)); }
-/* Порядок на десктопе: features сверху, потом описание («промежуточный
-   текст»), потом summary с ценой и кнопкой. margin-top:auto на описании
-   утягивает и его, и следующий за ним summary в самый низ карточки — так
-   цена, кнопка и подпись всегда стоят у нижней кромки шелла, а не
-   плавают серединой. Если описания нет (тариф без него — например,
-   «Быстрый старт» у «Контента»), .service-card__lead схлопывается и
-   auto переходит на summary. Порядок сбрасывается в портретной сетке
-   (responsive.css), там раскладка своя. */
-.service-card__lead,
-.service-card__summary { width: 100%; display: flex; flex-direction: column; }
-.service-card__features { order: 1; }
-.service-card__lead { order: 2; margin-top: auto; }
-.service-card__summary { order: 3; margin-top: 0; }
-.service-card__lead:empty { display: none; }
-.service-card__lead:empty ~ .service-card__summary { margin-top: auto; }
-.service-card__price { display: flex; flex-direction: column; gap: calc(16 * var(--px)); padding-top: calc(20 * var(--px)); }
+
+.service-card__summary { width: 100%; display: flex; flex-direction: column; gap: calc(20 * var(--px)); }
+.service-card__price { display: flex; flex-direction: column; gap: calc(16 * var(--px)); }
 .service-card__price span { color: var(--muted); font-size: calc(18 * var(--px)); line-height: 1; }
 .service-card__price strong { font-size: calc(40 * var(--px)); line-height: 1; font-weight: 500; }
-.service-card__note { width: calc(416 * var(--px)); margin-top: calc(20 * var(--px)); font-size: calc(16 * var(--px)); line-height: 1; }
+
 .service-card__cta {
   width: calc(270 * var(--px));
   height: calc(56 * var(--px));
-  margin-top: calc(20 * var(--px));
+  display: grid;
+  place-items: center;
   border-radius: 999px;
   background: var(--accent);
   color: #fff;
@@ -89,10 +167,14 @@
   transition: filter .25s ease, transform .25s var(--ease);
 }
 .service-card__cta:hover { filter: brightness(1.12); transform: translateY(calc(-2 * var(--px))); }
-.service-card--production .service-card__tabs { gap: calc(13 * var(--px)); }
-.service-card--production .service-card__description { font-size: calc(16 * var(--px)); }
-.service-card--production .service-card__features { gap: calc(24 * var(--px)); }
-.service-card--production .service-card__features li { font-size: calc(20 * var(--px)); }
+
+/* Без обрезки строки выше, и самый длинный тариф упирался бы в цену. Гасим
+   разницу шагом между пунктами: 15 вместо 20 отыгрывают те же ~60 единиц.
+   Firefox сюда попадает, Chrome 133+ и Safari 18.2+ — нет. */
+@supports not (text-box: trim-both cap alphabetic) {
+  .service-card__features { gap: calc(15 * var(--px)); }
+  .service-card__price { gap: calc(12 * var(--px)); }
+}
 
 @keyframes service-swap {
   from { opacity: 0; transform: translateY(calc(12 * var(--px))); }

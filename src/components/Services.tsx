@@ -1,32 +1,49 @@
-import { useRef, useState } from 'react';
-import { SERVICES, type Service } from '../data/services';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { SERVICES, VISIBLE_SERVICES, type Service } from '../data/services';
 import { useServiceCardHeight } from '../hooks/useServiceCardHeight';
 import { ServiceBlock } from './ServiceBlock';
+import navArrow from '../assets/icons/tariffs-nav-arrow.svg';
 import tariffsIcon from '../assets/icons/tariffs-arrow.svg';
 
-/* Мобильный макет (Figma, node 278:2318) не рисует ряд кнопок «Контент /
-   Фото / Продакшн»: секция там занята одной карточкой. Направление выбирается
-   пилюлей «Тарифы» в шапке.
+/* Десктоп (Figma, node 365:1192): шапка «Тарифы» с подписью и парой стрелок,
+   под ней ряд из трёх карточек. Направлений пять, поэтому ряд едет вбок —
+   стрелки сдвигают его на одну карточку.
+
+   Мобильный макет (node 278:2318) не рисует ни ряда, ни стрелок: секция там
+   занята одной карточкой, а направление выбирается пилюлей «Тарифы» в шапке.
 
    За пилюлей стоит настоящий <select>, растянутый поверх неё и прозрачный.
    Так по нажатию открывается системный список: на айфоне — барабан Safari, на
    андроиде — свой диалог. Самодельная панель этого не даёт: нативный список
    рисуется поверх страницы средствами ОС, ощущается частью телефона, а не
-   сайта, и бесплатно приносит прокрутку, жесты и доступность.
+   сайта, и бесплатно приносит прокрутку, жесты и доступность. */
 
-   На десктопе пилюля скрыта — там все три направления разложены в колонки. */
+const MAX_START = Math.max(0, SERVICES.length - VISIBLE_SERVICES);
 
 export function Services() {
   const [activeService, setActiveService] = useState<Service['id']>(SERVICES[0].id);
   const [tierByService, setTierByService] = useState<Record<string, string>>(() =>
     Object.fromEntries(SERVICES.map((service) => [service.id, service.defaultTier])),
   );
+  const [start, setStart] = useState(0);
 
   const shellRef = useRef<HTMLDivElement>(null);
   /* Карточка растёт и сжимается за содержимым — см. useServiceCardHeight.
      Ключ включает и направление, и выбранный в нём тариф: меняется любое из
-     двух, меняется и список пунктов. */
+     двух, меняется и список пунктов. Только для портрета. */
   useServiceCardHeight(shellRef, `${activeService}:${tierByService[activeService]}`);
+
+  /* Ряд листается только на десктопе. После поворота в портрет сдвиг надо
+     обнулить, иначе вернувшись в ландшафт пользователь увидит не тот кусок
+     ряда, что до поворота. */
+  useEffect(() => {
+    const portrait = window.matchMedia('(orientation: portrait)');
+    const reset = () => { if (portrait.matches) setStart(0); };
+
+    reset();
+    portrait.addEventListener('change', reset);
+    return () => portrait.removeEventListener('change', reset);
+  }, []);
 
   const selectTier = (serviceId: Service['id'], tierId: string) => {
     setTierByService((previous) => ({ ...previous, [serviceId]: tierId }));
@@ -45,7 +62,7 @@ export function Services() {
         className="service-picker__select"
         aria-label="Направление услуг"
         value={serviceId}
-        onChange={(event) => setActiveService(event.target.value as Service['id'])}
+        onChange={(event) => setActiveService(event.target.value)}
       >
         {SERVICES.map((service) => (
           <option value={service.id} key={service.id}>{service.title}</option>
@@ -57,31 +74,52 @@ export function Services() {
   return (
     <section className="services" aria-label="Услуги">
       <div className="services__shell reveal reveal--scroll-card" ref={shellRef}>
-        <nav className="services__nav" aria-label="Направления услуг">
-          {SERVICES.map((service) => (
+        <header className="services__head">
+          <div className="services__intro">
+            <h2 className="services__title">Тарифы</h2>
+            <p className="services__note">
+              Конечная стоимость проекта обсуждается после брифинга
+            </p>
+          </div>
+
+          <div className="services__nav">
             <button
               className="services__nav-button"
               type="button"
-              aria-pressed={activeService === service.id}
-              onClick={() => setActiveService(service.id)}
-              key={service.id}
+              aria-label="Предыдущие тарифы"
+              disabled={start === 0}
+              onClick={() => setStart((value) => Math.max(0, value - 1))}
             >
-              {service.title}
+              <img src={navArrow} alt="" />
             </button>
-          ))}
-        </nav>
+            <button
+              className="services__nav-button services__nav-button--next"
+              type="button"
+              aria-label="Следующие тарифы"
+              disabled={start >= MAX_START}
+              onClick={() => setStart((value) => Math.min(MAX_START, value + 1))}
+            >
+              <img src={navArrow} alt="" />
+            </button>
+          </div>
+        </header>
 
-        <div className="services__cards">
-          {SERVICES.map((service) => (
-            <ServiceBlock
-              service={service}
-              active={activeService === service.id}
-              activeTierId={tierByService[service.id]}
-              onTierChange={(tierId) => selectTier(service.id, tierId)}
-              picker={renderPicker(service.id)}
-              key={service.id}
-            />
-          ))}
+        <div className="services__viewport">
+          <div
+            className="services__cards"
+            style={{ '--tariff-start': start } as CSSProperties}
+          >
+            {SERVICES.map((service) => (
+              <ServiceBlock
+                service={service}
+                active={activeService === service.id}
+                activeTierId={tierByService[service.id]}
+                onTierChange={(tierId) => selectTier(service.id, tierId)}
+                picker={renderPicker(service.id)}
+                key={service.id}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { Service } from '../data/services';
+import { getTelegramHref, type Service } from '../data/services';
 import bullet from '../assets/icons/bullet.svg';
 
 type ServiceBlockProps = {
@@ -23,6 +23,9 @@ export function ServiceBlock({
 }: ServiceBlockProps) {
   const tier = service.tiers.find((item) => item.id === activeTierId) ?? service.tiers[0];
   const panelId = `panel-${service.id}`;
+  /* Ряд пилюль нужен только там, где есть из чего выбирать: у «Фото»,
+     «Ведения соцсетей» и «Маркетингового анализа» тариф один. */
+  const hasTiers = service.tiers.length > 1;
 
   return (
     <article
@@ -33,38 +36,36 @@ export function ServiceBlock({
         <h2 className="service-card__title" id={`service-${service.id}`}>{service.title}</h2>
         {picker}
       </div>
-      <div className="service-card__tabs" role="tablist" aria-label={`Тарифы: ${service.title}`}>
-        {service.tiers.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            id={`tab-${service.id}-${item.id}`}
-            className="service-card__tab"
-            aria-selected={item.id === tier.id}
-            aria-controls={panelId}
-            onClick={() => onTierChange(item.id)}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
 
+      {hasTiers && (
+        <div className="service-card__tabs" role="tablist" aria-label={`Тарифы: ${service.title}`}>
+          {service.tiers.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              id={`tab-${service.id}-${item.id}`}
+              className="service-card__tab"
+              aria-selected={item.id === tier.id}
+              aria-controls={panelId}
+              onClick={() => onTierChange(item.id)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Список сверху, цена с кнопкой снизу — карточка держит высоту из
+          макета (740), и низ прижат к её нижней кромке независимо от того,
+          сколько пунктов в тарифе. */}
       <div
         className="service-card__body"
         id={panelId}
-        role="tabpanel"
-        aria-labelledby={`tab-${service.id}-${tier.id}`}
+        role={hasTiers ? 'tabpanel' : undefined}
+        aria-labelledby={hasTiers ? `tab-${service.id}-${tier.id}` : undefined}
         key={tier.id}
       >
-        {/* Три группы, а не плоский список: на мобильном карточка держит
-            фиксированную высоту, и по ней раскладывается сетка 1fr / auto / 1fr
-            — описание сверху, плашка ровно по центру, цена с кнопкой внизу.
-            Равные крайние дорожки и дают точный центр. */}
-        <div className="service-card__lead">
-          {tier.description && <p className="service-card__description">{tier.description}</p>}
-        </div>
-
         <ul className="service-card__features">
           {tier.features.map((feature) => (
             <li key={feature}>
@@ -79,8 +80,16 @@ export function ServiceBlock({
             <span>Цена:</span>
             <strong>{tier.price}</strong>
           </div>
-          {tier.note && <p className="service-card__note">{tier.note}</p>}
-          <button className="service-card__cta" type="button">Выбрать</button>
+          {/* Ссылка, а не кнопка: ведёт в телеграм Азима с уже набранным
+              сообщением — см. getTelegramHref. */}
+          <a
+            className="service-card__cta"
+            href={getTelegramHref(service, tier)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Выбрать
+          </a>
         </div>
       </div>
     </article>
