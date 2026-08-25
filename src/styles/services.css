@@ -40,6 +40,9 @@
   gap: calc(40 * var(--spx));
   border-radius: calc(60 * var(--spx));
   background: var(--surface);
+  /* Лента доезжает до самой кромки панели, поэтому срезать её должен скруглённый
+     край — иначе карточки торчали бы из углов прямыми уголками. */
+  overflow: clip;
 }
 
 /* Макет обрезает строку по высоте прописной буквы: в Figma строка пункта
@@ -91,12 +94,23 @@
 .services__nav-button--next img { rotate: 180deg; }
 .services__nav-button:hover { background: rgba(63, 97, 96, .7); }
 
-/* Окно ряда. Направлений пять, видно три — остальное срезается по краю. */
-.services__viewport { flex: 1 1 auto; min-height: 0; display: flex; overflow: clip; }
+/* Окно ряда. Направлений пять, видно три — остальное срезается по краю.
+   Отрицательные поля растягивают окно на всю панель, до самой её кромки:
+   уходящая карточка не пропадает за невидимой чертой в 40 единиц от края, а
+   уезжает под границу фрейма. Ровно те же 40 возвращает отступ внутри ленты,
+   поэтому в состоянии покоя первая карточка стоит под заголовком, как и была. */
+.services__viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-inline: calc(-40 * var(--spx));
+  display: flex;
+  overflow: clip;
+}
 
 .services__cards {
   flex: 1 1 auto;
   width: 100%;
+  padding-inline: calc(40 * var(--spx));
   display: flex;
   align-items: stretch;
   gap: calc(106 * var(--spx));
@@ -155,7 +169,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: calc(20 * var(--spx));
-  animation: service-swap .38s var(--ease) both;
+  animation: service-swap .55s var(--ease) both;
 }
 
 .service-card__features {
@@ -197,7 +211,11 @@
   .service-card__price { gap: calc(12 * var(--spx)); }
 }
 
+/* Только прозрачность и подольше. Раньше содержимое ещё и подъезжало снизу,
+   и вместе с мгновенной сменой высоты списка (в «Продакшне» это 4 пункта
+   против 8) выходил двойной рывок: текст ехал вверх, а плашка под ним
+   прыгала. Спокойное проявление этот скачок скрывает. */
 @keyframes service-swap {
-  from { opacity: 0; transform: translateY(calc(12 * var(--spx))); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

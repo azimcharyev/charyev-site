@@ -187,6 +187,9 @@
 .case-page__social {
   flex: 1 1 auto;
   min-width: 0;
+  /* Пилюля забирает весь остаток острова, поэтому значок с ником надо
+     ставить по центру явно — иначе они липнут к левому краю. */
+  justify-content: center;
   padding: 0 calc(20 * var(--px));
   gap: calc(12 * var(--px));
   background: rgba(255, 255, 255, .1);
