@@ -809,7 +809,7 @@
   }
   .case-page__back,
   .case-page__about,
-  .case-page__instagram {
+  .case-page__social {
     height: max(48px, calc(55 * var(--mpx)));
     display: flex;
     align-items: center;
@@ -818,7 +818,7 @@
   }
   /* Крайние кнопки делят остаток поровну, «Описание» держит свою ширину. */
   .case-page__back,
-  .case-page__instagram { flex: 1 0 0; min-width: 0; width: auto; padding: 0; }
+  .case-page__social { flex: 1 0 0; min-width: 0; width: auto; padding: 0; }
   .case-page__back img { width: calc(35 * var(--mpx)); height: calc(35 * var(--mpx)); }
   /* Закрытое состояние — бирюзовая пилюля с подписью. */
   .case-page__about {
@@ -849,10 +849,10 @@
     rotate: 45deg;
   }
   .case-page__about-close::after { content: ''; display: block; rotate: 90deg; }
-  .case-page__instagram { background: rgba(255, 255, 255, .1); gap: 0; font-size: 0; }
+  .case-page__social { background: rgba(255, 255, 255, .1); gap: 0; font-size: 0; }
   /* Подпись с ником в остров не помещается — остаётся только иконка. */
-  .case-page__instagram span { display: none; }
-  .case-page__instagram img { width: calc(33 * var(--mpx)); height: calc(33 * var(--mpx)); }
+  .case-page__social span { display: none; }
+  .case-page__social img { width: calc(33 * var(--mpx)); height: calc(33 * var(--mpx)); }
 
   /* Кадры идут столбцом во всю колонку, пропорция из макета — 391x640. */
   .case-page__media { width: 100%; gap: calc(20 * var(--mpx)); }

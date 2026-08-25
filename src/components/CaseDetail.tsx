@@ -130,15 +130,20 @@ export function CaseDetail() {
                 </span>
               )
             )}
-            {caseData.instagram && (
+            {caseData.social && (
               <a
-                className="case-page__instagram"
-                href={`https://www.instagram.com/${caseData.instagram}/`}
+                className="case-page__social"
+                href={caseData.social.href}
                 target="_blank"
                 rel="noreferrer"
               >
-                <img src={instagram} alt="" />
-                <span>{caseData.instagram}</span>
+                {/* Своей иконки у TikTok в наборе нет — там общий значок
+                    внешней ссылки. */}
+                <img
+                  src={caseData.social.network === 'instagram' ? instagram : externalLink}
+                  alt=""
+                />
+                <span>{caseData.social.handle}</span>
               </a>
             )}
           </nav>

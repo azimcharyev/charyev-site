@@ -62,13 +62,26 @@ export type CaseFact = {
   items: string[];
 };
 
+/**
+ * Аккаунт героя кейса — третья кнопка острова у вертикальных кейсов.
+ *
+ * Хранится готовым адресом, а не ником: сети разные, и склеивать адрес из
+ * шаблона на каждую пришлось бы отдельно. У TikTok в наборе иконок своего
+ * значка нет, поэтому там общий значок внешней ссылки.
+ */
+export type CaseSocial = {
+  network: 'instagram' | 'tiktok';
+  handle: string;
+  href: string;
+};
+
 export type CaseDetailData = {
   id: string;
   title: string;
   teaser: string;
   intro: string;
   facts: CaseFact[];
-  instagram?: string;
+  social?: CaseSocial;
   /**
    * Ссылка на сам ролик — ютуб, вимео, что угодно. В макете горизонтального
    * кейса (node 351:535) это вторая кнопка острова, подписанная названием
@@ -102,7 +115,11 @@ export const CASE_DETAILS: CaseDetailData[] = [
         items: ['1,2 млн просмотров', 'Вокруг Николая сформировалась своя аудитория'],
       },
     ],
-    instagram: 'Nikolay_Petrov',
+    social: {
+      network: 'instagram',
+      handle: 'nickfcong',
+      href: 'https://www.instagram.com/nickfcong/',
+    },
     media: [
       { src: MEDIA.standing, previewSrc: MEDIA_PREVIEW.standing, type: 'video', position: '48% center' },
       { src: MEDIA.studio, previewSrc: MEDIA_PREVIEW.studio, type: 'video', tone: 'dark' },
@@ -138,7 +155,11 @@ export const CASE_DETAILS: CaseDetailData[] = [
         ],
       },
     ],
-    instagram: 'Dental_Impact',
+    social: {
+      network: 'instagram',
+      handle: 'dental___implant',
+      href: 'https://www.instagram.com/dental___implant/',
+    },
     media: [
       { src: dentalVideoOne, previewSrc: dentalVideoOnePreview, type: 'video' },
       { src: dentalPhotoOne, type: 'image', position: '54% center' },
@@ -173,7 +194,11 @@ export const CASE_DETAILS: CaseDetailData[] = [
         ],
       },
     ],
-    instagram: 'Lida_Lyutikova',
+    social: {
+      network: 'tiktok',
+      handle: 'lida_lyutik',
+      href: 'https://www.tiktok.com/@lida_lyutik?is_from_webapp=1&sender_device=pc',
+    },
     media: [
       { src: lidaVideoOne, previewSrc: lidaVideoOnePreview, type: 'video', position: '54% center' },
       { src: lidaPhotoOne, type: 'image', position: '52% center' },
@@ -203,6 +228,7 @@ export const CASE_DETAILS: CaseDetailData[] = [
         ],
       },
     ],
+    link: 'https://rutube.ru/video/ff3c17f6e307c361d29385b21f9b0127/',
     layout: 'horizontal',
     media: [{ src: gogoRentDetail, previewSrc: gogoRentPreview, type: 'video' }],
   },
@@ -273,6 +299,7 @@ export const CASE_DETAILS: CaseDetailData[] = [
         items: ['Backstage стал отдельной историей о том, как создавался рекламный ролик'],
       },
     ],
+    link: 'https://rutube.ru/video/2b436ae866403d7158ae59fbb8ff4edf/',
     layout: 'horizontal',
     media: [
       { src: rolfOilDetail, previewSrc: rolfOilPreview, type: 'video' },
@@ -300,6 +327,7 @@ export const CASE_DETAILS: CaseDetailData[] = [
         items: ['Получился полноценный влог-выпуск, передающий атмосферу и характер этого дня'],
       },
     ],
+    link: 'https://rutube.ru/video/80749e13cabd47f15bbedbc19e19594d/',
     layout: 'horizontal',
     media: [{ src: birthdaySergeyDetail, previewSrc: birthdaySergeyPreview, type: 'video' }],
   },
@@ -322,6 +350,7 @@ export const CASE_DETAILS: CaseDetailData[] = [
         items: ['Получилась живая история о компании изнутри и людях, которые каждый день её создают'],
       },
     ],
+    link: 'https://rutube.ru/video/fc430b92aeb1d86e21dc71ee481f0659/',
     layout: 'horizontal',
     media: [{ src: texmodDetail, previewSrc: texmodPreview, type: 'video' }],
   },

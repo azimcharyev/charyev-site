@@ -169,7 +169,7 @@
 .case-page__link.is-empty:hover { background: rgba(255, 255, 255, .1); transform: none; }
 
 .case-page__back,
-.case-page__instagram {
+.case-page__social {
   height: calc(55 * var(--px));
   display: flex;
   align-items: center;
@@ -184,7 +184,7 @@
 }
 .case-page__back img { width: calc(35 * var(--px)); height: calc(35 * var(--px)); }
 
-.case-page__instagram {
+.case-page__social {
   flex: 1 1 auto;
   min-width: 0;
   padding: 0 calc(20 * var(--px));
@@ -192,9 +192,9 @@
   background: rgba(255, 255, 255, .1);
   font-size: calc(20 * var(--px));
 }
-.case-page__instagram img { width: calc(24 * var(--px)); height: calc(24 * var(--px)); }
+.case-page__social img { width: calc(24 * var(--px)); height: calc(24 * var(--px)); }
 .case-page__back:hover,
-.case-page__instagram:hover { background: rgba(95, 163, 161, .55); transform: translateY(calc(-2 * var(--px))); }
+.case-page__social:hover { background: rgba(95, 163, 161, .55); transform: translateY(calc(-2 * var(--px))); }
 
 .case-page__media { width: calc(830 * var(--px)); display: flex; flex-direction: column; gap: calc(40 * var(--px)); }
 .case-page__media-row { height: calc(792 * var(--px)); display: flex; gap: calc(20 * var(--px)); }

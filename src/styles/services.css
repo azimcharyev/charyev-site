@@ -89,9 +89,7 @@
 .services__nav-button img { width: calc(35 * var(--spx)); height: calc(35 * var(--spx)); }
 /* Стрелка одна на обе кнопки — вторая просто развёрнута. */
 .services__nav-button--next img { rotate: 180deg; }
-.services__nav-button:hover:not(:disabled) { background: rgba(63, 97, 96, .7); }
-/* Край ряда: кнопку не прячем, иначе шапка дёргается — гасим и отключаем. */
-.services__nav-button:disabled { opacity: .35; cursor: default; }
+.services__nav-button:hover { background: rgba(63, 97, 96, .7); }
 
 /* Окно ряда. Направлений пять, видно три — остальное срезается по краю. */
 .services__viewport { flex: 1 1 auto; min-height: 0; display: flex; overflow: clip; }
@@ -106,6 +104,10 @@
   translate: calc(var(--tariff-start, 0) * -558 * var(--spx));
   transition: translate .6s var(--ease);
 }
+
+/* Возврат ленты в среднюю копию: тот же кадр, только без перехода — иначе
+   вместо круга было бы видно, как ряд отматывается назад. */
+.services__cards.is-static { transition: none; }
 
 .service-card {
   flex: 0 0 auto;

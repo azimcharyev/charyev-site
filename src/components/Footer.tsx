@@ -12,10 +12,14 @@ const PHONE_PRETTY = '+7 (919) 186 - 52 - 08';
 const PHONE_HREF = 'tel:+79191865208';
 
 const socials = [
-  { label: 'Instagram', icon: instagram, href: 'https://www.instagram.com/' },
-  { label: 'WhatsApp', icon: whatsapp, href: 'https://www.whatsapp.com/' },
-  { label: 'Telegram', icon: telegram, href: 'https://telegram.org/' },
-  { label: 'YouTube', icon: youtube, href: 'https://www.youtube.com/' },
+  { label: 'Instagram', icon: instagram, href: 'https://www.instagram.com/azim.charyev.cinema/' },
+  {
+    label: 'WhatsApp',
+    icon: whatsapp,
+    href: 'https://api.whatsapp.com/send/?phone=89056576030&text&type=phone_number&app_absent=0',
+  },
+  { label: 'Telegram', icon: telegram, href: 'https://t.me/charyev_azim' },
+  { label: 'YouTube', icon: youtube, href: 'https://www.youtube.com/@azim.charyev/featured' },
 ];
 
 export function Footer() {
