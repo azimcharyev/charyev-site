@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d0d0d" />
+    <title>Страница не найдена — Азим Чарыев</title>
+    <meta name="description" content="Такой страницы не существует." />
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <!-- Разметка целиком статическая: React тут нечего делать, а лишний
+         бандл только задержал бы показ. Стили и шрифт приезжают отдельной
+         точкой входа — src/notFound.ts. -->
+    <main class="not-found">
+      <div class="not-found__glow"></div>
+      <div class="not-found__grain"></div>
+      <div class="not-found__copy">
+        <div class="not-found__text">
+          <p class="not-found__value">404</p>
+          <p class="not-found__note">Такой страницы не существует</p>
+        </div>
+        <a class="not-found__link" href="/">На главную</a>
+      </div>
+    </main>
+    <script type="module" src="/src/notFound.ts"></script>
+  </body>
+</html>

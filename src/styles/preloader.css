@@ -1,0 +1,122 @@
+/* Прелоадер (Figma, node 367:536) и страница 404 (node 332:508).
+   Обе — тёмное поле с тем же свечением, что на главной, и парой строк по
+   центру. Стили общие: различается только содержимое.
+
+   Свечение прелоадера растёт вместе с загрузкой и к сотне становится ровно
+   таким, как в Hero. Дальше прелоадер гаснет, а под ним уже стоит точно такая
+   же картинка — стыка не видно. Поэтому здесь берутся --glow-image и
+   --grain-image из base.css, а не своя копия градиента. */
+
+.preloader,
+.not-found {
+  /* Своя копия единиц: --px живёт на .page и .case-site, а эти двое лежат
+     рядом с ними, а не внутри. Формула та же, что в base.css. */
+  --px: min(calc(100cqw / 1728), calc(100svh / 968));
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+}
+
+.preloader { z-index: 100; }
+
+/* Слои света. Отдельными элементами, а не фоном на самом поле: зерну нужна
+   своя прозрачность, а свечению — своя, растущая по ходу загрузки. */
+.preloader__glow,
+.preloader__grain,
+.not-found__glow,
+.not-found__grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.preloader__glow,
+.not-found__glow { background: var(--glow-image); }
+.preloader__grain,
+.not-found__grain { background-image: var(--grain-image); }
+
+/* --progress пишет preloader.ts: 0 в начале, 1 к концу загрузки. Ровно те же
+   формулы, что у .hero::before/::after с --hero-glow. */
+.preloader__glow { opacity: var(--progress, 0); }
+.preloader__grain { opacity: calc(.09 * var(--progress, 0)); }
+.not-found__glow { opacity: 1; }
+.not-found__grain { opacity: .09; }
+
+.preloader__copy,
+.not-found__copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(40 * var(--px));
+  text-align: center;
+}
+
+.preloader__text,
+.not-found__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(26 * var(--px));
+}
+
+.preloader__value,
+.not-found__value {
+  font-size: calc(120 * var(--px));
+  line-height: 1;
+  font-weight: 500;
+  white-space: nowrap;
+  /* Цифры набраны моноширинно, иначе счётчик дёргается по ширине на каждом
+     проценте — «11%» уже, чем «10%». */
+  font-variant-numeric: tabular-nums;
+}
+
+.preloader__note,
+.not-found__note {
+  width: calc(273 * var(--px));
+  font-size: calc(18 * var(--px));
+  line-height: 1.4;
+  font-weight: 300;
+}
+
+.not-found__link {
+  width: calc(273 * var(--px));
+  height: calc(56 * var(--px));
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: calc(18 * var(--px));
+  font-weight: 500;
+  transition: filter .25s ease, transform .25s var(--ease);
+}
+.not-found__link:hover { filter: brightness(1.12); transform: translateY(calc(-2 * var(--px))); }
+
+/* Уход. Гаснет всё поле разом: свечение под ним такое же, поэтому видно
+   только исчезновение цифр и темноты. */
+.preloader {
+  opacity: 1;
+  transition: opacity .7s var(--ease);
+}
+.preloader.is-done { opacity: 0; pointer-events: none; }
+
+@media (orientation: portrait) {
+  .preloader,
+  .not-found { --mpx: calc(min(100cqw, 440px) / 440); }
+  .preloader__copy,
+  .not-found__copy { gap: calc(40 * var(--mpx)); }
+  .preloader__text,
+  .not-found__text { gap: calc(20 * var(--mpx)); }
+  .preloader__value,
+  .not-found__value { font-size: max(64px, calc(90 * var(--mpx))); }
+  .preloader__note,
+  .not-found__note { width: calc(273 * var(--mpx)); font-size: max(13px, calc(18 * var(--mpx))); }
+  .not-found__link {
+    width: calc(273 * var(--mpx));
+    height: max(48px, calc(56 * var(--mpx)));
+    font-size: max(14px, calc(18 * var(--mpx)));
+  }
+}

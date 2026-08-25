@@ -15,6 +15,24 @@
   --accent: #5fa3a1;
   --accent-soft: rgba(63, 97, 96, 0.2);
   --ease: cubic-bezier(.22, .61, .36, 1);
+
+  /* Фоновое свечение и зерно поверх него. Держим одной парой переменных,
+     потому что рисуют их двое: Hero и прелоадер. Прелоадер доводит своё
+     свечение ровно до состояния Hero и гаснет — если бы картинки разошлись
+     хоть на оттенок, на стыке был бы заметен скачок.
+     Пятно заканчивается на 72% — заметно раньше углов вьюпорта, поэтому у
+     света нет собственной границы ни на каком соотношении сторон. */
+  --glow-image: radial-gradient(
+    90% 72% at 50% 38%,
+    rgba(95, 163, 161, .26) 0%,
+    rgba(63, 97, 96, .15) 40%,
+    rgba(20, 42, 41, .06) 58%,
+    transparent 72%
+  );
+  /* Зерно — feTurbulence прямо в data-URI: пары сотен байт вместо картинки,
+     и оно не тайлится видимым швом благодаря stitchTiles. feColorMatrix
+     обесцвечивает шум, иначе turbulence даёт цветную рябь. */
+  --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 html { background: var(--bg); }
