@@ -1,13 +1,17 @@
 .hero__title { font-size: clamp(48px, calc(80 * var(--px)), 112px); }
 .hero__copy { font-size: clamp(14px, calc(20 * var(--px)), 28px); }
-.services__title { font-size: clamp(32px, calc(50 * var(--px)), 68px); }
-.service-card__title { font-size: clamp(26px, calc(40 * var(--px)), 54px); }
+/* Кегли блока тарифов считаются от --spx (см. services.css): блок сведён к
+   ширине футера, и шрифт уменьшен в том же отношении. Нижние границы держат
+   читаемость на узких экранах — упёршись в них, панель начинает расти в
+   высоту, а не резать текст. */
+.services__title { font-size: clamp(28px, calc(50 * var(--stx)), 56px); }
+.service-card__title { font-size: clamp(22px, calc(40 * var(--stx)), 45px); }
 .services__note,
 .service-card__tab,
 .service-card__features li,
-.service-card__price span { font-size: clamp(12px, calc(18 * var(--px)), 24px); }
-.service-card__price strong { font-size: clamp(28px, calc(40 * var(--px)), 56px); }
-.service-card__cta { font-size: clamp(13px, calc(18 * var(--px)), 23px); }
+.service-card__price span,
+.service-card__cta { font-size: clamp(13px, calc(18 * var(--stx)), 20px); }
+.service-card__price strong { font-size: clamp(24px, calc(40 * var(--stx)), 45px); }
 
 @media (orientation: landscape) {
   .hero__title {
@@ -145,6 +149,7 @@
     min-height: 0;
     margin-inline: auto;
     padding: calc(20 * var(--mpx));
+    gap: calc(16 * var(--mpx));
     border-radius: calc(40 * var(--mpx));
   }
   /* Селектор с .reveal намеренно: на шелле висит .reveal--scroll-card со своим
@@ -182,7 +187,10 @@
   .service-card:not(.is-active) { display: none; }
   /* Шаг между блоками задаёт gap самой карточки, поэтому отступ шапки снимаем. */
   .service-card__head { margin-bottom: 0; align-items: center; gap: calc(10 * var(--mpx)); }
-  .service-card__title { font-size: max(24px, calc(40 * var(--mpx))); line-height: 1; }
+  /* Десктопная ширина размечена через --spx, а он считается от --px — в
+     портрете тот равен 0,217 реального пикселя, и заголовок сжимался бы до
+     69 px. Здесь переносить нечего, ширину отпускаем. */
+  .service-card__title { max-width: none; font-size: max(24px, calc(40 * var(--mpx))); line-height: 1; }
   .service-card__tabs { gap: calc(10 * var(--mpx)); margin-bottom: 0; }
   .service-card__tab {
     position: relative;
