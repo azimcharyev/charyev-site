@@ -200,6 +200,16 @@
   will-change: transform;
 }
 
+/* На время прокрутки кольцо замирает — см. scrollActivity.ts. Плитка в этот
+   момент наклоняется в перспективе, и бесконечная анимация внутри неё не даёт
+   слою успокоиться ни на кадр: замер показал 325 мс провалов против 67 мс,
+   когда кольцо стоит. Вращения при пролистывании всё равно не разобрать.
+   will-change снимаем заодно, иначе слой держится впустую. */
+.is-scrolling .case-tile__hint-ring {
+  animation-play-state: paused;
+  will-change: auto;
+}
+
 .case-tile__hint-ring text {
   fill: currentColor;
   font-size: 40px;
