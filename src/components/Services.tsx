@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState, type CSSProperties, type TransitionEvent } from 'react';
+import { useEffect, useState, type CSSProperties, type TransitionEvent } from 'react';
 import { SERVICES, type Service } from '../data/services';
-import { useServiceCardHeight } from '../hooks/useServiceCardHeight';
 import { ServiceBlock } from './ServiceBlock';
 import navArrow from '../assets/icons/tariffs-nav-arrow.svg';
 import tariffsIcon from '../assets/icons/tariffs-arrow.svg';
@@ -35,12 +34,6 @@ export function Services() {
   /* Стартуем со средней копии, чтобы круг сразу был доступен в обе стороны. */
   const [start, setStart] = useState(COUNT);
   const [animated, setAnimated] = useState(true);
-
-  const shellRef = useRef<HTMLDivElement>(null);
-  /* Карточка растёт и сжимается за содержимым — см. useServiceCardHeight.
-     Ключ включает и направление, и выбранный в нём тариф: меняется любое из
-     двух, меняется и список пунктов. Только для портрета. */
-  useServiceCardHeight(shellRef, `${activeService}:${tierByService[activeService]}`);
 
   /* Лента ходит только на десктопе. После поворота в портрет сдвиг надо
      вернуть в среднюю копию, иначе вернувшись в ландшафт пользователь увидит
@@ -106,7 +99,7 @@ export function Services() {
 
   return (
     <section className="services" aria-label="Услуги">
-      <div className="services__shell reveal reveal--scroll-card" ref={shellRef}>
+      <div className="services__shell reveal reveal--scroll-card">
         <header className="services__head">
           <div className="services__intro">
             <h2 className="services__title">Тарифы</h2>
