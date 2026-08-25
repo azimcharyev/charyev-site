@@ -88,7 +88,7 @@ export function CaseDetail() {
           </aside>
 
           <nav className="case-page__nav" aria-label="Навигация по кейсу">
-            <a className="case-page__back" href="./index.html#cases" aria-label="Вернуться к кейсам">
+            <a className="case-page__back" href="/#cases" aria-label="Вернуться к кейсам">
               <img src={back} alt="" />
             </a>
             {/* Кнопка живёт только в мобильной раскладке: на десктопе описание

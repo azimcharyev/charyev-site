@@ -137,7 +137,7 @@ export function Cases() {
         {items.map((item, index) => {
           const isPackagedCase = 'caseId' in item;
           const media = item.media.type === 'video' ? (
-            <SilentVideo src={item.media.src} />
+            <SilentVideo src={item.media.src} pauseWhileScrolling />
           ) : (
             <img src={item.media.src} alt="" loading="lazy" draggable="false" />
           );

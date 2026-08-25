@@ -23,7 +23,13 @@ export function useGalleryMotion(refreshKey: string) {
       let frame = 0;
       let lastTime = 0;
       let lastScrollTime = 0;
+      let willChangeSet = false;
       const tilts = cards.map(() => 0);
+      /* Последнее записанное значение. Наклон затухает по экспоненте и в конце
+         меняется на тысячные доли градуса — без этой проверки в стиль каждый
+         кадр уезжала новая строка, и браузер заново собирал слой ради сдвига,
+         которого не видно. */
+      const written = cards.map(() => Number.NaN);
 
       const render = (time: number) => {
         const delta = lastTime ? Math.min((time - lastTime) / 1000, .05) : 1 / 60;
@@ -41,14 +47,24 @@ export function useGalleryMotion(refreshKey: string) {
           return (bounds.top + bounds.height / 2 - viewportCenter) / viewportHeight;
         });
 
+        if (!willChangeSet) {
+          willChangeSet = true;
+          cards.forEach((card) => { card.style.willChange = 'rotate'; });
+        }
+
         let largestDifference = 0;
         cards.forEach((card, index) => {
           const target = MAX_TILT * Math.max(-1, Math.min(1, distances[index]));
           largestDifference = Math.max(largestDifference, Math.abs(target - tilts[index]));
           tilts[index] += (target - tilts[index]) * easing;
-          card.style.willChange = 'rotate';
-          card.style.rotate = `x ${tilts[index]}deg`;
-          card.style.translate = `0 ${tilts[index] * .7}px`;
+
+          /* Сотых долей градуса хватает: при высоте плитки 716 единиц 0,01°
+             — это меньше десятой доли пикселя по краю. */
+          const tilt = Math.round(tilts[index] * 100) / 100;
+          if (tilt === written[index]) return;
+          written[index] = tilt;
+          card.style.rotate = `x ${tilt}deg`;
+          card.style.translate = `0 ${(tilt * .7).toFixed(2)}px`;
         });
 
         if (largestDifference > .01 || time - lastScrollTime < SETTLE_DELAY) {
@@ -57,6 +73,7 @@ export function useGalleryMotion(refreshKey: string) {
           frame = 0;
           /* will-change снимаем по простою: иначе он держит по слою
              композитора на каждую плитку всё время. */
+          willChangeSet = false;
           cards.forEach((card) => card.style.removeProperty('will-change'));
         }
       };
