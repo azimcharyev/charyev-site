@@ -1,5 +1,4 @@
 import { useEffect, useRef, type CSSProperties } from 'react';
-import { isScrolling, subscribeScrollActivity } from '../hooks/scrollActivity';
 
 type SilentVideoProps = {
   src: string;
@@ -9,12 +8,6 @@ type SilentVideoProps = {
   playOnHover?: boolean;
   preload?: 'none' | 'metadata' | 'auto';
   eager?: boolean;
-  /**
-   * Пауза на время прокрутки. Для плиток кейсов: они наклоняются в
-   * перспективе, и играющее видео под трёхмерным поворотом приходится
-   * растеризовать заново каждый кадр — см. scrollActivity.ts.
-   */
-  pauseWhileScrolling?: boolean;
   /**
    * Загрузить и показать первый кадр, но не проигрывать. Для дальнего плана
    * Hero: те карточки размыты на 9 px и притушены до 46%, движения в них почти
@@ -33,7 +26,6 @@ export function SilentVideo({
   preload = 'metadata',
   eager = false,
   still = false,
-  pauseWhileScrolling = false,
 }: SilentVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -48,11 +40,6 @@ export function SilentVideo({
 
     const syncPlayback = () => {
       if (still) {
-        video.pause();
-        return;
-      }
-
-      if (pauseWhileScrolling && isScrolling()) {
         video.pause();
         return;
       }
@@ -87,9 +74,6 @@ export function SilentVideo({
     hoverHost?.addEventListener('focusin', onEnter);
     hoverHost?.addEventListener('focusout', onLeave);
     document.addEventListener('visibilitychange', syncPlayback);
-    const unsubscribeScroll = pauseWhileScrolling
-      ? subscribeScrollActivity(syncPlayback)
-      : null;
 
     const loadObserver = new IntersectionObserver(
       ([entry]) => {
@@ -124,12 +108,11 @@ export function SilentVideo({
       hoverHost?.removeEventListener('focusin', onEnter);
       hoverHost?.removeEventListener('focusout', onLeave);
       document.removeEventListener('visibilitychange', syncPlayback);
-      unsubscribeScroll?.();
       video.pause();
       video.removeAttribute('src');
       video.load();
     };
-  }, [active, eager, pauseWhileScrolling, playOnHover, preload, src, still]);
+  }, [active, eager, playOnHover, preload, src, still]);
 
   return (
     <video
