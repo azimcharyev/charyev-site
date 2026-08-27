@@ -110,7 +110,7 @@
   /* Новые ролики сохраняют свои стороны и на мобильном: wedding сверху,
      china снизу. Они заменяют две случайные карточки, а не добавляются к ним. */
   .hero__media-card--fixed-wedding { z-index: 3; left: 77.3%; top: 4.3%; width: calc(120 * var(--mpx)); height: calc(219 * var(--mpx)); }
-  .hero__media-card--fixed-china { z-index: 3; left: 76.5%; top: 64%; width: calc(185 * var(--mpx)); height: calc(104 * var(--mpx)); }
+  .hero__media-card--fixed-china { z-index: 3; left: 69%; top: 63%; width: calc(240 * var(--mpx)); height: calc(135 * var(--mpx)); }
   /* Дальний план: в макете эти две ничем не выделены, но на десктопе глубина
      задаётся размытием — оставляем её, чтобы мобильный читался тем же языком. */
   .hero__media-card--7,
