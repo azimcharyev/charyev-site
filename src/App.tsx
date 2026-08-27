@@ -3,7 +3,6 @@ import { Services } from './components/Services';
 import { Cases } from './components/Cases';
 import { CaseDetail } from './components/CaseDetail';
 import { Footer } from './components/Footer';
-import { useBlockSnap } from './hooks/useBlockSnap';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { useReveal } from './hooks/useReveal';
 
@@ -14,11 +13,9 @@ export default function App() {
 }
 
 function Home() {
-  /* useSmoothScroll — десктоп: Lenis и выравнивание секций.
-     useBlockSnap — портрет: доводка до ближайшего блока, включая каждую
-     карточку кейса. Друг друга не задевают, каждый сам проверяет ориентацию. */
+  /* useSmoothScroll работает только в горизонтальной ориентации. На мобильных
+     оставляем обычный нативный скролл без автоматической доводки секций. */
   useSmoothScroll();
-  useBlockSnap();
   useReveal();
 
   return (

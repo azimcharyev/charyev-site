@@ -671,12 +671,26 @@
 
   /* Блок реквизитов на мобильном: карточка растягивается на всю ширину
      колонки, заголовок и цифры кладём в одну колонку. */
-  .footer__about { align-items: stretch; gap: calc(20 * var(--mpx)); order: 3; }
-  .footer__about h2 { font-size: max(20px, calc(36 * var(--mpx))); text-align: center; }
+  .footer__about {
+    width: 100%;
+    align-items: center;
+    gap: calc(20 * var(--mpx));
+    order: 3;
+  }
+  .footer__about h2 {
+    width: 100%;
+    font-size: max(20px, calc(36 * var(--mpx)));
+    text-align: center;
+  }
   .footer__about-card {
     width: 100%;
+    height: auto;
+    margin-inline: auto;
     padding: calc(20 * var(--mpx));
     gap: calc(12 * var(--mpx));
+    align-items: stretch;
+    justify-content: flex-start;
+    text-align: left;
     border-radius: calc(30 * var(--mpx));
   }
   /* На узкой колонке две колонки в строке не работают: длинные значения
