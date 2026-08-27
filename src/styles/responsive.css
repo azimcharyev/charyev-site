@@ -28,17 +28,12 @@
      106 дают ровно 1568 внутренней ширины. Ужимать больше нечего, и размеры
      шрифтов вернулись к своим настоящим значениям из services.css. */
 
-  .footer {
-    height: calc(620 * var(--px));
-    display: grid;
-    place-items: center;
-  }
+  /* Размеры футера теперь целиком в footer.css — они размечены макетными
+     числами через --fpx и уже дают нужную ширину 1255. Здесь остаётся только
+     снять появление: у шелла свой transform, и он мешал бы раскладке. */
+  .footer { display: grid; place-items: center; }
 
   .footer__shell {
-    width: calc(1255 * var(--px));
-    height: calc(540 * var(--px));
-    padding: calc(30 * var(--px));
-    border-radius: calc(46 * var(--px));
     transform: none !important;
     scale: none;
     rotate: none;
@@ -588,8 +583,13 @@
      назван «кейс»). Шелл 400 с полями 30/40, радиус 40, фон .04, четыре группы
      враспор. Телефон здесь — такая же карточка, как почта, поэтому классы
      .footer__mail-* переиспользуются. */
-  .footer { height: auto; min-height: 100svh; padding: var(--portrait-edge); }
+  .footer { display: block; height: auto; min-height: 100svh; padding: var(--portrait-edge); }
+  /* Ширина и высота в десктопных стилях размечены через --fpx, а он считается
+     от --px — в портрете тот равен 0,217 реального пикселя, и шелл сжимался
+     до 272 px вместо полной колонки. */
   .footer__shell {
+    width: 100%;
+    height: auto;
     min-height: calc(100svh - (var(--portrait-edge) * 2));
     padding: calc(40 * var(--mpx)) calc(30 * var(--mpx));
     flex-direction: column;
@@ -599,9 +599,13 @@
     border-radius: calc(40 * var(--mpx));
     background: var(--surface-soft);
   }
+  /* Группа соцсетей на мобильном идёт обычной колонкой во всю ширину. */
+  .footer__socials-top { width: 100%; gap: calc(30 * var(--mpx)); }
   .footer__contacts,
   .footer__right,
   .footer__socials,
+  .footer__about,
+  .footer__about-card,
   .footer__group,
   .footer__mail,
   .footer__phone-mobile { width: 100%; }

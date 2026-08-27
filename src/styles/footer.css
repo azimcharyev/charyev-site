@@ -1,21 +1,45 @@
+/* Футер (Figma, node 289:1433).
+   Макет нарисован на 1648 — во всю ширину минус поля. Но футер на сайте
+   занимает 1255, как сетка кейсов и панель тарифов, и расширять его не надо.
+   Поэтому всё внутри уменьшено ровно в том же отношении: размеры ниже —
+   макетные, помноженные на --fpx.
+
+   Собственная единица, а не пересчитанные числа: так в коде остаются те же
+   значения, что в Figma, и блок можно вернуть к исходной ширине одной
+   правкой коэффициента. Та же схема, что у тарифов (--spx в services.css). */
 .footer {
+  --fpx: calc(var(--px) * 1255 / 1648);
   width: 100%;
-  height: calc(622 * var(--px));
-  padding: calc(40 * var(--px));
+  height: calc(622 * var(--fpx));
+  display: grid;
+  place-items: center;
   /* Без своего фона — см. комментарий в services.css. */
 }
 
+/* 1648 макетных единиц — это и есть нынешние 1255 обычных: ширина не
+   меняется, меняется только то, из каких чисел она собрана. */
 .footer__shell {
   position: relative;
-  width: 100%;
-  height: 100%;
-  padding: calc(40 * var(--px));
+  width: calc(1648 * var(--fpx));
+  height: calc(542 * var(--fpx));
+  padding: calc(40 * var(--fpx));
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   justify-content: space-between;
-  overflow: hidden;
-  border-radius: calc(60 * var(--px));
+  border-radius: calc(60 * var(--fpx));
   background: var(--surface);
+}
+
+/* Макет обрезает строку по высоте прописной буквы: подпись «Исполнитель» в
+   Figma занимает 10 единиц при кегле 14, а не 17, как обычный строчный бокс.
+   На этом построена вся вертикаль карточки реквизитов. */
+.footer__group h2,
+.footer__socials h2,
+.footer__about h2,
+.footer__about-row dt,
+.footer__about-row dd,
+.footer__copyright {
+  text-box: trim-both cap alphabetic;
 }
 
 .footer__contacts,
@@ -27,183 +51,154 @@
   flex-direction: column;
 }
 
-/* Ширины трёх колонок в сумме с зазорами должны укладываться во внутренние
-   1195 единиц шелла (1255 минус поля по 30). Раньше сумма была 1215 —
-   колонки слипались вплотную и текст выглядел стиснутым. */
-.footer__contacts { width: calc(400 * var(--px)); height: 100%; justify-content: space-between; }
-.footer__group--mail { gap: calc(20 * var(--px)); }
-.footer__group--phone { gap: calc(30 * var(--px)); }
-/* 45, а не 50: при 50 «Социальные сети» занимают 441 единицу, и три колонки
-   в сумме упирались в границу шелла — зазоров между ними не оставалось. */
+/* Три колонки из макета: 456, 468 и 423. Промежутки раздаёт space-between. */
+.footer__contacts { width: calc(456 * var(--fpx)); justify-content: space-between; }
+.footer__group--mail { gap: calc(20 * var(--fpx)); }
+.footer__group--phone { gap: calc(30 * var(--fpx)); }
 .footer__group h2,
 .footer__socials h2,
-.footer__about h2 { font-size: calc(45 * var(--px)); line-height: 1; font-weight: 500; }
+.footer__about h2 { font-size: calc(40 * var(--fpx)); line-height: 1; font-weight: 500; }
 
-/* Ширина из макета, а не по содержимому: почта и телефон стоят друг под
-   другом, и разница в десяток пикселей между ними бросается в глаза. Раньше
-   обе карточки были max-content — телефон случайно совпадал с макетом, почта
-   отставала на 11 px. */
 .footer__mail,
-.footer__phone-card { width: calc(400 * var(--px)); }
+.footer__phone-card { width: 100%; }
 
 .footer__mail {
-  padding: calc(20 * var(--px));
+  padding: calc(20 * var(--fpx));
   display: flex;
   align-items: center;
-  gap: calc(20 * var(--px));
-  border-radius: calc(60 * var(--px));
+  gap: calc(20 * var(--fpx));
+  border-radius: calc(60 * var(--fpx));
   background: var(--surface);
   transition: background .25s ease, transform .25s var(--ease);
 }
 
 .footer__mail-icon {
-  width: calc(78 * var(--px));
-  height: calc(78 * var(--px));
+  flex: 0 0 auto;
+  width: calc(78 * var(--fpx));
+  height: calc(78 * var(--fpx));
   display: grid;
   place-items: center;
-  border-radius: calc(40 * var(--px));
+  border-radius: calc(40 * var(--fpx));
   background: var(--surface);
 }
-.footer__mail-icon img { width: calc(38 * var(--px)); height: calc(38 * var(--px)); }
+.footer__mail-icon img { width: calc(38 * var(--fpx)); height: calc(38 * var(--fpx)); }
 .footer__mail-copy,
-.footer__phone-copy { display: flex; flex-direction: column; justify-content: center; gap: calc(12 * var(--px)); font-weight: 400; }
-/* Ширина по содержимому: карточка теперь уже, и фиксированные 284 её распирали. */
+.footer__phone-copy { display: flex; flex-direction: column; justify-content: center; gap: calc(12 * var(--fpx)); font-weight: 400; }
 .footer__mail-copy { width: auto; min-width: 0; white-space: nowrap; }
 .footer__mail-copy strong,
-.footer__phone-copy strong { font-size: calc(24 * var(--px)); line-height: 1; font-weight: 400; }
-.footer__mail-copy small { color: rgba(255, 255, 255, .6); font-size: calc(20 * var(--px)); line-height: 1; }
+.footer__phone-copy strong { font-size: calc(24 * var(--fpx)); line-height: 1.15; font-weight: 400; }
+.footer__mail-copy small { color: rgba(255, 255, 255, .6); font-size: calc(20 * var(--fpx)); line-height: 1; }
 
 .footer__phone-card {
-  padding: calc(30 * var(--px));
+  padding: calc(30 * var(--fpx));
   display: flex;
   align-items: center;
-  gap: calc(20 * var(--px));
-  border-radius: calc(60 * var(--px));
+  gap: calc(20 * var(--fpx));
+  border-radius: calc(60 * var(--fpx));
   background: var(--surface);
   transition: background .25s ease, transform .25s var(--ease);
 }
 
 .footer__qr {
   flex: 0 0 auto;
-  width: calc(118 * var(--px));
-  height: calc(118 * var(--px));
+  width: calc(118 * var(--fpx));
+  height: calc(118 * var(--fpx));
 }
 
 /* Мобильная замена QR-карточке. Показывается только в портрете — см.
    responsive.css. */
 .footer__phone-mobile { display: none; }
 
-.footer__phone-copy { width: calc(242 * var(--px)); }
-/* Ширина по содержимому. Раньше здесь стояли 355 единиц — это они растягивали
-   карточку, пока та жила по max-content. С фиксированной шириной карточки
-   номер вылезал за её край на 55 px. */
-.footer__phone-copy small { color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--px)); line-height: 1; }
+.footer__phone-copy { width: auto; min-width: 0; }
+.footer__phone-copy small { color: rgba(255, 255, 255, .6); font-size: calc(16 * var(--fpx)); line-height: 1; }
 
-.footer__socials { width: calc(400 * var(--px)); height: 100%; gap: calc(30 * var(--px)); }
-.footer__social-grid { display: grid; grid-template-columns: repeat(2, max-content); gap: calc(20 * var(--px)); }
+.footer__socials { width: calc(468 * var(--fpx)); justify-content: flex-start; }
+.footer__socials-top { display: flex; flex-direction: column; gap: calc(30 * var(--fpx)); }
+.footer__social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: calc(20 * var(--fpx)); }
 .footer__social-grid a {
-  height: calc(72 * var(--px));
-  padding: calc(16 * var(--px));
+  height: calc(80 * var(--fpx));
+  padding: calc(20 * var(--fpx));
   display: flex;
   align-items: center;
-  gap: calc(16 * var(--px));
-  border-radius: calc(36 * var(--px));
+  gap: calc(20 * var(--fpx));
+  border-radius: calc(40 * var(--fpx));
   background: var(--surface);
-  font-size: calc(21 * var(--px));
+  font-size: calc(24 * var(--fpx));
   line-height: 1;
   transition: background .25s ease, transform .25s var(--ease);
 }
-.footer__social-grid img { width: calc(36 * var(--px)); height: calc(36 * var(--px)); }
-.footer__social-note { width: calc(355 * var(--px)); color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--px)); line-height: 1; }
+.footer__social-grid img { flex: 0 0 auto; width: calc(40 * var(--fpx)); height: calc(40 * var(--fpx)); }
+.footer__social-note { width: calc(355 * var(--fpx)); color: rgba(255, 255, 255, .6); font-size: calc(17 * var(--fpx)); line-height: 1.4; }
 
-.footer__right {
-  width: calc(355 * var(--px));
-  height: 100%;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: calc(24 * var(--px));
+.footer__copyright {
+  position: absolute;
+  left: 50%;
+  bottom: calc(40 * var(--fpx));
+  translate: -50% 0;
+  color: rgba(255, 255, 255, .6);
+  font-size: calc(24 * var(--fpx));
+  line-height: 1;
+  white-space: nowrap;
 }
 
-/* Блок реквизитов — третья колонка, по языку такая же, как соседние: слева
-   выровненный заголовок, под ним карточка на общем фоне. Раньше заголовок был
-   вдвое мельче соседних и прижат вправо, а текст внутри — 12 и 16 против 24 у
-   почты и соцсетей: колонка выпадала из ряда и не читалась. */
-.footer__about { width: 100%; gap: calc(20 * var(--px)); align-items: flex-start; }
-.footer__about h2 { font-size: calc(40 * var(--px)); }
+/* Правая колонка: сверху заголовок с карточкой, снизу кнопка, прижатая
+   вправо (в макете — items-end, justify-between). */
+.footer__right { width: calc(423 * var(--fpx)); align-items: flex-end; justify-content: space-between; }
+.footer__about { width: 100%; gap: calc(30 * var(--fpx)); align-items: flex-start; }
+
 .footer__about-card {
   width: 100%;
   margin: 0;
-  padding: calc(24 * var(--px));
+  padding: calc(20 * var(--fpx));
   display: flex;
   flex-direction: column;
-  gap: calc(14 * var(--px));
-  border-radius: calc(36 * var(--px));
+  gap: calc(18 * var(--fpx));
+  border-radius: calc(40 * var(--fpx));
   background: var(--surface);
 }
-/* Подпись слева, значение справа — реквизиты так короче по высоте и читаются
-   как таблица, а не как столбик разнородных строк. */
-.footer__about-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: calc(16 * var(--px));
-}
+/* Подпись над значением — так в макете. Значение шире подписи, и в строку они
+   не встают: «Чарыев Азымберди Оразбердиевич» занимает всю ширину карточки. */
+.footer__about-row { display: flex; flex-direction: column; gap: calc(10 * var(--fpx)); }
 .footer__about-row dt {
-  flex: 0 0 auto;
-  color: rgba(255, 255, 255, .6);
-  font-size: calc(16 * var(--px));
-  line-height: 1.2;
+  color: rgba(255, 255, 255, .5);
+  font-size: calc(16 * var(--fpx));
+  line-height: 1;
+  white-space: nowrap;
 }
 .footer__about-row dd {
-  flex: 1 1 auto;
   margin: 0;
   color: #fff;
-  font-size: calc(18 * var(--px));
-  line-height: 1.2;
-  text-align: right;
+  font-size: calc(21 * var(--fpx));
+  line-height: 1.15;
+  font-weight: 400;
 }
 .footer__about-note {
-  margin: calc(4 * var(--px)) 0 0;
-  color: rgba(255, 255, 255, .6);
-  font-size: calc(15 * var(--px));
+  margin: 0;
+  color: rgba(255, 255, 255, .7);
+  font-size: calc(17 * var(--fpx));
   line-height: 1.4;
 }
 
-/* Кнопка «Дизайн сайта». Ссылка на levmich.studio — я разрешил её ставить в
-   футере, как исполнитель дизайна.
-   flex-shrink: 0, чтобы правая колонка не сжимала кнопку в контентную полоску,
-   если в ней не хватает места. Лучше поехать за нижний край шелла, чем
-   получить кнопку в 24 px. */
+/* Кнопка «Дизайн сайта». Ссылка на levmich.studio — с разрешения заказчика. */
 .footer__designer {
   flex-shrink: 0;
-  height: calc(56 * var(--px));
-  padding: 0 calc(24 * var(--px));
+  padding: calc(12 * var(--fpx)) calc(20 * var(--fpx));
   display: inline-flex;
   align-items: center;
-  gap: calc(12 * var(--px));
-  border-radius: 999px;
+  justify-content: center;
+  gap: calc(10 * var(--fpx));
+  border-radius: calc(60 * var(--fpx));
   background: var(--surface);
   color: #fff;
-  font-size: calc(18 * var(--px));
+  font-size: calc(24 * var(--fpx));
   line-height: 1;
   transition: background .25s ease, transform .25s var(--ease);
 }
 /* Логотип студии — 27x29 в исходнике, поэтому высота чуть больше ширины. */
 .footer__designer-logo {
   flex: 0 0 auto;
-  width: calc(24 * var(--px));
-  height: calc(26 * var(--px));
-}
-
-.footer__copyright {
-  position: absolute;
-  left: 50%;
-  bottom: calc(40 * var(--px));
-  translate: -50% 0;
-  color: #fff;
-  font-size: calc(24 * var(--px));
-  line-height: normal;
-  white-space: nowrap;
+  width: calc(27 * var(--fpx));
+  height: calc(29 * var(--fpx));
 }
 
 .footer__mail:hover,
@@ -215,5 +210,12 @@
 .footer__social-grid a:focus-visible,
 .footer__designer:focus-visible {
   background: rgba(255, 255, 255, .12);
-  transform: translateY(calc(-2 * var(--px)));
+  transform: translateY(calc(-2 * var(--fpx)));
+}
+
+/* Без обрезки строки выше, и карточка реквизитов вырастает — см. тот же приём
+   в services.css. Гасим разницу шагом между строками. */
+@supports not (text-box: trim-both cap alphabetic) {
+  .footer__about-card { gap: calc(12 * var(--fpx)); }
+  .footer__about-row { gap: calc(6 * var(--fpx)); }
 }

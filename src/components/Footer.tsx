@@ -68,18 +68,20 @@ export function Footer() {
         </div>
 
         <section className="footer__socials">
-          <h2>Социальные сети</h2>
-          <div className="footer__social-grid">
-            {socials.map((social) => (
-              <a href={social.href} target="_blank" rel="noreferrer" key={social.label}>
-                <img src={social.icon} alt="" />
-                <span>{social.label}</span>
-              </a>
-            ))}
+          <div className="footer__socials-top">
+            <h2>Социальные сети</h2>
+            <div className="footer__social-grid">
+              {socials.map((social) => (
+                <a href={social.href} target="_blank" rel="noreferrer" key={social.label}>
+                  <img src={social.icon} alt="" />
+                  <span>{social.label}</span>
+                </a>
+              ))}
+            </div>
+            <p className="footer__social-note">
+              *Компания Meta — признана в России<br />экстремистской организацией
+            </p>
           </div>
-          <p className="footer__social-note">
-            *Компания Meta — признана в России<br />экстремистской организацией
-          </p>
         </section>
 
         <div className="footer__right">
@@ -109,7 +111,7 @@ export function Footer() {
               </div>
               <p className="footer__about-note">
                 Цены на сайте носят информационный характер и не являются публичной
-                офертой. Точная стоимость обсуждается после брифинга.
+                офертой.<br />Точная стоимость обсуждается после брифинга.
               </p>
             </dl>
           </section>
@@ -125,6 +127,10 @@ export function Footer() {
           </a>
         </div>
 
+        {/* Копирайт по центру нижней кромки шелла. В макете он стоит по центру
+            средней колонки — она сама почти по центру, расхождение 17 единиц.
+            Отдельным слоем, а не строкой внутри колонки: на мобильном он
+            должен быть последним, а колонки там перестраиваются. */}
         <p className="footer__copyright">© Azim Charyev 2026</p>
       </div>
     </footer>
