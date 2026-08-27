@@ -21,23 +21,25 @@
 .footer__contacts,
 .footer__group,
 .footer__socials,
+.footer__about,
 .footer__right {
   display: flex;
   flex-direction: column;
 }
 
-.footer__contacts { width: calc(605 * var(--px)); height: 100%; justify-content: space-between; }
+.footer__contacts { width: calc(490 * var(--px)); height: 100%; justify-content: space-between; }
 .footer__group--mail { gap: calc(20 * var(--px)); }
 .footer__group--phone { gap: calc(30 * var(--px)); }
 .footer__group h2,
-.footer__socials h2 { font-size: calc(50 * var(--px)); line-height: 1; font-weight: 500; }
+.footer__socials h2,
+.footer__about h2 { font-size: calc(50 * var(--px)); line-height: 1; font-weight: 500; }
 
 /* Ширина из макета, а не по содержимому: почта и телефон стоят друг под
    другом, и разница в десяток пикселей между ними бросается в глаза. Раньше
    обе карточки были max-content — телефон случайно совпадал с макетом, почта
    отставала на 11 px. */
 .footer__mail,
-.footer__phone-card { width: calc(440 * var(--px)); }
+.footer__phone-card { width: calc(410 * var(--px)); }
 
 .footer__mail {
   padding: calc(20 * var(--px));
@@ -91,8 +93,7 @@
    номер вылезал за её край на 55 px. */
 .footer__phone-copy small { color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--px)); line-height: 1; }
 
-.footer__right { height: 100%; align-items: flex-end; justify-content: space-between; }
-.footer__socials { gap: calc(30 * var(--px)); }
+.footer__socials { height: 100%; gap: calc(30 * var(--px)); }
 .footer__social-grid { display: grid; grid-template-columns: repeat(2, max-content); gap: calc(20 * var(--px)); }
 .footer__social-grid a {
   height: calc(80 * var(--px));
@@ -109,6 +110,69 @@
 .footer__social-grid img { width: calc(40 * var(--px)); height: calc(40 * var(--px)); }
 .footer__social-note { width: calc(355 * var(--px)); color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--px)); line-height: 1; }
 
+.footer__right {
+  height: 100%;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: calc(30 * var(--px));
+}
+
+/* Блок реквизитов. Заголовок сверху, под ним карточка со списком строк.
+   Размеры уменьшены против макета соседних блоков: правой колонке шелла
+   выделено 350 px по высоте, и туда должны влезть заголовок, карточка и
+   кнопка «Дизайн сайта». */
+.footer__about { gap: calc(16 * var(--px)); align-items: flex-end; }
+.footer__about h2 { font-size: calc(30 * var(--px)); }
+.footer__about-card {
+  width: calc(360 * var(--px));
+  margin: 0;
+  padding: calc(20 * var(--px));
+  display: flex;
+  flex-direction: column;
+  gap: calc(10 * var(--px));
+  border-radius: calc(30 * var(--px));
+  background: var(--surface);
+}
+.footer__about-row { display: flex; flex-direction: column; gap: calc(2 * var(--px)); }
+.footer__about-row dt {
+  color: rgba(255, 255, 255, .6);
+  font-size: calc(12 * var(--px));
+  line-height: 1;
+}
+.footer__about-row dd {
+  margin: 0;
+  color: #fff;
+  font-size: calc(16 * var(--px));
+  line-height: 1.15;
+}
+.footer__about-note {
+  margin: calc(4 * var(--px)) 0 0;
+  color: rgba(255, 255, 255, .6);
+  font-size: calc(12 * var(--px));
+  line-height: 1.35;
+}
+
+/* Кнопка «Дизайн сайта». Ссылка на levmich.studio — я разрешил её ставить в
+   футере, как исполнитель дизайна.
+   flex-shrink: 0, чтобы правая колонка не сжимала кнопку в контентную полоску,
+   если в ней не хватает места. Лучше поехать за нижний край шелла, чем
+   получить кнопку в 24 px. */
+.footer__designer {
+  flex-shrink: 0;
+  height: calc(48 * var(--px));
+  padding: 0 calc(24 * var(--px));
+  display: inline-flex;
+  align-items: center;
+  gap: calc(10 * var(--px));
+  border-radius: 999px;
+  background: var(--surface);
+  color: #fff;
+  font-size: calc(16 * var(--px));
+  line-height: 1;
+  transition: background .25s ease, transform .25s var(--ease);
+}
+.footer__designer-emoji { font-size: calc(20 * var(--px)); line-height: 1; }
+
 .footer__copyright {
   position: absolute;
   left: 50%;
@@ -123,23 +187,11 @@
 .footer__mail:hover,
 .footer__phone-card:hover,
 .footer__social-grid a:hover,
-.footer__privacy:hover,
+.footer__designer:hover,
 .footer__mail:focus-visible,
 .footer__phone-card:focus-visible,
 .footer__social-grid a:focus-visible,
-.footer__privacy:focus-visible {
+.footer__designer:focus-visible {
   background: rgba(255, 255, 255, .12);
   transform: translateY(calc(-2 * var(--px)));
-}
-
-.footer__privacy {
-  padding: calc(20 * var(--px));
-  display: flex;
-  align-items: center;
-  border-radius: calc(60 * var(--px));
-  background: var(--surface);
-  color: #fff;
-  font-size: calc(24 * var(--px));
-  line-height: normal;
-  transition: background .25s ease, transform .25s var(--ease);
 }

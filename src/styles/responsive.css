@@ -29,14 +29,14 @@
      шрифтов вернулись к своим настоящим значениям из services.css. */
 
   .footer {
-    height: calc(493 * var(--px));
+    height: calc(540 * var(--px));
     display: grid;
     place-items: center;
   }
 
   .footer__shell {
     width: calc(1255 * var(--px));
-    height: calc(413 * var(--px));
+    height: calc(460 * var(--px));
     padding: calc(30 * var(--px));
     border-radius: calc(46 * var(--px));
     transform: none !important;
@@ -46,15 +46,10 @@
     transition: none;
   }
 
-  .footer__contacts,
-  .footer__right {
-    height: calc(462 * var(--px));
-    zoom: .762;
-  }
-
-  .footer__copyright {
-    zoom: .762;
-  }
+  /* Раньше здесь колонки давились zoom: .762, а размеры внутри были размечены
+     в макетных единицах десктопа (1728). После сведения футера к общей
+     ширине 1255 всё внутри уже размечено соответствующим масштабом —
+     ужимать нечего, иначе кнопка «Дизайн сайта» падает с 56 до 18 px. */
 }
 
 @media (orientation: portrait) {
@@ -666,18 +661,28 @@
   .footer__social-grid img { width: calc(40 * var(--mpx)); height: calc(40 * var(--mpx)); }
   .footer__social-note { width: 100%; text-align: center; color: rgba(255, 255, 255, .6); font-size: max(11px, calc(14 * var(--mpx))); }
 
-  .footer__privacy {
-    align-self: center;
-    min-height: 44px;
-    /* В макете эта пилюля шире своей колонки — 359 против 340, — и строка в
-       20 помещается в одну. У нас колонка та же, но выйти за неё некуда,
-       поэтому боковые поля уже, а кегль на два пункта меньше: иначе
-       «Политика конфиденциальности» ломается надвое. */
-    padding: calc(20 * var(--mpx)) calc(14 * var(--mpx));
-    border-radius: calc(60 * var(--mpx));
-    text-align: center;
-    font-size: max(12px, calc(18 * var(--mpx)));
+  /* Блок реквизитов на мобильном: карточка растягивается на всю ширину
+     колонки, заголовок и цифры кладём в одну колонку. */
+  .footer__about { align-items: stretch; gap: calc(20 * var(--mpx)); }
+  .footer__about h2 { font-size: max(20px, calc(36 * var(--mpx))); text-align: center; }
+  .footer__about-card {
+    width: 100%;
+    padding: calc(20 * var(--mpx));
+    gap: calc(12 * var(--mpx));
+    border-radius: calc(30 * var(--mpx));
   }
+  .footer__about-row dt { font-size: max(11px, calc(13 * var(--mpx))); }
+  .footer__about-row dd { font-size: max(14px, calc(18 * var(--mpx))); }
+  .footer__about-note { font-size: max(11px, calc(13 * var(--mpx))); }
+
+  .footer__designer {
+    align-self: center;
+    height: max(44px, calc(52 * var(--mpx)));
+    padding: 0 calc(24 * var(--mpx));
+    border-radius: 999px;
+    font-size: max(13px, calc(18 * var(--mpx)));
+  }
+  .footer__designer-emoji { font-size: max(16px, calc(22 * var(--mpx))); }
   .footer__copyright {
     position: static;
     left: auto;
