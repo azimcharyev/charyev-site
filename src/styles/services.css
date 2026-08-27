@@ -85,14 +85,14 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: rgba(63, 97, 96, .4);
+  background: rgba(8, 194, 188, .4);
   transition: background .24s ease, opacity .24s ease;
 }
 
 .services__nav-button img { width: calc(35 * var(--spx)); height: calc(35 * var(--spx)); }
 /* Стрелка одна на обе кнопки — вторая просто развёрнута. */
 .services__nav-button--next img { rotate: 180deg; }
-.services__nav-button:hover { background: rgba(63, 97, 96, .7); }
+.services__nav-button:hover { background: rgba(8, 194, 188, .7); }
 
 /* Окно ряда. Направлений пять, видно три — остальное срезается по краю.
    Отрицательные поля растягивают окно на всю панель, до самой её кромки:
@@ -150,8 +150,8 @@
 .service-card__tab {
   padding: calc(10 * var(--spx)) calc(20 * var(--spx));
   border-radius: calc(20 * var(--spx));
-  background: var(--surface);
-  color: var(--text);
+  background: rgba(8, 194, 188, .12);
+  color: var(--accent);
   font-size: calc(18 * var(--stx));
   line-height: 1;
   font-weight: 300;

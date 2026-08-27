@@ -258,7 +258,7 @@
     font-size: max(14px, calc(18 * var(--mpx)));
   }
 
-  /* Пилюля «Тарифы» — из макета: высота 40, радиус 100, фон rgba(63,97,96,.3),
+  /* Пилюля «Тарифы» — из макета: высота 40, радиус 100, акцентный фон,
      иконка 24, подпись 14 акцентным.
 
      Списка в макете нет, и рисовать его мы не будем: за пилюлей стоит обычный
@@ -278,7 +278,7 @@
     justify-content: center;
     gap: calc(4 * var(--mpx));
     border-radius: 999px;
-    background: rgba(63, 97, 96, .3);
+    background: rgba(8, 194, 188, .3);
     color: var(--accent);
     font-size: max(12px, calc(14 * var(--mpx)));
     white-space: nowrap;
@@ -477,7 +477,7 @@
     width: calc(60 * var(--mpx));
     height: calc(60 * var(--mpx));
     border-radius: 50%;
-    background: rgba(63, 97, 96, .78);
+    background: rgba(8, 194, 188, .78);
   }
   .cases__filter-guard:nth-child(1) .cases__filter-icon { width: calc(17 * var(--mpx)) !important; height: calc(25 * var(--mpx)) !important; }
   .cases__filter-guard:nth-child(2) .cases__filter-icon { width: calc(25 * var(--mpx)) !important; height: calc(17 * var(--mpx)) !important; }

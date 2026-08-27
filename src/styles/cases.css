@@ -59,7 +59,7 @@
   display: grid;
   place-items: center;
   border-radius: calc(12 * var(--px));
-  background: rgba(95, 163, 161, .4);
+  background: rgba(8, 194, 188, .4);
   transition: background .28s ease;
 }
 
@@ -280,7 +280,7 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: rgba(63, 97, 96, .4);
+  background: rgba(8, 194, 188, .4);
   color: var(--accent);
   font-size: calc(18 * var(--px));
   line-height: 1;

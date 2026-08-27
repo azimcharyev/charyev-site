@@ -64,7 +64,7 @@
 .case-page--horizontal .case-page__fact li { font-size: calc(18 * var(--px)); }
 /* Остров по центру и по содержимому, а не во всю ширину сайдбара. */
 .case-page--horizontal .case-page__nav { width: max-content; }
-.case-page--horizontal .case-page__back { background: rgba(63, 97, 96, .4); }
+.case-page--horizontal .case-page__back { background: rgba(8, 194, 188, .4); }
 
 .case-page__sidebar {
   position: sticky;
@@ -162,7 +162,7 @@
 }
 .case-page__link img { width: calc(24 * var(--px)); height: calc(24 * var(--px)); }
 .case-page__link:hover,
-.case-page__link:focus-visible { background: rgba(95, 163, 161, .55); transform: translateY(calc(-2 * var(--px))); }
+.case-page__link:focus-visible { background: rgba(8, 194, 188, .55); transform: translateY(calc(-2 * var(--px))); }
 /* Пока адрес не задан — вид тот же, но без реакции на курсор: подсветка при
    наведении обещала бы переход, которого нет. */
 .case-page__link.is-empty { cursor: default; }
@@ -180,7 +180,7 @@
 .case-page__back {
   width: calc(133 * var(--px));
   justify-content: center;
-  background: rgba(63, 97, 96, .4);
+  background: rgba(8, 194, 188, .4);
 }
 .case-page__back img { width: calc(35 * var(--px)); height: calc(35 * var(--px)); }
 
@@ -197,7 +197,7 @@
 }
 .case-page__social img { width: calc(24 * var(--px)); height: calc(24 * var(--px)); }
 .case-page__back:hover,
-.case-page__social:hover { background: rgba(95, 163, 161, .55); transform: translateY(calc(-2 * var(--px))); }
+.case-page__social:hover { background: rgba(8, 194, 188, .55); transform: translateY(calc(-2 * var(--px))); }
 
 .case-page__media { width: calc(830 * var(--px)); display: flex; flex-direction: column; gap: calc(40 * var(--px)); }
 .case-page__media-row { height: calc(792 * var(--px)); display: flex; gap: calc(20 * var(--px)); }
