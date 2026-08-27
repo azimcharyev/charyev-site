@@ -674,7 +674,7 @@
   .footer__about {
     width: 100%;
     align-items: center;
-    gap: calc(20 * var(--mpx));
+    gap: calc(30 * var(--mpx));
     order: 3;
   }
   .footer__about h2 {
