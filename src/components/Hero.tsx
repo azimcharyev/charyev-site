@@ -1,5 +1,5 @@
 import { useRef, useState, type CSSProperties } from 'react';
-import { HERO_MEDIA } from '../data/heroMedia';
+import { HERO_FIXED_MEDIA, HERO_MEDIA } from '../data/heroMedia';
 import { useHeroParallax } from '../hooks/useHeroParallax';
 import { SilentVideo } from './SilentVideo';
 
@@ -20,6 +20,11 @@ type HeroForegroundSlot = {
   vertical: 'top' | 'bottom';
 };
 
+type HeroMediaItem = {
+  fixedName?: 'china' | 'wedding';
+  src: string;
+};
+
 const HERO_WIDTH = 1728;
 const HERO_HEIGHT = 968;
 const HERO_TEXT_AREA = { left: 626, top: 230, right: 1101, bottom: 590 };
@@ -33,6 +38,37 @@ const HERO_EDGE_SLOTS = ['left', 'right'] as const;
 const HERO_BACKGROUND_COUNT = 8;
 const HERO_BACKGROUND_UNDER_TEXT_COUNT = 3;
 const HERO_CARD_COUNT = HERO_FOREGROUND_SLOTS.length + HERO_EDGE_SLOTS.length + HERO_BACKGROUND_COUNT;
+
+/* Индексы 2 и 3 — правые передние карточки. Фиксируем там новые ролики,
+   сохраняя общее число карточек: Hero не становится тяжелее прежнего. */
+const HERO_FIXED_CARDS: Partial<Record<number, HeroMediaItem & { layout: HeroCardLayout }>> = {
+  2: {
+    fixedName: 'wedding',
+    src: HERO_FIXED_MEDIA.wedding,
+    layout: {
+      layer: 'foreground',
+      x: 1255,
+      y: 105,
+      width: 205,
+      height: 310,
+      pointerDepth: 50,
+      scrollDepth: -575,
+    },
+  },
+  3: {
+    fixedName: 'china',
+    src: HERO_FIXED_MEDIA.china,
+    layout: {
+      layer: 'foreground',
+      x: 1330,
+      y: 510,
+      width: 420,
+      height: 236,
+      pointerDepth: 52,
+      scrollDepth: -906,
+    },
+  },
+};
 
 const randomBetween = ([min, max]: [number, number]) => min + Math.random() * (max - min);
 
@@ -75,7 +111,9 @@ function createEdgeCandidate(side: (typeof HERO_EDGE_SLOTS)[number]): HeroCardLa
   const x = side === 'left'
     ? nearestX + randomBetween([0, 38])
     : nearestX - randomBetween([0, 38]);
-  const y = randomBetween([275, Math.min(455, HERO_HEIGHT - edgeMargin - height)]);
+  const y = side === 'right'
+    ? randomBetween([150, Math.max(150, 470 - height)])
+    : randomBetween([275, Math.min(455, HERO_HEIGHT - edgeMargin - height)]);
 
   return {
     layer: 'midground',
@@ -166,7 +204,9 @@ function getDistanceToText(layout: HeroCardLayout) {
 
 function createHeroLayout(): HeroCardLayout[] {
   const placed = [
-    ...HERO_FOREGROUND_SLOTS.map(createForegroundCandidate),
+    ...HERO_FOREGROUND_SLOTS.map((slot, index) => (
+      HERO_FIXED_CARDS[index]?.layout ?? createForegroundCandidate(slot)
+    )),
     ...HERO_EDGE_SLOTS.map(createEdgeCandidate),
   ];
 
@@ -208,11 +248,22 @@ function createHeroLayout(): HeroCardLayout[] {
 }
 
 function pickRandomVideos() {
-  return [...new Set(HERO_MEDIA)]
+  const fixedCount = Object.keys(HERO_FIXED_CARDS).length;
+  const randomVideos = [...new Set(HERO_MEDIA)]
     .map((src) => ({ src, order: Math.random() }))
     .sort((a, b) => a.order - b.order)
-    .slice(0, HERO_CARD_COUNT)
+    .slice(0, HERO_CARD_COUNT - fixedCount)
     .map(({ src }) => src);
+
+  let randomIndex = 0;
+  return Array.from({ length: HERO_CARD_COUNT }, (_, index): HeroMediaItem => {
+    const fixed = HERO_FIXED_CARDS[index];
+    if (fixed) return { src: fixed.src, fixedName: fixed.fixedName };
+
+    const src = randomVideos[randomIndex];
+    randomIndex += 1;
+    return { src };
+  });
 }
 
 export function Hero() {
@@ -237,12 +288,13 @@ export function Hero() {
         </div>
       </div>
 
-      {heroMedia.map((src, index) => {
+      {heroMedia.map(({ src, fixedName }, index) => {
         const layout = heroLayout[index];
+        const fixedClass = fixedName ? ` hero__media-card--fixed hero__media-card--fixed-${fixedName}` : '';
 
         return (
         <div
-          className={`hero__media-card hero__media-card--${index + 1} hero__media-card--${layout.layer}`}
+          className={`hero__media-card hero__media-card--${index + 1} hero__media-card--${layout.layer}${fixedClass}`}
           data-pointer-depth={layout.pointerDepth}
           data-scroll-depth={layout.scrollDepth}
           style={{

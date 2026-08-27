@@ -27,6 +27,8 @@ import standaloneThree from '../assets/optimized/thumb/standalone-03.mp4';
 import standaloneFour from '../assets/optimized/thumb/standalone-04.mp4';
 import standaloneFive from '../assets/optimized/thumb/standalone-05.mp4';
 import standaloneSix from '../assets/optimized/thumb/standalone-06.mp4';
+import chinaFixed from '../assets/optimized/thumb/china-fixed.mp4';
+import weddingFixed from '../assets/optimized/thumb/wedding-fixed.mp4';
 
 export const HERO_MEDIA = [
   studio,
@@ -46,3 +48,10 @@ export const HERO_MEDIA = [
   standaloneFive,
   standaloneSix,
 ] as const;
+
+/* Эти два ролика заказчик закрепил в композиции Hero: они не участвуют в
+   случайной выборке и при каждом открытии остаются на своих местах. */
+export const HERO_FIXED_MEDIA = {
+  china: chinaFixed,
+  wedding: weddingFixed,
+} as const;
