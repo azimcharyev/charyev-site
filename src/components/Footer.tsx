@@ -1,5 +1,4 @@
 import instagram from '../assets/icons/instagram.svg';
-import levmich from '../assets/icons/levmich-studio.svg';
 import mail from '../assets/icons/mail.svg';
 import phone from '../assets/icons/phone.svg';
 import qr from '../assets/icons/contact-qr.png';
@@ -8,11 +7,11 @@ import whatsapp from '../assets/icons/whatsapp.svg';
 import youtube from '../assets/icons/youtube.svg';
 
 const PHONE = '+7(919)186-52-08';
-/* В мобильном макете номер набран с пробелами — так он и подписан. */
 const PHONE_PRETTY = '+7 (919) 186 - 52 - 08';
+const PHONE_DESKTOP = '+7\u00a0(919)\u00a0186-52-08';
 const PHONE_HREF = 'tel:+79191865208';
+const PRIVACY_HREF = 'https://azimcharyev.com/privacypolicy';
 
-/* Порядок из макета: Instagram и Telegram сверху, WhatsApp и YouTube снизу. */
 const socials = [
   { label: 'Instagram', icon: instagram, href: 'https://www.instagram.com/azim.charyev.cinema/' },
   { label: 'Telegram', icon: telegram, href: 'https://t.me/charyev_azim' },
@@ -27,7 +26,91 @@ const socials = [
 export function Footer() {
   return (
     <footer className="footer" aria-label="Контакты">
-      <div className="footer__shell">
+      {/* Desktop: точная композиция Figma, node 397:1795. Отдельная разметка
+          не даёт перестройке трёх колонок затронуть мобильный футер. */}
+      <div className="footer__shell footer__shell--desktop">
+        <div className="footer-desktop__left">
+          <a className="footer-desktop__phone" href={PHONE_HREF}>
+            <img className="footer-desktop__qr" src={qr} alt="QR-код контакта" />
+            <span className="footer-desktop__phone-copy">
+              <strong>Наведи камеру<br />телефона и&nbsp;позвони</strong>
+              <small>{PHONE_DESKTOP}</small>
+            </span>
+          </a>
+
+          <p className="footer-desktop__copyright">© Azim Charyev 2026</p>
+        </div>
+
+        <div className="footer-desktop__center">
+          <h2>Об исполнителе</h2>
+          <dl className="footer-desktop__about-card">
+            <div className="footer-desktop__about-row">
+              <dt>Исполнитель</dt>
+              <dd>ИП Чарыев Азымберди Оразбердиевич</dd>
+            </div>
+            <div className="footer-desktop__about-row">
+              <dt>ИНН</dt>
+              <dd>366237878050</dd>
+            </div>
+            <div className="footer-desktop__about-row">
+              <dt>ОГРНИП</dt>
+              <dd>324366800124435</dd>
+            </div>
+            <p className="footer-desktop__about-note">
+              Цены на&nbsp;сайте носят информационный характер и&nbsp;не&nbsp;являются
+              публичной офертой. Точная стоимость обсуждается после&nbsp;брифинга.
+            </p>
+          </dl>
+
+          <a className="footer-desktop__privacy" href={PRIVACY_HREF}>
+            Политика обработки персональных данных
+          </a>
+        </div>
+
+        <div className="footer-desktop__right">
+          <div className="footer-desktop__socials">
+            <h2>Социальные сети</h2>
+
+            <a className="footer-desktop__mail" href="mailto:azim.charyev@yandex.ru">
+              <span className="footer-desktop__mail-icon"><img src={mail} alt="" /></span>
+              <span className="footer-desktop__mail-copy">
+                <strong>azim.charyev@yandex.ru</strong>
+                <small>Нажми и&nbsp;напиши</small>
+              </span>
+            </a>
+
+            <div className="footer-desktop__social-grid">
+              {socials.map((social) => (
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.label}
+                  key={social.label}
+                >
+                  <img src={social.icon} alt="" />
+                </a>
+              ))}
+            </div>
+
+            <p className="footer-desktop__social-note">
+              *Компания Meta&nbsp;— признана в&nbsp;России<br />экстремистской организацией
+            </p>
+          </div>
+
+          <a
+            className="footer-desktop__designer"
+            href="https://levmich.studio"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Дизайн сайта
+          </a>
+        </div>
+      </div>
+
+      {/* Mobile: прежняя композиция. Из кнопки удалён только логотип студии. */}
+      <div className="footer__shell footer__shell--mobile">
         <div className="footer__contacts">
           <section className="footer__group footer__group--mail">
             <h2>Почта</h2>
@@ -42,8 +125,6 @@ export function Footer() {
 
           <section className="footer__group footer__group--phone">
             <h2>Телефон</h2>
-
-            {/* Десктоп: карточка с QR — наводят камеру телефона. */}
             <a className="footer__phone-card" href={PHONE_HREF}>
               <img className="footer__qr" src={qr} alt="QR-код контакта" />
               <span className="footer__phone-copy">
@@ -51,12 +132,6 @@ export function Footer() {
                 <small>{PHONE}</small>
               </span>
             </a>
-
-            {/* Мобильный: QR бессмысленен — телефон уже в руке. В макете
-                (node 328:747) вместо него карточка «Нажми и позвони», парная
-                к почтовой, поэтому и классы переиспользуются. Оба варианта
-                лежат в разметке рядом, показывает нужный CSS: так десктопная
-                карточка остаётся нетронутой. */}
             <a className="footer__phone-mobile" href={PHONE_HREF}>
               <span className="footer__mail-icon"><img src={phone} alt="" /></span>
               <span className="footer__mail-copy">
@@ -91,11 +166,6 @@ export function Footer() {
         <div className="footer__right">
           <section className="footer__about">
             <h2>Об исполнителе</h2>
-
-            {/* Раскрытие исполнителя. Обязательно для ИП: ФИО (ст. 9 ЗоЗПП),
-                ИНН и ОГРНИП (ст. 8 ЗоЗПП, ст. 5 закона о рекламе). Оговорка
-                про оферту снимает риск, что прайс с ценами прочитают как
-                публичную оферту (ст. 437 ГК). */}
             <dl className="footer__about-card">
               <div className="footer__about-row">
                 <dt>Исполнитель</dt>
@@ -127,7 +197,6 @@ export function Footer() {
             rel="noreferrer"
           >
             <span>Дизайн сайта</span>
-            <img className="footer__designer-logo" src={levmich} alt="Levmich Studio" />
           </a>
         </div>
       </div>

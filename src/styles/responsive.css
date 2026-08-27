@@ -601,6 +601,8 @@
     border-radius: calc(40 * var(--mpx));
     background: var(--surface-soft);
   }
+  .footer__shell--desktop { display: none; }
+  .footer__shell--mobile { display: flex; }
   /* На мобильном обёртки десктопных колонок не должны менять привычный
      порядок групп: контакты, соцсети, реквизиты, дизайнер, копирайт. */
   .footer__center,

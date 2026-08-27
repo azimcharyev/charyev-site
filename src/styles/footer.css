@@ -233,3 +233,291 @@
   .footer__about-card { justify-content: space-between; }
   .footer__about-row { gap: calc(6 * var(--fpx)); }
 }
+
+/* Desktop footer — Figma 397:1795. The source island is 1648 × 468. It is
+   scaled with the same --fpx as the services/cases grid, so its visible width
+   remains the site's established 1255 desktop units. */
+.footer {
+  height: calc(548 * var(--fpx));
+}
+
+.footer__shell--mobile {
+  display: none;
+}
+
+.footer__shell--desktop {
+  width: calc(1648 * var(--fpx));
+  height: calc(468 * var(--fpx));
+  padding: calc(40 * var(--fpx));
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0;
+  border-radius: calc(60 * var(--fpx));
+}
+
+.footer-desktop__left,
+.footer-desktop__center,
+.footer-desktop__right,
+.footer-desktop__phone,
+.footer-desktop__phone-copy,
+.footer-desktop__socials,
+.footer-desktop__mail,
+.footer-desktop__mail-copy,
+.footer-desktop__about-card,
+.footer-desktop__about-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-desktop__left,
+.footer-desktop__center,
+.footer-desktop__right {
+  height: calc(388 * var(--fpx));
+  justify-content: space-between;
+}
+
+.footer-desktop__left {
+  width: calc(295 * var(--fpx));
+  align-items: center;
+}
+
+.footer-desktop__phone {
+  width: 100%;
+  height: calc(317 * var(--fpx));
+  padding-block: calc(20 * var(--fpx));
+  align-items: center;
+  justify-content: space-between;
+  border-radius: calc(40 * var(--fpx));
+  background: var(--surface);
+  transition: background .25s ease, transform .25s var(--ease);
+}
+
+.footer-desktop__qr {
+  width: calc(190 * var(--fpx));
+  height: calc(190 * var(--fpx));
+  object-fit: contain;
+}
+
+.footer-desktop__phone-copy {
+  width: calc(267 * var(--fpx));
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--fpx));
+  text-align: center;
+}
+
+.footer-desktop__phone-copy strong {
+  font-size: calc(22 * var(--fpx));
+  line-height: 1;
+  font-weight: 400;
+}
+
+.footer-desktop__phone-copy small {
+  color: rgba(255, 255, 255, .6);
+  font-size: calc(17 * var(--fpx));
+  line-height: 1;
+}
+
+.footer-desktop__copyright {
+  width: 100%;
+  padding: calc(20 * var(--fpx));
+  border-radius: calc(40 * var(--fpx));
+  background: rgba(255, 255, 255, .03);
+  color: rgba(255, 255, 255, .3);
+  font-size: calc(17 * var(--fpx));
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.footer-desktop__center {
+  width: calc(470 * var(--fpx));
+  align-items: flex-start;
+}
+
+.footer-desktop__right {
+  width: calc(380 * var(--fpx));
+  align-items: center;
+}
+
+.footer-desktop__center h2,
+.footer-desktop__socials h2 {
+  margin: 0;
+  color: #fff;
+  font-size: calc(44 * var(--fpx));
+  line-height: 1;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.footer-desktop__about-card {
+  width: 100%;
+  margin: 0;
+  padding: calc(20 * var(--fpx));
+  gap: calc(20 * var(--fpx));
+  border-radius: calc(30 * var(--fpx));
+  background: var(--surface);
+}
+
+.footer-desktop__about-row {
+  width: 100%;
+  gap: calc(10 * var(--fpx));
+}
+
+.footer-desktop__about-row dt {
+  color: rgba(255, 255, 255, .5);
+  font-size: calc(16 * var(--fpx));
+  line-height: 1;
+}
+
+.footer-desktop__about-row dd {
+  margin: 0;
+  color: #fff;
+  font-size: calc(22 * var(--fpx));
+  line-height: 1;
+  font-weight: 400;
+}
+
+.footer-desktop__about-note {
+  margin: 0;
+  color: rgba(255, 255, 255, .7);
+  font-size: calc(14 * var(--fpx));
+  line-height: 1.08;
+}
+
+.footer-desktop__privacy,
+.footer-desktop__designer {
+  min-height: calc(56 * var(--fpx));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(40 * var(--fpx));
+  background: var(--surface);
+  color: #fff;
+  font-size: calc(18 * var(--fpx));
+  line-height: 1;
+  transition: background .25s ease, transform .25s var(--ease);
+}
+
+.footer-desktop__privacy {
+  width: 100%;
+  padding: calc(20 * var(--fpx));
+  white-space: nowrap;
+}
+
+.footer-desktop__designer {
+  width: 100%;
+  padding: calc(20 * var(--fpx)) calc(40 * var(--fpx));
+}
+
+.footer-desktop__socials {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: calc(20 * var(--fpx));
+}
+
+.footer-desktop__mail {
+  width: 100%;
+  padding: calc(20 * var(--fpx));
+  flex-direction: row;
+  align-items: center;
+  gap: calc(20 * var(--fpx));
+  border-radius: calc(60 * var(--fpx));
+  background: var(--surface);
+  transition: background .25s ease, transform .25s var(--ease);
+}
+
+.footer-desktop__mail-icon {
+  flex: 0 0 auto;
+  width: calc(62 * var(--fpx));
+  height: calc(62 * var(--fpx));
+  padding: calc(10 * var(--fpx));
+  display: grid;
+  place-items: center;
+  border-radius: calc(40 * var(--fpx));
+  background: var(--surface);
+}
+
+.footer-desktop__mail-icon img {
+  width: calc(40 * var(--fpx));
+  height: calc(40 * var(--fpx));
+}
+
+.footer-desktop__mail-copy {
+  min-width: 0;
+  justify-content: center;
+  gap: calc(10 * var(--fpx));
+  white-space: nowrap;
+}
+
+.footer-desktop__mail-copy strong {
+  font-size: calc(22 * var(--fpx));
+  line-height: 1;
+  font-weight: 400;
+}
+
+.footer-desktop__mail-copy small {
+  color: rgba(255, 255, 255, .6);
+  font-size: calc(16 * var(--fpx));
+  line-height: 1;
+}
+
+.footer-desktop__social-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, calc(80 * var(--fpx)));
+  justify-content: space-between;
+}
+
+.footer-desktop__social-grid a {
+  width: calc(80 * var(--fpx));
+  height: calc(80 * var(--fpx));
+  padding: calc(20 * var(--fpx));
+  display: grid;
+  place-items: center;
+  border-radius: calc(40 * var(--fpx));
+  background: var(--surface);
+  transition: background .25s ease, transform .25s var(--ease);
+}
+
+.footer-desktop__social-grid img {
+  width: calc(40 * var(--fpx));
+  height: calc(40 * var(--fpx));
+}
+
+.footer-desktop__social-note {
+  width: 100%;
+  margin: 0;
+  color: rgba(255, 255, 255, .6);
+  font-size: calc(16 * var(--fpx));
+  line-height: 1.05;
+  text-align: center;
+}
+
+.footer-desktop__phone:hover,
+.footer-desktop__mail:hover,
+.footer-desktop__social-grid a:hover,
+.footer-desktop__privacy:hover,
+.footer-desktop__designer:hover,
+.footer-desktop__phone:focus-visible,
+.footer-desktop__mail:focus-visible,
+.footer-desktop__social-grid a:focus-visible,
+.footer-desktop__privacy:focus-visible,
+.footer-desktop__designer:focus-visible {
+  background: rgba(255, 255, 255, .12);
+  transform: translateY(calc(-2 * var(--fpx)));
+}
+
+.footer-desktop__center h2,
+.footer-desktop__socials h2,
+.footer-desktop__about-row dt,
+.footer-desktop__about-row dd,
+.footer-desktop__phone-copy strong,
+.footer-desktop__phone-copy small,
+.footer-desktop__mail-copy strong,
+.footer-desktop__mail-copy small,
+.footer-desktop__copyright {
+  text-box: trim-both cap alphabetic;
+}
