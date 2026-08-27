@@ -27,19 +27,24 @@
   flex-direction: column;
 }
 
-.footer__contacts { width: calc(490 * var(--px)); height: 100%; justify-content: space-between; }
+/* Ширины трёх колонок в сумме с зазорами должны укладываться во внутренние
+   1195 единиц шелла (1255 минус поля по 30). Раньше сумма была 1215 —
+   колонки слипались вплотную и текст выглядел стиснутым. */
+.footer__contacts { width: calc(400 * var(--px)); height: 100%; justify-content: space-between; }
 .footer__group--mail { gap: calc(20 * var(--px)); }
 .footer__group--phone { gap: calc(30 * var(--px)); }
+/* 45, а не 50: при 50 «Социальные сети» занимают 441 единицу, и три колонки
+   в сумме упирались в границу шелла — зазоров между ними не оставалось. */
 .footer__group h2,
 .footer__socials h2,
-.footer__about h2 { font-size: calc(50 * var(--px)); line-height: 1; font-weight: 500; }
+.footer__about h2 { font-size: calc(45 * var(--px)); line-height: 1; font-weight: 500; }
 
 /* Ширина из макета, а не по содержимому: почта и телефон стоят друг под
    другом, и разница в десяток пикселей между ними бросается в глаза. Раньше
    обе карточки были max-content — телефон случайно совпадал с макетом, почта
    отставала на 11 px. */
 .footer__mail,
-.footer__phone-card { width: calc(410 * var(--px)); }
+.footer__phone-card { width: calc(400 * var(--px)); }
 
 .footer__mail {
   padding: calc(20 * var(--px));
@@ -62,7 +67,8 @@
 .footer__mail-icon img { width: calc(38 * var(--px)); height: calc(38 * var(--px)); }
 .footer__mail-copy,
 .footer__phone-copy { display: flex; flex-direction: column; justify-content: center; gap: calc(12 * var(--px)); font-weight: 400; }
-.footer__mail-copy { width: calc(284 * var(--px)); white-space: nowrap; }
+/* Ширина по содержимому: карточка теперь уже, и фиксированные 284 её распирали. */
+.footer__mail-copy { width: auto; min-width: 0; white-space: nowrap; }
 .footer__mail-copy strong,
 .footer__phone-copy strong { font-size: calc(24 * var(--px)); line-height: 1; font-weight: 400; }
 .footer__mail-copy small { color: rgba(255, 255, 255, .6); font-size: calc(20 * var(--px)); line-height: 1; }
@@ -93,63 +99,74 @@
    номер вылезал за её край на 55 px. */
 .footer__phone-copy small { color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--px)); line-height: 1; }
 
-.footer__socials { height: 100%; gap: calc(30 * var(--px)); }
+.footer__socials { width: calc(400 * var(--px)); height: 100%; gap: calc(30 * var(--px)); }
 .footer__social-grid { display: grid; grid-template-columns: repeat(2, max-content); gap: calc(20 * var(--px)); }
 .footer__social-grid a {
-  height: calc(80 * var(--px));
-  padding: calc(20 * var(--px));
+  height: calc(72 * var(--px));
+  padding: calc(16 * var(--px));
   display: flex;
   align-items: center;
-  gap: calc(20 * var(--px));
-  border-radius: calc(40 * var(--px));
+  gap: calc(16 * var(--px));
+  border-radius: calc(36 * var(--px));
   background: var(--surface);
-  font-size: calc(24 * var(--px));
+  font-size: calc(21 * var(--px));
   line-height: 1;
   transition: background .25s ease, transform .25s var(--ease);
 }
-.footer__social-grid img { width: calc(40 * var(--px)); height: calc(40 * var(--px)); }
+.footer__social-grid img { width: calc(36 * var(--px)); height: calc(36 * var(--px)); }
 .footer__social-note { width: calc(355 * var(--px)); color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--px)); line-height: 1; }
 
 .footer__right {
+  width: calc(355 * var(--px));
   height: 100%;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: calc(30 * var(--px));
+  gap: calc(24 * var(--px));
 }
 
-/* Блок реквизитов. Заголовок сверху, под ним карточка со списком строк.
-   Размеры уменьшены против макета соседних блоков: правой колонке шелла
-   выделено 350 px по высоте, и туда должны влезть заголовок, карточка и
-   кнопка «Дизайн сайта». */
-.footer__about { gap: calc(16 * var(--px)); align-items: flex-end; }
-.footer__about h2 { font-size: calc(30 * var(--px)); }
+/* Блок реквизитов — третья колонка, по языку такая же, как соседние: слева
+   выровненный заголовок, под ним карточка на общем фоне. Раньше заголовок был
+   вдвое мельче соседних и прижат вправо, а текст внутри — 12 и 16 против 24 у
+   почты и соцсетей: колонка выпадала из ряда и не читалась. */
+.footer__about { width: 100%; gap: calc(20 * var(--px)); align-items: flex-start; }
+.footer__about h2 { font-size: calc(40 * var(--px)); }
 .footer__about-card {
-  width: calc(360 * var(--px));
+  width: 100%;
   margin: 0;
-  padding: calc(20 * var(--px));
+  padding: calc(24 * var(--px));
   display: flex;
   flex-direction: column;
-  gap: calc(10 * var(--px));
-  border-radius: calc(30 * var(--px));
+  gap: calc(14 * var(--px));
+  border-radius: calc(36 * var(--px));
   background: var(--surface);
 }
-.footer__about-row { display: flex; flex-direction: column; gap: calc(2 * var(--px)); }
+/* Подпись слева, значение справа — реквизиты так короче по высоте и читаются
+   как таблица, а не как столбик разнородных строк. */
+.footer__about-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(16 * var(--px));
+}
 .footer__about-row dt {
+  flex: 0 0 auto;
   color: rgba(255, 255, 255, .6);
-  font-size: calc(12 * var(--px));
-  line-height: 1;
+  font-size: calc(16 * var(--px));
+  line-height: 1.2;
 }
 .footer__about-row dd {
+  flex: 1 1 auto;
   margin: 0;
   color: #fff;
-  font-size: calc(16 * var(--px));
-  line-height: 1.15;
+  font-size: calc(18 * var(--px));
+  line-height: 1.2;
+  text-align: right;
 }
 .footer__about-note {
   margin: calc(4 * var(--px)) 0 0;
   color: rgba(255, 255, 255, .6);
-  font-size: calc(12 * var(--px));
-  line-height: 1.35;
+  font-size: calc(15 * var(--px));
+  line-height: 1.4;
 }
 
 /* Кнопка «Дизайн сайта». Ссылка на levmich.studio — я разрешил её ставить в
@@ -159,19 +176,24 @@
    получить кнопку в 24 px. */
 .footer__designer {
   flex-shrink: 0;
-  height: calc(48 * var(--px));
+  height: calc(56 * var(--px));
   padding: 0 calc(24 * var(--px));
   display: inline-flex;
   align-items: center;
-  gap: calc(10 * var(--px));
+  gap: calc(12 * var(--px));
   border-radius: 999px;
   background: var(--surface);
   color: #fff;
-  font-size: calc(16 * var(--px));
+  font-size: calc(18 * var(--px));
   line-height: 1;
   transition: background .25s ease, transform .25s var(--ease);
 }
-.footer__designer-emoji { font-size: calc(20 * var(--px)); line-height: 1; }
+/* Логотип студии — 27x29 в исходнике, поэтому высота чуть больше ширины. */
+.footer__designer-logo {
+  flex: 0 0 auto;
+  width: calc(24 * var(--px));
+  height: calc(26 * var(--px));
+}
 
 .footer__copyright {
   position: absolute;

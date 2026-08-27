@@ -1,4 +1,5 @@
 import instagram from '../assets/icons/instagram.svg';
+import levmich from '../assets/icons/levmich-studio.svg';
 import mail from '../assets/icons/mail.svg';
 import phone from '../assets/icons/phone.svg';
 import qr from '../assets/icons/contact-qr.png';
@@ -120,7 +121,7 @@ export function Footer() {
             rel="noreferrer"
           >
             <span>Дизайн сайта</span>
-            <span className="footer__designer-emoji" aria-hidden="true">🧑‍💻</span>
+            <img className="footer__designer-logo" src={levmich} alt="Levmich Studio" />
           </a>
         </div>
 
