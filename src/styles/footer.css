@@ -24,8 +24,9 @@
   height: calc(542 * var(--fpx));
   padding: calc(40 * var(--fpx));
   display: flex;
-  align-items: stretch;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: calc(80 * var(--fpx));
   border-radius: calc(60 * var(--fpx));
   background: var(--surface);
 }
@@ -44,6 +45,7 @@
 
 .footer__contacts,
 .footer__group,
+.footer__center,
 .footer__socials,
 .footer__about,
 .footer__right {
@@ -51,10 +53,14 @@
   flex-direction: column;
 }
 
-/* Три колонки из макета: 456, 468 и 423. Промежутки раздаёт space-between. */
-.footer__contacts { width: calc(456 * var(--fpx)); justify-content: space-between; }
+/* Три колонки: контакты, соцсети, реквизиты. */
+.footer__contacts {
+  width: calc(456 * var(--fpx));
+  height: 100%;
+  justify-content: space-between;
+}
 .footer__group--mail { gap: calc(20 * var(--fpx)); }
-.footer__group--phone { gap: calc(30 * var(--fpx)); }
+.footer__group--phone { gap: calc(20 * var(--fpx)); }
 .footer__group h2,
 .footer__socials h2,
 .footer__about h2 { font-size: calc(40 * var(--fpx)); line-height: 1; font-weight: 500; }
@@ -112,8 +118,8 @@
 .footer__phone-copy { width: auto; min-width: 0; }
 .footer__phone-copy small { color: rgba(255, 255, 255, .6); font-size: calc(16 * var(--fpx)); line-height: 1; }
 
-.footer__socials { width: calc(468 * var(--fpx)); justify-content: flex-start; }
-.footer__socials-top { display: flex; flex-direction: column; gap: calc(30 * var(--fpx)); }
+.footer__socials { width: 100%; justify-content: flex-start; }
+.footer__socials-top { display: flex; flex-direction: column; gap: calc(20 * var(--fpx)); }
 .footer__social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: calc(20 * var(--fpx)); }
 .footer__social-grid a {
   height: calc(80 * var(--fpx));
@@ -128,31 +134,39 @@
   transition: background .25s ease, transform .25s var(--ease);
 }
 .footer__social-grid img { flex: 0 0 auto; width: calc(40 * var(--fpx)); height: calc(40 * var(--fpx)); }
-.footer__social-note { width: calc(355 * var(--fpx)); color: rgba(255, 255, 255, .6); font-size: calc(17 * var(--fpx)); line-height: 1.4; }
+.footer__social-note { width: calc(355 * var(--fpx)); color: rgba(255, 255, 255, .6); font-size: calc(14 * var(--fpx)); line-height: 1; }
 
 .footer__copyright {
-  position: absolute;
-  left: 50%;
-  bottom: calc(40 * var(--fpx));
-  translate: -50% 0;
-  color: rgba(255, 255, 255, .6);
+  margin: 0;
+  color: rgba(255, 255, 255, .3);
   font-size: calc(24 * var(--fpx));
   line-height: 1;
   white-space: nowrap;
 }
 
-/* Правая колонка: сверху заголовок с карточкой, снизу кнопка, прижатая
-   вправо (в макете — items-end, justify-between). */
-.footer__right { width: calc(423 * var(--fpx)); align-items: flex-end; justify-content: space-between; }
-.footer__about { width: 100%; gap: calc(30 * var(--fpx)); align-items: flex-start; }
+/* Средняя колонка — соцсети и копирайт. Правая — реквизиты и дизайнер. */
+.footer__center {
+  width: calc(468 * var(--fpx));
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer__right {
+  width: calc(423 * var(--fpx));
+  height: 100%;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.footer__about { width: 100%; gap: calc(20 * var(--fpx)); align-items: flex-start; }
 
 .footer__about-card {
   width: 100%;
+  height: calc(314 * var(--fpx));
   margin: 0;
   padding: calc(20 * var(--fpx));
   display: flex;
   flex-direction: column;
-  gap: calc(18 * var(--fpx));
+  justify-content: space-between;
   border-radius: calc(40 * var(--fpx));
   background: var(--surface);
 }
@@ -161,7 +175,7 @@
 .footer__about-row { display: flex; flex-direction: column; gap: calc(10 * var(--fpx)); }
 .footer__about-row dt {
   color: rgba(255, 255, 255, .5);
-  font-size: calc(16 * var(--fpx));
+  font-size: calc(14 * var(--fpx));
   line-height: 1;
   white-space: nowrap;
 }
@@ -175,8 +189,8 @@
 .footer__about-note {
   margin: 0;
   color: rgba(255, 255, 255, .7);
-  font-size: calc(17 * var(--fpx));
-  line-height: 1.4;
+  font-size: calc(15 * var(--fpx));
+  line-height: 1;
 }
 
 /* Кнопка «Дизайн сайта». Ссылка на levmich.studio — с разрешения заказчика. */
@@ -216,6 +230,6 @@
 /* Без обрезки строки выше, и карточка реквизитов вырастает — см. тот же приём
    в services.css. Гасим разницу шагом между строками. */
 @supports not (text-box: trim-both cap alphabetic) {
-  .footer__about-card { gap: calc(12 * var(--fpx)); }
+  .footer__about-card { justify-content: space-between; }
   .footer__about-row { gap: calc(6 * var(--fpx)); }
 }

@@ -599,17 +599,20 @@
     border-radius: calc(40 * var(--mpx));
     background: var(--surface-soft);
   }
+  /* На мобильном обёртки десктопных колонок не должны менять привычный
+     порядок групп: контакты, соцсети, реквизиты, дизайнер, копирайт. */
+  .footer__center,
+  .footer__right { display: contents; }
   /* Группа соцсетей на мобильном идёт обычной колонкой во всю ширину. */
   .footer__socials-top { width: 100%; gap: calc(30 * var(--mpx)); }
   .footer__contacts,
-  .footer__right,
   .footer__socials,
   .footer__about,
   .footer__about-card,
   .footer__group,
   .footer__mail,
   .footer__phone-mobile { width: 100%; }
-  .footer__contacts { height: auto; align-items: center; justify-content: flex-start; gap: calc(30 * var(--mpx)); }
+  .footer__contacts { height: auto; align-items: center; justify-content: flex-start; gap: calc(30 * var(--mpx)); order: 1; }
   .footer__group { align-items: center; gap: calc(20 * var(--mpx)); }
   .footer__group h2,
   .footer__socials h2 { font-size: max(22px, calc(40 * var(--mpx))); font-weight: 500; text-align: center; }
@@ -640,8 +643,7 @@
   .footer__phone-card { display: none; }
 
   /* Соцсети: четыре круга враспор, без подписей — так в макете. */
-  .footer__right { height: auto; align-items: center; gap: calc(30 * var(--mpx)); order: 2; }
-  .footer__socials { align-items: center; gap: calc(30 * var(--mpx)); }
+  .footer__socials { align-items: center; gap: calc(30 * var(--mpx)); order: 2; }
   .footer__social-grid {
     width: 100%;
     display: flex;
@@ -667,7 +669,7 @@
 
   /* Блок реквизитов на мобильном: карточка растягивается на всю ширину
      колонки, заголовок и цифры кладём в одну колонку. */
-  .footer__about { align-items: stretch; gap: calc(20 * var(--mpx)); }
+  .footer__about { align-items: stretch; gap: calc(20 * var(--mpx)); order: 3; }
   .footer__about h2 { font-size: max(20px, calc(36 * var(--mpx))); text-align: center; }
   .footer__about-card {
     width: 100%;
@@ -689,6 +691,7 @@
   .footer__about-note { font-size: max(11px, calc(13 * var(--mpx))); }
 
   .footer__designer {
+    order: 4;
     align-self: center;
     height: max(44px, calc(52 * var(--mpx)));
     padding: 0 calc(24 * var(--mpx));
@@ -706,7 +709,7 @@
     left: auto;
     bottom: auto;
     translate: none;
-    order: 3;
+    order: 5;
     margin-top: 0;
     align-self: center;
     text-align: center;

@@ -67,22 +67,26 @@ export function Footer() {
           </section>
         </div>
 
-        <section className="footer__socials">
-          <div className="footer__socials-top">
-            <h2>Социальные сети</h2>
-            <div className="footer__social-grid">
-              {socials.map((social) => (
-                <a href={social.href} target="_blank" rel="noreferrer" key={social.label}>
-                  <img src={social.icon} alt="" />
-                  <span>{social.label}</span>
-                </a>
-              ))}
+        <div className="footer__center">
+          <section className="footer__socials">
+            <div className="footer__socials-top">
+              <h2>Социальные сети</h2>
+              <div className="footer__social-grid">
+                {socials.map((social) => (
+                  <a href={social.href} target="_blank" rel="noreferrer" key={social.label}>
+                    <img src={social.icon} alt="" />
+                    <span>{social.label}</span>
+                  </a>
+                ))}
+              </div>
+              <p className="footer__social-note">
+                *Компания Meta — признана в России<br />экстремистской организацией
+              </p>
             </div>
-            <p className="footer__social-note">
-              *Компания Meta — признана в России<br />экстремистской организацией
-            </p>
-          </div>
-        </section>
+          </section>
+
+          <p className="footer__copyright">© Azim Charyev 2026</p>
+        </div>
 
         <div className="footer__right">
           <section className="footer__about">
@@ -126,12 +130,6 @@ export function Footer() {
             <img className="footer__designer-logo" src={levmich} alt="Levmich Studio" />
           </a>
         </div>
-
-        {/* Копирайт по центру нижней кромки шелла. В макете он стоит по центру
-            средней колонки — она сама почти по центру, расхождение 17 единиц.
-            Отдельным слоем, а не строкой внутри колонки: на мобильном он
-            должен быть последним, а колонки там перестраиваются. */}
-        <p className="footer__copyright">© Azim Charyev 2026</p>
       </div>
     </footer>
   );
