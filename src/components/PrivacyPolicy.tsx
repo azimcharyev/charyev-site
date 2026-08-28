@@ -11,12 +11,19 @@ export function PrivacyPolicy() {
     const footer = document.querySelector<HTMLElement>('.policy-site > .footer');
     if (!button || !footer) return;
     const portrait = window.matchMedia('(orientation: portrait)');
+    const visualViewport = window.visualViewport;
 
     let frame = 0;
     const updateButtonPosition = () => {
       frame = 0;
-      const buttonStyle = window.getComputedStyle(button);
-      const buttonBottom = window.innerHeight - Number.parseFloat(buttonStyle.bottom || '24');
+      /* На мобильных window.innerHeight и видимая область расходятся, когда
+         браузер показывает свои верхнюю и нижнюю панели. Берём настоящий rect
+         fixed-кнопки и вычитаем уже применённый сдвиг — так получаем её
+         исходную нижнюю границу в текущем visual viewport. */
+      const currentShift = Number.parseFloat(
+        button.style.getPropertyValue('--policy-home-shift'),
+      ) || 0;
+      const buttonBottom = button.getBoundingClientRect().bottom - currentShift;
       const mobileFooter = footer.querySelector<HTMLElement>('.footer__shell--mobile');
       const stopTarget = portrait.matches && mobileFooter ? mobileFooter : footer;
       const footerGap = portrait.matches ? 20 : 36;
@@ -31,9 +38,13 @@ export function PrivacyPolicy() {
     updateButtonPosition();
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
     window.addEventListener('resize', scheduleUpdate);
+    visualViewport?.addEventListener('scroll', scheduleUpdate, { passive: true });
+    visualViewport?.addEventListener('resize', scheduleUpdate);
     return () => {
       window.removeEventListener('scroll', scheduleUpdate);
       window.removeEventListener('resize', scheduleUpdate);
+      visualViewport?.removeEventListener('scroll', scheduleUpdate);
+      visualViewport?.removeEventListener('resize', scheduleUpdate);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
