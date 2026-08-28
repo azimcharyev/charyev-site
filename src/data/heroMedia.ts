@@ -6,9 +6,9 @@
  * лишней работы на кадр. На главной таких карточек четырнадцать, и играют они
  * одновременно, поэтому именно этот перерасход бил по плавности сильнее всего.
  *
- * Пул отвязан от CASE_DETAILS намеренно: Hero берёт кадры вперемешку и не
- * привязан к конкретным кейсам, а тянуть сюда пути из данных страницы кейса
- * значило бы тащить и их размер.
+ * Ролики сгруппированы по кейсам: в основные карточки Hero попадает ровно
+ * один случайный ролик из каждой группы. Поэтому два видео одного героя
+ * больше не могут одновременно оказаться на переднем плане.
  */
 
 import studio from '../assets/optimized/thumb/nikolay-studio.mp4';
@@ -30,24 +30,21 @@ import standaloneSix from '../assets/optimized/thumb/standalone-06.mp4';
 import chinaFixed from '../assets/optimized/thumb/china-fixed.mp4';
 import weddingFixed from '../assets/optimized/thumb/wedding-fixed.mp4';
 
-export const HERO_MEDIA = [
-  studio,
-  seated,
-  standing,
-  closeup,
-  finger,
-  army,
-  dentalOne,
-  dentalTwo,
-  lidaOne,
-  lidaTwo,
-  standaloneOne,
-  standaloneTwo,
-  standaloneThree,
-  standaloneFour,
-  standaloneFive,
-  standaloneSix,
-] as const;
+export const HERO_CASE_MEDIA = {
+  nikolay: [studio, seated, standing, closeup, finger, army],
+  dental: [dentalOne, dentalTwo],
+  lida: [lidaOne, lidaTwo],
+  standalone: [
+    standaloneOne,
+    standaloneTwo,
+    standaloneThree,
+    standaloneFour,
+    standaloneFive,
+    standaloneSix,
+  ],
+} as const;
+
+export const HERO_MEDIA = Object.values(HERO_CASE_MEDIA).flat();
 
 /* Эти два ролика заказчик закрепил в композиции Hero: они не участвуют в
    случайной выборке и при каждом открытии остаются на своих местах. */

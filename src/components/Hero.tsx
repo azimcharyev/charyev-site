@@ -1,5 +1,5 @@
 import { useRef, useState, type CSSProperties } from 'react';
-import { HERO_FIXED_MEDIA, HERO_MEDIA } from '../data/heroMedia';
+import { HERO_CASE_MEDIA, HERO_FIXED_MEDIA, HERO_MEDIA } from '../data/heroMedia';
 import { useHeroParallax } from '../hooks/useHeroParallax';
 import { SilentVideo } from './SilentVideo';
 
@@ -38,6 +38,9 @@ const HERO_EDGE_SLOTS = ['left', 'right'] as const;
 const HERO_BACKGROUND_COUNT = 8;
 const HERO_BACKGROUND_UNDER_TEXT_COUNT = 3;
 const HERO_CARD_COUNT = HERO_FOREGROUND_SLOTS.length + HERO_EDGE_SLOTS.length + HERO_BACKGROUND_COUNT;
+/* Четыре незакреплённые основные карточки: две передние и две по краям.
+   В них распределяется по одному ролику из каждого пула кейса. */
+const HERO_PRIMARY_RANDOM_CARDS = [0, 1, 4, 5] as const;
 
 /* Индексы 2 и 3 — правые передние карточки. Фиксируем там новые ролики,
    сохраняя общее число карточек: Hero не становится тяжелее прежнего. */
@@ -248,20 +251,33 @@ function createHeroLayout(): HeroCardLayout[] {
 }
 
 function pickRandomVideos() {
-  const fixedCount = Object.keys(HERO_FIXED_CARDS).length;
-  const randomVideos = [...new Set(HERO_MEDIA)]
-    .map((src) => ({ src, order: Math.random() }))
+  const shuffle = <T,>(items: readonly T[]) => items
+    .map((item) => ({ item, order: Math.random() }))
     .sort((a, b) => a.order - b.order)
-    .slice(0, HERO_CARD_COUNT - fixedCount)
-    .map(({ src }) => src);
+    .map(({ item }) => item);
 
-  let randomIndex = 0;
+  const primaryVideos = shuffle(
+    Object.values(HERO_CASE_MEDIA).map((caseVideos) => (
+      caseVideos[Math.floor(Math.random() * caseVideos.length)]
+    )),
+  );
+  const primaryByIndex = new Map<number, string>(
+    HERO_PRIMARY_RANDOM_CARDS.map((cardIndex, index) => [cardIndex, primaryVideos[index]]),
+  );
+  const backgroundVideos = shuffle(
+    [...new Set(HERO_MEDIA)].filter((src) => !primaryVideos.includes(src)),
+  );
+
+  let backgroundIndex = 0;
   return Array.from({ length: HERO_CARD_COUNT }, (_, index): HeroMediaItem => {
     const fixed = HERO_FIXED_CARDS[index];
     if (fixed) return { src: fixed.src, fixedName: fixed.fixedName };
 
-    const src = randomVideos[randomIndex];
-    randomIndex += 1;
+    const primary = primaryByIndex.get(index);
+    if (primary) return { src: primary };
+
+    const src = backgroundVideos[backgroundIndex];
+    backgroundIndex += 1;
     return { src };
   });
 }
