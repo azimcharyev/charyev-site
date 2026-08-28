@@ -708,6 +708,7 @@
   .footer__about-row dd { font-size: max(14px, calc(18 * var(--mpx))); }
   .footer__about-note { font-size: max(11px, calc(13 * var(--mpx))); }
 
+  .footer__privacy,
   .footer__designer {
     order: 4;
     align-self: center;
@@ -716,6 +717,11 @@
     border-radius: 999px;
     font-size: max(13px, calc(18 * var(--mpx)));
   }
+  .footer__privacy {
+    width: 100%;
+    text-align: center;
+  }
+  .footer__designer { order: 5; }
   /* Размер размечен через --px, а в портрете он равен 0,217 реального
      пикселя — логотип схлопывался до 5x6. */
   .footer__designer-logo {
@@ -727,7 +733,7 @@
     left: auto;
     bottom: auto;
     translate: none;
-    order: 5;
+    order: 6;
     margin-top: 0;
     align-self: center;
     text-align: center;

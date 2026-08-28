@@ -40,6 +40,8 @@ function unique(urls: Array<string | undefined>) {
  * выбранный проект, иначе один переход заставил бы скачать все проекты сразу.
  */
 function getCurrentPageMedia() {
+  if (window.location.pathname.endsWith('/privacy.html')) return [];
+
   if (window.location.pathname.endsWith('/case.html')) {
     const requestedCase = new URLSearchParams(window.location.search).get('case') ?? CASE_DETAILS[0].id;
     const caseData = CASES_BY_ID[requestedCase] ?? CASE_DETAILS[0];

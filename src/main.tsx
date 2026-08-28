@@ -14,6 +14,7 @@ import './styles/services.css';
 import './styles/cases.css';
 import './styles/footer.css';
 import './styles/case-detail.css';
+import './styles/privacy.css';
 import './styles/responsive.css';
 
 /* До разметки приложения: прелоадер уже на экране, и чем раньше он начнёт

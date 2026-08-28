@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         home: 'index.html',
         case: 'case.html',
+        privacy: 'privacy.html',
         /* GitHub Pages сам отдаёт 404.html на любой неизвестный адрес —
            достаточно, чтобы файл оказался в корне сборки. */
         notFound: '404.html',

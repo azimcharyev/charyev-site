@@ -142,7 +142,10 @@
   font-size: calc(24 * var(--fpx));
   line-height: 1;
   white-space: nowrap;
+  transition: color .25s ease;
 }
+.footer__copyright:hover,
+.footer__copyright:focus-visible { color: rgba(255, 255, 255, .72); }
 
 /* Средняя колонка — соцсети и копирайт. Правая — реквизиты и дизайнер. */
 .footer__center {
@@ -193,7 +196,8 @@
   line-height: 1;
 }
 
-/* Кнопка «Дизайн сайта». Ссылка на levmich.studio — с разрешения заказчика. */
+/* Нижние кнопки мобильного футера. */
+.footer__privacy,
 .footer__designer {
   flex-shrink: 0;
   padding: calc(12 * var(--fpx)) calc(20 * var(--fpx));
@@ -218,10 +222,12 @@
 .footer__mail:hover,
 .footer__phone-card:hover,
 .footer__social-grid a:hover,
+.footer__privacy:hover,
 .footer__designer:hover,
 .footer__mail:focus-visible,
 .footer__phone-card:focus-visible,
 .footer__social-grid a:focus-visible,
+.footer__privacy:focus-visible,
 .footer__designer:focus-visible {
   background: rgba(255, 255, 255, .12);
   transform: translateY(calc(-2 * var(--fpx)));
@@ -329,6 +335,7 @@
   line-height: 1;
   text-align: center;
   white-space: nowrap;
+  transition: background .25s ease, color .25s ease, transform .25s var(--ease);
 }
 
 .footer-desktop__center {
@@ -499,14 +506,17 @@
 .footer-desktop__phone:hover,
 .footer-desktop__mail:hover,
 .footer-desktop__social-grid a:hover,
+.footer-desktop__copyright:hover,
 .footer-desktop__privacy:hover,
 .footer-desktop__designer:hover,
 .footer-desktop__phone:focus-visible,
 .footer-desktop__mail:focus-visible,
 .footer-desktop__social-grid a:focus-visible,
+.footer-desktop__copyright:focus-visible,
 .footer-desktop__privacy:focus-visible,
 .footer-desktop__designer:focus-visible {
   background: rgba(255, 255, 255, .12);
+  color: rgba(255, 255, 255, .72);
   transform: translateY(calc(-2 * var(--fpx)));
 }
 

@@ -3,11 +3,13 @@ import { Services } from './components/Services';
 import { Cases } from './components/Cases';
 import { CaseDetail } from './components/CaseDetail';
 import { Footer } from './components/Footer';
+import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { useReveal } from './hooks/useReveal';
 
 export default function App() {
   if (window.location.pathname.endsWith('/case.html')) return <CaseDetail />;
+  if (window.location.pathname.endsWith('/privacy.html')) return <PrivacyPolicy />;
 
   return <Home />;
 }

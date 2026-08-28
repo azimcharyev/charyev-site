@@ -10,7 +10,7 @@ const PHONE = '+7(919)186-52-08';
 const PHONE_PRETTY = '+7 (919) 186 - 52 - 08';
 const PHONE_DESKTOP = '+7\u00a0(919)\u00a0186-52-08';
 const PHONE_HREF = 'tel:+79191865208';
-const PRIVACY_HREF = 'https://azimcharyev.com/privacypolicy';
+const PRIVACY_HREF = '/privacy.html';
 
 const socials = [
   { label: 'Instagram', icon: instagram, href: 'https://www.instagram.com/azim.charyev.cinema/' },
@@ -38,7 +38,14 @@ export function Footer() {
             </span>
           </a>
 
-          <p className="footer-desktop__copyright">© Azim Charyev 2026</p>
+          <a
+            className="footer-desktop__copyright"
+            href="/"
+            aria-label="Перейти на главную страницу"
+            title="На главную"
+          >
+            © Azim Charyev 2026
+          </a>
         </div>
 
         <div className="footer-desktop__center">
@@ -160,7 +167,14 @@ export function Footer() {
             </div>
           </section>
 
-          <p className="footer__copyright">© Azim Charyev 2026</p>
+          <a
+            className="footer__copyright"
+            href="/"
+            aria-label="Перейти на главную страницу"
+            title="На главную"
+          >
+            © Azim Charyev 2026
+          </a>
         </div>
 
         <div className="footer__right">
@@ -189,6 +203,10 @@ export function Footer() {
               </p>
             </dl>
           </section>
+
+          <a className="footer__privacy" href={PRIVACY_HREF}>
+            Политика обработки персональных данных
+          </a>
 
           <a
             className="footer__designer"
