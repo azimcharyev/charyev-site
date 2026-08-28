@@ -59,7 +59,8 @@
      Определяем на .page и .case-site, а не на :root — cqw считается только
      внутри контейнера, а container-type объявлен у body. */
   .page,
-  .case-site {
+  .case-site,
+  .policy-site {
     --mpx: calc(min(100cqw, 440px) / 440);
     --portrait-edge: calc(20 * var(--mpx));
     --portrait-gap: calc(20 * var(--mpx));
@@ -69,7 +70,8 @@
      центру — иначе на планшете в портрете карточка услуг и лента кейсов
      упираются в свои 400, а Hero и футер разъезжаются на всю ширину. */
   .page,
-  .case-site { width: min(100cqw, 440px); margin-inline: auto; }
+  .case-site,
+  .policy-site { width: min(100cqw, 440px); margin-inline: auto; }
   .hero,
   .services { width: 100%; height: 100svh; min-height: 0; }
 
@@ -581,164 +583,192 @@
     height: calc(35 * var(--mpx));
     scale: -1 1;
   }
-  /* Футер по мобильному макету (Figma, node 328:781 — во фрейме он ошибочно
-     назван «кейс»). Шелл 400 с полями 30/40, радиус 40, фон .04, четыре группы
-     враспор. Телефон здесь — такая же карточка, как почта, поэтому классы
-     .footer__mail-* переиспользуются. */
-  .footer { display: block; height: auto; min-height: 100svh; padding: var(--portrait-edge); }
-  /* Ширина и высота в десктопных стилях размечены через --fpx, а он считается
-     от --px — в портрете тот равен 0,217 реального пикселя, и шелл сжимался
-     до 272 px вместо полной колонки. */
-  .footer__shell {
+  /* Mobile footer — точная структура Figma 328:428. Шелл 400 px, поля
+     30/40 px, радиус 40 px; значения масштабируются общей мобильной единицей. */
+  .footer { display: block; height: auto; min-height: 0; padding: var(--portrait-edge); }
+  .footer__shell--desktop { display: none; }
+  .footer__shell--mobile {
     width: 100%;
     height: auto;
-    min-height: calc(100svh - (var(--portrait-edge) * 2));
+    min-height: 0;
     padding: calc(40 * var(--mpx)) calc(30 * var(--mpx));
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
     gap: calc(30 * var(--mpx));
     border-radius: calc(40 * var(--mpx));
-    background: var(--surface-soft);
+    background: rgba(255, 255, 255, .04);
   }
-  .footer__shell--desktop { display: none; }
-  .footer__shell--mobile { display: flex; }
-  /* На мобильном обёртки десктопных колонок не должны менять привычный
-     порядок групп: контакты, соцсети, реквизиты, дизайнер, копирайт. */
-  .footer__center,
-  .footer__right { display: contents; }
-  /* Группа соцсетей на мобильном идёт обычной колонкой во всю ширину. */
-  .footer__socials-top { width: 100%; gap: calc(30 * var(--mpx)); }
-  .footer__contacts,
-  .footer__socials,
-  .footer__about,
-  .footer__about-card,
-  .footer__group,
-  .footer__mail,
-  .footer__phone-mobile { width: 100%; }
-  .footer__contacts { height: auto; align-items: center; justify-content: flex-start; gap: calc(30 * var(--mpx)); order: 1; }
-  .footer__group { align-items: center; gap: calc(20 * var(--mpx)); }
-  .footer__group h2,
-  .footer__socials h2 { font-size: max(22px, calc(40 * var(--mpx))); font-weight: 500; text-align: center; }
 
-  /* Карточки почты и телефона. */
-  .footer__mail,
-  .footer__phone-mobile {
+  .footer-mobile__about,
+  .footer-mobile__socials,
+  .footer-mobile__bottom,
+  .footer-mobile__about-card,
+  .footer-mobile__about-row,
+  .footer-mobile__contact-copy {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-mobile__about { align-items: center; gap: calc(20 * var(--mpx)); }
+  .footer-mobile__about h2,
+  .footer-mobile__socials h2 {
+    margin: 0;
+    color: #fff;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    text-box: trim-both cap alphabetic;
+  }
+  .footer-mobile__about h2 { font-size: max(28px, calc(40 * var(--mpx))); }
+
+  .footer-mobile__about-card {
+    width: calc(338 * var(--mpx));
+    max-width: 100%;
+    min-height: calc(360 * var(--mpx));
+    margin: 0;
+    padding: calc(20 * var(--mpx));
+    align-items: flex-start;
+    justify-content: space-between;
+    border-radius: calc(40 * var(--mpx));
+    background: var(--surface);
+  }
+  .footer-mobile__about-row { width: 100%; gap: calc(10 * var(--mpx)); }
+  .footer-mobile__about-row dt,
+  .footer-mobile__about-row dd { text-box: trim-both cap alphabetic; }
+  .footer-mobile__about-row dt {
+    color: rgba(255, 255, 255, .5);
+    font-size: max(11px, calc(14 * var(--mpx)));
+    line-height: 1;
+  }
+  .footer-mobile__about-row dd {
+    margin: 0;
+    color: #fff;
+    font-size: max(15px, calc(21 * var(--mpx)));
+    font-weight: 400;
+    line-height: 1.15;
+  }
+  .footer-mobile__about-note {
+    width: 100%;
+    margin: 0;
+    color: rgba(255, 255, 255, .7);
+    font-size: max(10px, calc(13 * var(--mpx)));
+    line-height: 1.15;
+  }
+
+  .footer-mobile__contact {
+    width: 100%;
+    min-height: calc(110 * var(--mpx));
     padding: calc(20 * var(--mpx));
     display: flex;
     align-items: center;
-    gap: calc(16 * var(--mpx));
+    gap: calc(20 * var(--mpx));
     border-radius: calc(60 * var(--mpx));
     background: var(--surface);
+    transition: background .25s ease;
   }
-  .footer__mail-icon {
+  .footer-mobile__contact-icon {
     flex: 0 0 auto;
     width: calc(70 * var(--mpx));
     height: calc(70 * var(--mpx));
+    padding: calc(20 * var(--mpx));
+    display: grid;
+    place-items: center;
     border-radius: calc(40 * var(--mpx));
+    background: var(--surface);
   }
-  .footer__mail-icon img { width: calc(30 * var(--mpx)); height: calc(30 * var(--mpx)); }
-  .footer__mail-copy { width: auto; min-width: 0; gap: calc(12 * var(--mpx)); }
-  .footer__mail-copy strong { font-size: max(13px, calc(18 * var(--mpx))); font-weight: 400; }
-  .footer__mail-copy small { color: rgba(255, 255, 255, .6); font-size: max(11px, calc(14 * var(--mpx))); }
-  .footer__phone-mobile .footer__mail-copy strong { font-size: max(14px, calc(20 * var(--mpx))); }
-  .footer__phone-mobile .footer__mail-copy small { font-size: max(12px, calc(16 * var(--mpx))); }
-  /* Десктопная карточка с QR: на мобильном её место занимает карточка выше. */
-  .footer__phone-card { display: none; }
+  .footer-mobile__contact-icon img { width: 100%; height: 100%; }
+  .footer-mobile__contact-copy {
+    min-width: 0;
+    justify-content: center;
+    gap: calc(12 * var(--mpx));
+    white-space: nowrap;
+  }
+  .footer-mobile__contact-copy strong {
+    font-size: max(14px, calc(20 * var(--mpx)));
+    font-weight: 400;
+    line-height: 1;
+  }
+  .footer-mobile__contact-copy small {
+    color: rgba(255, 255, 255, .6);
+    font-size: max(11px, calc(14 * var(--mpx)));
+    line-height: 1;
+  }
 
-  /* Соцсети: четыре круга враспор, без подписей — так в макете. */
-  .footer__socials { align-items: center; gap: calc(30 * var(--mpx)); order: 2; }
-  .footer__social-grid {
+  .footer-mobile__socials { width: 100%; align-items: center; gap: calc(20 * var(--mpx)); }
+  .footer-mobile__socials h2 { font-size: max(26px, calc(36 * var(--mpx))); }
+  .footer-mobile__socials .footer-mobile__contact-copy strong {
+    font-size: max(13px, calc(18 * var(--mpx)));
+  }
+  .footer-mobile__social-grid {
     width: 100%;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     gap: calc(10 * var(--mpx));
   }
-  .footer__social-grid a {
+  .footer-mobile__social-grid a {
     flex: 0 0 auto;
     width: calc(80 * var(--mpx));
     height: calc(80 * var(--mpx));
     min-width: 44px;
     min-height: 44px;
-    padding: 0;
-    justify-content: center;
-    border-radius: calc(40 * var(--mpx));
-    /* Подписи скрыты, но кегль без этой строки считается от десктопного --px
-       и равен 5,2 px — см. комментарий у .case-tile__cta. */
-    font-size: max(13px, calc(17 * var(--mpx)));
-  }
-  .footer__social-grid a span { display: none; }
-  .footer__social-grid img { width: calc(40 * var(--mpx)); height: calc(40 * var(--mpx)); }
-  .footer__social-note { width: 100%; text-align: center; color: rgba(255, 255, 255, .6); font-size: max(11px, calc(14 * var(--mpx))); }
-
-  /* Блок реквизитов на мобильном: карточка растягивается на всю ширину
-     колонки, заголовок и цифры кладём в одну колонку. */
-  .footer__about {
-    width: 100%;
-    align-items: center;
-    gap: calc(30 * var(--mpx));
-    order: 3;
-  }
-  .footer__about h2 {
-    width: 100%;
-    font-size: max(20px, calc(36 * var(--mpx)));
-    text-align: center;
-  }
-  .footer__about-card {
-    width: 100%;
-    height: auto;
-    margin-inline: auto;
     padding: calc(20 * var(--mpx));
-    gap: calc(12 * var(--mpx));
-    align-items: stretch;
-    justify-content: flex-start;
-    text-align: left;
-    border-radius: calc(30 * var(--mpx));
+    display: grid;
+    place-items: center;
+    border-radius: calc(40 * var(--mpx));
+    background: var(--surface);
+    transition: background .25s ease;
   }
-  /* На узкой колонке две колонки в строке не работают: длинные значения
-     ломаются на две строки в правой половине и висят рваным блоком. Здесь
-     подпись сверху, значение под ней — во всю ширину карточки. */
-  .footer__about-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: calc(2 * var(--mpx));
-  }
-  .footer__about-row dd { text-align: left; }
-  .footer__about-row dt { font-size: max(11px, calc(13 * var(--mpx))); }
-  .footer__about-row dd { font-size: max(14px, calc(18 * var(--mpx))); }
-  .footer__about-note { font-size: max(11px, calc(13 * var(--mpx))); }
-
-  .footer__privacy,
-  .footer__designer {
-    order: 4;
-    align-self: center;
-    height: max(44px, calc(52 * var(--mpx)));
-    padding: 0 calc(24 * var(--mpx));
-    border-radius: 999px;
-    font-size: max(13px, calc(18 * var(--mpx)));
-  }
-  .footer__privacy {
+  .footer-mobile__social-grid img { width: 100%; height: 100%; }
+  .footer-mobile__social-note {
     width: 100%;
+    margin: 0;
+    color: rgba(255, 255, 255, .6);
+    font-size: max(10px, calc(14 * var(--mpx)));
+    line-height: 1;
     text-align: center;
   }
-  .footer__designer { order: 5; }
-  /* Размер размечен через --px, а в портрете он равен 0,217 реального
-     пикселя — логотип схлопывался до 5x6. */
-  .footer__designer-logo {
-    width: max(20px, calc(24 * var(--mpx)));
-    height: max(21px, calc(26 * var(--mpx)));
-  }
-  .footer__copyright {
-    position: static;
-    left: auto;
-    bottom: auto;
-    translate: none;
-    order: 6;
-    margin-top: 0;
-    align-self: center;
+
+  .footer-mobile__bottom { width: 100%; align-items: center; gap: calc(10 * var(--mpx)); }
+  .footer-mobile__button,
+  .footer-mobile__copyright {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    font-size: max(12px, calc(18 * var(--mpx)));
+    transition: background .25s ease, color .25s ease;
   }
+  .footer-mobile__button {
+    width: calc(339 * var(--mpx));
+    max-width: 100%;
+    min-height: calc(64 * var(--mpx));
+    padding: calc(20 * var(--mpx));
+    border-radius: calc(60 * var(--mpx));
+    background: var(--surface);
+    color: #fff;
+    font-size: max(14px, calc(20 * var(--mpx)));
+    line-height: 1.15;
+  }
+  .footer-mobile__copyright {
+    width: 100%;
+    min-height: calc(56 * var(--mpx));
+    padding: calc(20 * var(--mpx));
+    border-radius: calc(40 * var(--mpx));
+    background: rgba(255, 255, 255, .03);
+    color: rgba(255, 255, 255, .3);
+    font-size: max(12px, calc(16 * var(--mpx)));
+    line-height: 1;
+  }
+  .footer-mobile__contact:hover,
+  .footer-mobile__contact:focus-visible,
+  .footer-mobile__social-grid a:hover,
+  .footer-mobile__social-grid a:focus-visible,
+  .footer-mobile__button:hover,
+  .footer-mobile__button:focus-visible,
+  .footer-mobile__copyright:hover,
+  .footer-mobile__copyright:focus-visible { background: rgba(255, 255, 255, .12); }
 
   /* Страница кейса (макет Figma, node 278:2380). Кадры идут столбцом во всю
      колонку, а описание и навигация уходят поверх них: остров с кнопками
