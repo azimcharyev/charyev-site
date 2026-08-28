@@ -1,13 +1,55 @@
+import { useEffect, useRef } from 'react';
 import { Footer } from './Footer';
 
 const OPERATOR_EMAIL = 'azim.charyev@yandex.ru';
 
 export function PrivacyPolicy() {
+  const homeButtonRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const button = homeButtonRef.current;
+    const footer = document.querySelector<HTMLElement>('.policy-site > .footer');
+    if (!button || !footer) return;
+
+    let frame = 0;
+    const updateButtonPosition = () => {
+      frame = 0;
+      const buttonStyle = window.getComputedStyle(button);
+      const buttonBottom = window.innerHeight - Number.parseFloat(buttonStyle.bottom || '24');
+      const footerGap = window.matchMedia('(max-width: 760px), (orientation: portrait)').matches
+        ? 20
+        : 36;
+      const shift = Math.min(0, footer.getBoundingClientRect().top - footerGap - buttonBottom);
+      button.style.setProperty('--policy-home-shift', `${shift}px`);
+    };
+    const scheduleUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateButtonPosition);
+    };
+
+    updateButtonPosition();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    return () => {
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <div className="policy-site">
+      <a
+        ref={homeButtonRef}
+        className="policy-page__back"
+        href="/"
+        aria-label="Перейти на главную страницу"
+      >
+        На главную
+      </a>
+
       <main className="policy-page">
         <header className="policy-page__header">
-          <a className="policy-page__back" href="/">На главную</a>
           <p className="policy-page__date">Редакция от 28 августа 2026 года</p>
           <h1>Политика в&nbsp;отношении обработки персональных данных</h1>
           <p className="policy-page__lead">
