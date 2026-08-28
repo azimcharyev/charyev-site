@@ -479,7 +479,9 @@
     width: calc(60 * var(--mpx));
     height: calc(60 * var(--mpx));
     border-radius: 50%;
-    background: rgba(8, 194, 188, .78);
+    /* Полупрозрачная подложка отделяется от фона, но не спорит с яркой
+       бирюзовой иконкой. Активный пункт ниже остаётся полностью залитым. */
+    background: rgba(8, 194, 188, .3);
   }
   .cases__filter-guard:nth-child(1) .cases__filter-icon { width: calc(17 * var(--mpx)) !important; height: calc(25 * var(--mpx)) !important; }
   .cases__filter-guard:nth-child(2) .cases__filter-icon { width: calc(25 * var(--mpx)) !important; height: calc(17 * var(--mpx)) !important; }

@@ -10,16 +10,17 @@ export function PrivacyPolicy() {
     const button = homeButtonRef.current;
     const footer = document.querySelector<HTMLElement>('.policy-site > .footer');
     if (!button || !footer) return;
+    const portrait = window.matchMedia('(orientation: portrait)');
 
     let frame = 0;
     const updateButtonPosition = () => {
       frame = 0;
       const buttonStyle = window.getComputedStyle(button);
       const buttonBottom = window.innerHeight - Number.parseFloat(buttonStyle.bottom || '24');
-      const footerGap = window.matchMedia('(max-width: 760px), (orientation: portrait)').matches
-        ? 20
-        : 36;
-      const shift = Math.min(0, footer.getBoundingClientRect().top - footerGap - buttonBottom);
+      const mobileFooter = footer.querySelector<HTMLElement>('.footer__shell--mobile');
+      const stopTarget = portrait.matches && mobileFooter ? mobileFooter : footer;
+      const footerGap = portrait.matches ? 20 : 36;
+      const shift = Math.min(0, stopTarget.getBoundingClientRect().top - footerGap - buttonBottom);
       button.style.setProperty('--policy-home-shift', `${shift}px`);
     };
     const scheduleUpdate = () => {

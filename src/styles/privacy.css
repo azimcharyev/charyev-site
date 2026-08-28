@@ -153,9 +153,11 @@
   .policy-page__date { justify-self: start; text-align: left; }
   .policy-page__back {
     bottom: max(18px, env(safe-area-inset-bottom));
-    min-width: 146px;
-    min-height: 46px;
-    font-size: 14px;
+    min-width: max(170px, calc(210 * var(--mpx, 1px)));
+    height: var(--policy-home-height, 50px);
+    min-height: 0;
+    padding-block: 0;
+    font-size: max(15px, calc(18 * var(--mpx, 1px)));
   }
   .policy-page h1 { margin-top: 16px; font-size: clamp(38px, 12vw, 56px); }
   .policy-page__lead { font-size: 17px; }
@@ -168,4 +170,14 @@
   .policy-page__section li,
   .policy-page__table-row { font-size: 15px; line-height: 1.48; }
   .policy-page__table-row { grid-template-columns: 1fr; gap: 8px; padding: 18px; }
+}
+
+@media (orientation: portrait) {
+  .policy-site { --policy-home-height: max(50px, calc(58 * var(--mpx))); }
+  /* Между краем политики, кнопкой и островком футера остаётся ровно по 20 px.
+     Внешний отступ футера уже равен --portrait-edge, поэтому вычитаем его из
+     промежутка страницы и получаем точную геометрию при любой ширине. */
+  .policy-page {
+    margin-bottom: calc(40px + var(--policy-home-height) - var(--portrait-edge));
+  }
 }
