@@ -24,6 +24,7 @@ export function useHeroParallax(heroRef: RefObject<HTMLElement | null>) {
     let targetScroll = 0;
     let currentScroll = 0;
     let frame = 0;
+    let isActive = true;
 
     /* Высота Hero меняется только при ресайзе, а чтение offsetHeight внутри
        render() заставляло браузер пересчитывать вёрстку каждый кадр — прямо
@@ -66,10 +67,11 @@ export function useHeroParallax(heroRef: RefObject<HTMLElement | null>) {
     };
 
     const requestRender = () => {
-      if (!frame) frame = requestAnimationFrame(render);
+      if (isActive && !frame) frame = requestAnimationFrame(render);
     };
 
     const updateScrollTarget = () => {
+      if (!isActive) return;
       const bounds = hero.getBoundingClientRect();
       targetScroll = Math.max(0, Math.min(1, -bounds.top / bounds.height));
       requestRender();
@@ -81,6 +83,7 @@ export function useHeroParallax(heroRef: RefObject<HTMLElement | null>) {
     };
 
     const onPointerMove = (event: PointerEvent) => {
+      if (!isActive) return;
       targetX = (event.clientX / Math.max(1, window.innerWidth) - 0.5) * 2;
       targetY = (event.clientY / Math.max(1, window.innerHeight) - 0.5) * 2;
       requestRender();
@@ -99,9 +102,34 @@ export function useHeroParallax(heroRef: RefObject<HTMLElement | null>) {
     }
     window.addEventListener('scroll', updateScrollTarget, { passive: true });
     window.addEventListener('resize', updateLayoutScale);
+
+    /* После ухода Hero с экрана движения указателя раньше продолжали писать
+       transform во все 14 карточек. Заодно постоянный will-change удерживал
+       для них отдельные GPU-слои до самого футера. Останавливаем расчёты и
+       освобождаем слои, пока секция не вернётся к экрану. */
+    const activityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isActive = entry.isIntersecting;
+        cards.forEach((card) => {
+          if (isActive) card.style.willChange = 'transform';
+          else card.style.removeProperty('will-change');
+        });
+
+        if (isActive) {
+          updateScrollTarget();
+        } else if (frame) {
+          cancelAnimationFrame(frame);
+          frame = 0;
+        }
+      },
+      { rootMargin: '120px 0px', threshold: 0 },
+    );
+    cards.forEach((card) => { card.style.willChange = 'transform'; });
+    activityObserver.observe(hero);
     updateScrollTarget();
 
     return () => {
+      activityObserver.disconnect();
       if (precisePointer) {
         window.removeEventListener('pointermove', onPointerMove);
         window.removeEventListener('blur', onPointerLeave);
@@ -115,6 +143,7 @@ export function useHeroParallax(heroRef: RefObject<HTMLElement | null>) {
         card.style.removeProperty('--parallax-x');
         card.style.removeProperty('--parallax-y');
         card.style.removeProperty('--parallax-scroll-y');
+        card.style.removeProperty('will-change');
       });
     };
   }, [heroRef]);

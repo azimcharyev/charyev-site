@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 
-const DURATION = 2.25;
+/* Две с лишним секунды инерции воспринимались как задержка ввода. Оставляем
+   мягкость, но возвращаем колесу и трекпаду быстрый отклик. */
+const DURATION = 1.15;
 const MAX_TILT = 14;
-const MOTION_DAMPING = 8;
-const ALIGN_DELAY = 520;
-const ALIGN_DURATION = 1.35;
+const ALIGN_DELAY = 360;
+const ALIGN_DURATION = .8;
 const ALIGN_EPSILON = 1;
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -26,14 +27,13 @@ export function useSmoothScroll() {
       syncTouch: false,
       duration: reducedMotion ? 0 : DURATION,
       easing: easeOutCubic,
+      autoRaf: true,
     });
 
-    let animationFrame = 0;
     let hashFrame = 0;
+    let initialFrame = 0;
     let alignTimer = 0;
-    let lastFrameTime = 0;
     let activeSectionIndex = -1;
-    const currentTilts = sections.map(() => 0);
     const renderedTilts: Array<number | null> = sections.map(() => null);
     const sectionNames = sections.map(
       (section, index) => section.id || section.classList.item(0) || `section-${index + 1}`,
@@ -45,13 +45,13 @@ export function useSmoothScroll() {
       return Math.max(0, Math.min(lenis.limit, sectionCenter - window.innerHeight / 2));
     };
 
-    const getNearestSectionIndex = (scrollPosition: number) => {
+    const getNearestSectionIndex = (scrollPosition: number, rects?: DOMRect[]) => {
       const viewportCenter = scrollPosition + window.innerHeight / 2;
       let nearestIndex = 0;
       let nearestDistance = Number.POSITIVE_INFINITY;
 
       sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
+        const rect = rects?.[index] ?? section.getBoundingClientRect();
         const sectionTop = window.scrollY + rect.top;
         const sectionBottom = sectionTop + rect.height;
         if (viewportCenter >= sectionTop && viewportCenter <= sectionBottom) {
@@ -73,8 +73,8 @@ export function useSmoothScroll() {
       return nearestIndex;
     };
 
-    const updateActiveSection = () => {
-      const nearestIndex = getNearestSectionIndex(window.scrollY);
+    const updateActiveSection = (rects: DOMRect[]) => {
+      const nearestIndex = getNearestSectionIndex(window.scrollY, rects);
       if (nearestIndex === activeSectionIndex) return;
 
       activeSectionIndex = nearestIndex;
@@ -129,50 +129,49 @@ export function useSmoothScroll() {
       renderedTilts[index] = tilt;
     };
 
-    const updateSectionMotion = (frameEasing: number) => {
+    const updateSectionMotion = (rects: DOMRect[]) => {
       if (reducedMotion) {
         motionTargets.forEach(clearTargetMotion);
         return;
       }
 
       const viewportCenter = window.innerHeight / 2;
-      sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
+      sections.forEach((_, index) => {
+        const rect = rects[index];
         const distance = (rect.top + rect.height / 2 - viewportCenter) / window.innerHeight;
         const target = motionTargets[index] ?? null;
 
         if (Math.abs(distance) > 1.2) {
-          currentTilts[index] = Math.sign(distance) * MAX_TILT;
           clearTargetMotion(target, index);
           return;
         }
 
         const sectionPhase = Math.max(-1, Math.min(1, distance));
-        const targetTilt = MAX_TILT * sectionPhase;
-        currentTilts[index] += (targetTilt - currentTilts[index]) * frameEasing;
+        const tilt = MAX_TILT * sectionPhase;
 
-        if (Math.abs(targetTilt - currentTilts[index]) < 0.004) {
-          currentTilts[index] = targetTilt;
-        }
-
-        if (index === 0 && window.scrollY < 0.5 && Math.abs(currentTilts[index]) < 0.025) {
+        if (index === 0 && window.scrollY < 0.5 && Math.abs(tilt) < 0.025) {
           clearTargetMotion(target, index);
           return;
         }
 
-        setTargetMotion(target, currentTilts[index], index);
+        setTargetMotion(target, tilt, index);
       });
     };
 
-    const runFrame = (time: number) => {
-      lenis.raf(time);
-      const deltaSeconds = lastFrameTime ? Math.min((time - lastFrameTime) / 1000, 0.05) : 1 / 60;
-      lastFrameTime = time;
-      const frameEasing = 1 - Math.exp(-MOTION_DAMPING * deltaSeconds);
-      updateSectionMotion(frameEasing);
-      updateActiveSection();
-      animationFrame = requestAnimationFrame(runFrame);
+    /* Lenis сам вызывает этот обработчик только при реальном изменении
+       прокрутки. Раньше отдельный бесконечный rAF дважды измерял все секции
+       даже в полном покое, а после записи transform второй набор чтений ещё
+       и принудительно пересчитывал layout. Теперь геометрию читаем один раз
+       за фактический кадр скролла и передаём один снимок обеим функциям. */
+    const updateScrollState = () => {
+      const rects = sections.map((section) => section.getBoundingClientRect());
+      updateSectionMotion(rects);
+      updateActiveSection(rects);
     };
+
+    const unsubscribeScroll = lenis.on('scroll', updateScrollState);
+    const onResize = () => updateScrollState();
+    window.addEventListener('resize', onResize);
 
     const hashTarget = sections.find((section) => `#${section.id}` === window.location.hash);
     if (hashTarget) {
@@ -181,13 +180,15 @@ export function useSmoothScroll() {
       });
     }
 
-    animationFrame = requestAnimationFrame(runFrame);
+    initialFrame = requestAnimationFrame(updateScrollState);
 
     return () => {
       unsubscribeVirtualScroll();
+      unsubscribeScroll();
+      window.removeEventListener('resize', onResize);
       window.clearTimeout(alignTimer);
       cancelAnimationFrame(hashFrame);
-      cancelAnimationFrame(animationFrame);
+      cancelAnimationFrame(initialFrame);
       motionTargets.forEach(clearTargetMotion);
       sections.forEach((section) => section.removeAttribute('data-active'));
       delete document.documentElement.dataset.activeSection;

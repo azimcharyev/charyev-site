@@ -101,7 +101,6 @@
     calc(var(--parallax-y, 0px) + var(--parallax-scroll-y, 0px)),
     0
   );
-  will-change: transform;
 }
 
 .hero__media-card-frame {
@@ -135,8 +134,13 @@
 .hero__media-card--background {
   z-index: 1;
   opacity: .46;
+}
+
+/* Размытие живёт на неподвижной внутренней рамке, а параллакс двигает
+   внешний слой. Так браузер растеризует blur один раз и затем только
+   композитит готовую карточку вместо пересчёта фильтра на каждом движении. */
+.hero__media-card--background .hero__media-card-frame {
   filter: blur(calc(11 * var(--px))) brightness(.62) saturate(.64);
-  will-change: transform;
 }
 
 .hero__media-card video {

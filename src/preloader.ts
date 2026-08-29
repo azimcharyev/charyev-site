@@ -1,4 +1,4 @@
-import { CASES_BY_ID, CASE_DETAILS, CASE_GALLERY } from './data/caseDetails';
+import { CASES_BY_ID, CASE_DETAILS } from './data/caseDetails';
 import { HERO_FIXED_MEDIA, HERO_MEDIA } from './data/heroMedia';
 
 /**
@@ -10,9 +10,9 @@ import { HERO_FIXED_MEDIA, HERO_MEDIA } from './data/heroMedia';
  * инлайнить сюда ничего не нужно.
  *
  * Проценты идут по настоящим вехам загрузки, включая медиа текущей страницы.
- * Главная заранее кладёт в HTTP-кеш Hero и все три категории кейсов; отдельная
- * страница — все кадры и ролики открытого кейса. Поэтому ленивое подключение
- * src при скролле больше не превращается в скачивание посреди анимации.
+ * Главная заранее кладёт в HTTP-кеш Hero; отдельная страница — все кадры и
+ * ролики открытого кейса. Галерея подключает src за 600 px до экрана, поэтому
+ * её файлы успевают прогреться при подходе, не задерживая первый экран.
  *
  * Свечение растёт вместе с процентами и к сотне становится ровно таким, как в
  * Hero (та же --glow-image, та же формула прозрачности). Под прелоадером к
@@ -52,7 +52,6 @@ function getCurrentPageMedia() {
   return unique([
     ...HERO_MEDIA,
     ...Object.values(HERO_FIXED_MEDIA),
-    ...Object.values(CASE_GALLERY).flatMap((items) => items.map((item) => item.media.src)),
   ]);
 }
 
@@ -177,8 +176,8 @@ export function startPreloader() {
     advance(STAGES.mediaStart + progress * (STAGES.mediaEnd - STAGES.mediaStart));
   });
 
-  /* Сотня означает именно готовность документа, шрифта и всех медиа текущей
-     страницы. reduced-motion влияет только на CSS-анимацию, но не отменяет
-     загрузку — иначе на таких устройствах лаги оставались бы. */
+  /* Сотня означает готовность документа, шрифта и медиа, которые посетитель
+     увидит первыми. reduced-motion влияет только на CSS-анимацию, но не
+     отменяет загрузку критического набора. */
   void Promise.all([fontReady, documentReady, mediaReady]).then(() => advance(STAGES.load));
 }
