@@ -9,7 +9,8 @@ export function PrivacyPolicy() {
   useEffect(() => {
     const button = homeButtonRef.current;
     const footer = document.querySelector<HTMLElement>('.policy-site > .footer');
-    if (!button || !footer) return;
+    const policy = document.querySelector<HTMLElement>('.policy-page');
+    if (!button || !footer || !policy) return;
     const portrait = window.matchMedia('(orientation: portrait)');
     const visualViewport = window.visualViewport;
 
@@ -23,11 +24,20 @@ export function PrivacyPolicy() {
       const currentShift = Number.parseFloat(
         button.style.getPropertyValue('--policy-home-shift'),
       ) || 0;
-      const buttonBottom = button.getBoundingClientRect().bottom - currentShift;
+      const buttonRect = button.getBoundingClientRect();
+      const buttonBottom = buttonRect.bottom - currentShift;
       const mobileFooter = footer.querySelector<HTMLElement>('.footer__shell--mobile');
-      const stopTarget = portrait.matches && mobileFooter ? mobileFooter : footer;
-      const footerGap = portrait.matches ? 20 : 36;
-      const shift = Math.min(0, stopTarget.getBoundingClientRect().top - footerGap - buttonBottom);
+      const desktopFooter = footer.querySelector<HTMLElement>('.footer__shell--desktop');
+      const stopTarget = portrait.matches
+        ? (mobileFooter ?? footer)
+        : (desktopFooter ?? footer);
+      const policyBottom = policy.getBoundingClientRect().bottom;
+      const footerTop = stopTarget.getBoundingClientRect().top;
+      /* Центрируем кнопку в реальном промежутке между островками. Формула
+         работает для обоих макетов: на мобильном CSS оставляет 20 px с каждой
+         стороны, на десктопе свободное место делится строго пополам. */
+      const centeredButtonBottom = (policyBottom + footerTop + buttonRect.height) / 2;
+      const shift = Math.min(0, centeredButtonBottom - buttonBottom);
       button.style.setProperty('--policy-home-shift', `${shift}px`);
     };
     const scheduleUpdate = () => {
