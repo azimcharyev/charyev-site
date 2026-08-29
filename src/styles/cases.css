@@ -146,6 +146,20 @@
   transition: opacity .4s ease;
 }
 
+/* Затемнение видео отдельным неподвижным слоем дешевле CSS-filter на каждом
+   декодированном кадре. Особенно заметно во время 3D-наклона плитки: браузер
+   композитит готовые слои вместо повторной обработки самого видео. */
+.case-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  background: rgba(13, 13, 13, .18);
+  pointer-events: none;
+  transition: opacity .4s ease;
+}
+
 .case-tile--standalone { cursor: default; }
 .case-tile--standalone::after { display: none; }
 
@@ -171,10 +185,8 @@
   display: block;
   object-fit: cover;
   pointer-events: none;
-  transition: transform .75s var(--ease), filter .5s ease;
+  transition: transform .75s var(--ease);
 }
-
-.case-tile > video { filter: brightness(.78) saturate(.88); }
 
 .case-tile__hint {
   position: absolute;
@@ -228,10 +240,14 @@
 .case-tile:not(.case-tile--standalone):focus-visible > video,
 .case-tile:not(.case-tile--standalone):focus-visible > img {
   transform: scale(1.035);
-  filter: brightness(.38) saturate(.78);
 }
 
-.case-tile--standalone:hover > video { transform: scale(1.025); filter: brightness(.88) saturate(1); }
+.case-tile--standalone:hover > video { transform: scale(1.025); }
+
+.case-tile:not(.case-tile--standalone):hover::before,
+.case-tile:not(.case-tile--standalone):focus-visible::before { opacity: 0; }
+
+.case-tile--standalone:hover::before { opacity: .1; }
 
 .case-tile:not(.case-tile--standalone):hover::after,
 .case-tile:not(.case-tile--standalone):focus-visible::after { opacity: 1; }

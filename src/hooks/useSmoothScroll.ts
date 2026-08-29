@@ -18,12 +18,18 @@ export function useSmoothScroll() {
     if (sections.length < 2 || window.matchMedia('(orientation: portrait)').matches) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* Вращать всю панель тарифов во время скролла дорого: это слой почти на
+       весь экран с большим количеством текста и плашек. Hero сохраняет своё
+       движение, а тарифы прокручиваются ровно — внешне спокойнее и без
+       повторной растеризации огромной поверхности на каждом кадре. */
     const motionTargets = sections.map((section) =>
-      section.querySelector<HTMLElement>('.hero__content, .services__shell'),
+      section.querySelector<HTMLElement>('.hero__content'),
     );
 
     const lenis = new Lenis({
-      smoothWheel: true,
+      /* Нативное колесо и трекпад не получают искусственную задержку. Lenis
+         остаётся только для мягкого финального выравнивания секций. */
+      smoothWheel: false,
       syncTouch: false,
       duration: reducedMotion ? 0 : DURATION,
       easing: easeOutCubic,

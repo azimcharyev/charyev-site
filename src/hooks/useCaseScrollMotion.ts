@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
-import Lenis from 'lenis';
 
-const DURATION = 2.25;
 const MAX_TILT = 14;
-const MOTION_DAMPING = 8;
-
-const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
 /** Ориентация по подписке, а не разовой проверкой: иначе после поворота
     телефона состояние осталось бы от предыдущей раскладки. */
@@ -27,9 +22,7 @@ export function useCaseScrollMotion() {
 
   useEffect(() => {
     /* На мобильном страница кейса — обычный столбец кадров: ни наклонов, ни
-       липкого сайдбара макет не предполагает. А Lenis здесь означал бы
-       покадровый цикл на телефоне — ровно та цена, от которой мы уходили в
-       остальных блоках ради плавности. */
+       липкого сайдбара макет не предполагает. */
     if (portrait) return;
 
     const cards = [...document.querySelectorAll<HTMLElement>('.case-page__media-row')];
@@ -38,19 +31,10 @@ export function useCaseScrollMotion() {
     if (!cards.length || !casePage || !sidebar) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const lenis = new Lenis({
-      smoothWheel: true,
-      syncTouch: false,
-      duration: reducedMotion ? 0 : DURATION,
-      easing: easeOutCubic,
-    });
-
     let animationFrame = 0;
-    let lastFrameTime = 0;
     let stickyTop = 0;
     let pagePaddingBottom = 0;
     let settleDistance = 0;
-    const currentTilts = cards.map(() => 0);
     const renderedTilts: Array<number | null> = cards.map(() => null);
 
     const refreshEndGeometry = () => {
@@ -79,10 +63,15 @@ export function useCaseScrollMotion() {
       renderedTilts[index] = tilt;
     };
 
-    const updateCards = (frameEasing: number) => {
+    const updateCards = () => {
+      animationFrame = 0;
       const viewportCenter = window.innerHeight / 2;
       const pageRect = casePage.getBoundingClientRect();
       const sidebarRect = sidebar.getBoundingClientRect();
+      /* Всю геометрию читаем до первой записи transform. Раньше чтение и
+         запись чередовались по карточкам, вынуждая браузер пересчитывать
+         layout несколько раз внутри одного кадра. */
+      const cardRects = cards.map((card) => card.getBoundingClientRect());
       const remainingStickyDistance = pageRect.bottom - pagePaddingBottom - stickyTop - sidebarRect.height;
       const reachedStickyEnd = remainingStickyDistance <= 0;
       const endMotionScale = Math.max(0, Math.min(1, remainingStickyDistance / settleDistance));
@@ -94,49 +83,42 @@ export function useCaseScrollMotion() {
         }
 
         if (reachedStickyEnd) {
-          currentTilts[index] = 0;
           clearCardMotion(card, index);
           return;
         }
 
-        const rect = card.getBoundingClientRect();
+        const rect = cardRects[index];
         const distance = (rect.top + rect.height / 2 - viewportCenter) / window.innerHeight;
 
         if (Math.abs(distance) > 1.35) {
-          currentTilts[index] = Math.sign(distance) * MAX_TILT;
           clearCardMotion(card, index);
           return;
         }
 
-        const targetTilt = MAX_TILT * Math.max(-1, Math.min(1, distance)) * endMotionScale;
-        currentTilts[index] += (targetTilt - currentTilts[index]) * frameEasing;
-
-        if (Math.abs(targetTilt - currentTilts[index]) < 0.004) {
-          currentTilts[index] = targetTilt;
-        }
-
-        setCardMotion(card, currentTilts[index], index);
+        const tilt = MAX_TILT * Math.max(-1, Math.min(1, distance)) * endMotionScale;
+        setCardMotion(card, tilt, index);
       });
     };
 
-    const runFrame = (time: number) => {
-      lenis.raf(time);
-      const deltaSeconds = lastFrameTime ? Math.min((time - lastFrameTime) / 1000, 0.05) : 1 / 60;
-      lastFrameTime = time;
-      const frameEasing = 1 - Math.exp(-MOTION_DAMPING * deltaSeconds);
-      updateCards(frameEasing);
-      animationFrame = requestAnimationFrame(runFrame);
+    const scheduleUpdate = () => {
+      if (!animationFrame) animationFrame = requestAnimationFrame(updateCards);
+    };
+
+    const onResize = () => {
+      refreshEndGeometry();
+      scheduleUpdate();
     };
 
     refreshEndGeometry();
-    window.addEventListener('resize', refreshEndGeometry);
-    animationFrame = requestAnimationFrame(runFrame);
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', onResize);
+    scheduleUpdate();
 
     return () => {
       cancelAnimationFrame(animationFrame);
-      window.removeEventListener('resize', refreshEndGeometry);
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', onResize);
       cards.forEach(clearCardMotion);
-      lenis.destroy();
     };
   }, [portrait]);
 }
