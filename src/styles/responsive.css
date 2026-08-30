@@ -92,7 +92,7 @@
     padding: calc(20 * var(--mpx));
     gap: calc(20 * var(--mpx));
   }
-  .hero__title { gap: calc(10 * var(--mpx)); font-size: max(30px, calc(50 * var(--mpx))); line-height: 1; }
+  .hero__title { gap: 0; font-size: max(30px, calc(50 * var(--mpx))); line-height: .84; }
   .hero__copy { width: 100%; font-size: max(12px, calc(14 * var(--mpx))); line-height: 1.3; }
 
   /* Шесть карточек по координатам макета (node 278:2306). Две верхние уходят
