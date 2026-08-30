@@ -4,7 +4,6 @@ import { Cases } from './components/Cases';
 import { CaseDetail } from './components/CaseDetail';
 import { Footer } from './components/Footer';
 import { PrivacyPolicy } from './components/PrivacyPolicy';
-import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { useReveal } from './hooks/useReveal';
 
 export default function App() {
@@ -15,9 +14,6 @@ export default function App() {
 }
 
 function Home() {
-  /* useSmoothScroll работает только в горизонтальной ориентации. На мобильных
-     оставляем обычный нативный скролл без автоматической доводки секций. */
-  useSmoothScroll();
   useReveal();
 
   return (

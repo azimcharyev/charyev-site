@@ -57,9 +57,6 @@
   border-radius: var(--radius-s);
   background: var(--placeholder);
   overflow: hidden;
-  transform: translate3d(0, calc(var(--p, 0) * var(--drift) * var(--px)), 0);
-  transition: transform 0.6s var(--ease);
-  will-change: transform;
 }
 
 .approach__shape > img,

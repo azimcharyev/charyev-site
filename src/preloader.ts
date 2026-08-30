@@ -1,5 +1,5 @@
 import { CASES_BY_ID, CASE_DETAILS } from './data/caseDetails';
-import { HERO_FIXED_MEDIA, HERO_MEDIA } from './data/heroMedia';
+import { HERO_BACKGROUND_MEDIA, HERO_FIXED_MEDIA, HERO_MEDIA } from './data/heroMedia';
 
 /**
  * Прелоадер (Figma, node 367:536).
@@ -51,6 +51,7 @@ function getCurrentPageMedia() {
 
   return unique([
     ...HERO_MEDIA,
+    ...HERO_BACKGROUND_MEDIA,
     ...Object.values(HERO_FIXED_MEDIA),
   ]);
 }
