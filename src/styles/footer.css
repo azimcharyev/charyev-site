@@ -291,10 +291,10 @@
 .footer-desktop__phone {
   width: 100%;
   height: calc(317 * var(--fpx));
-  padding-block: calc(20 * var(--fpx));
+  padding-block: 0;
   align-items: center;
-  justify-content: flex-start;
-  gap: calc(10 * var(--fpx));
+  justify-content: center;
+  gap: calc(16 * var(--fpx));
   border-radius: calc(40 * var(--fpx));
   background: var(--surface);
   transition: background .25s ease, transform .25s var(--ease);
@@ -310,7 +310,7 @@
   width: calc(267 * var(--fpx));
   align-items: center;
   justify-content: center;
-  gap: calc(10 * var(--fpx));
+  gap: calc(16 * var(--fpx));
   text-align: center;
 }
 
