@@ -1,7 +1,8 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { APPROACH_TEXT } from '../data/hero';
 import { APPROACH_SHAPES } from '../data/approach';
+import { useScrollProgress } from '../hooks/useScrollProgress';
 
 /** Слова загораются по одному: каждое вспыхивает целиком. */
 const WORDS = APPROACH_TEXT.split(' ');
@@ -13,8 +14,19 @@ const START_DELAY = 260;
 const STEP = 55;
 
 export function Approach() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
   const [lit, setLit] = useState(0);
+
+  // Блок теперь занимает один экран, поэтому вспышки идут не от прокрутки,
+  // а от появления блока в кадре: зашёл — текст загорелся по словам.
+  const sectionRef = useScrollProgress<HTMLElement>(
+    'enter',
+    useCallback((progress: number, element: HTMLElement) => {
+      // лёгкий параллакс плашек, --p наследуется вниз по каскаду
+      element.style.setProperty('--p', (progress - 0.5).toFixed(4));
+      if (progress > 0.35) element.dataset.visible = 'yes';
+    }, []),
+  );
 
   useEffect(() => {
     const element = sectionRef.current;
@@ -47,7 +59,7 @@ export function Approach() {
 
   return (
     <section className="approach" ref={sectionRef} aria-label="Мой подход">
-      <p className="approach__text txt">
+      <p className="approach__text txt" ref={textRef}>
         {WORDS.map((word, index) => (
           <Fragment key={`${word}-${index}`}>
             <span className="approach__word" style={{ opacity: index < lit ? 1 : DIM }}>

@@ -112,6 +112,7 @@
   grid-auto-rows: calc(716 * var(--px));
   column-gap: calc(20 * var(--px));
   row-gap: calc(40 * var(--px));
+  perspective: calc(1200 * var(--px));
 }
 
 .case-tile {
@@ -123,14 +124,15 @@
   isolation: isolate;
   animation: case-tile-in .6s var(--ease) both;
   animation-delay: calc(var(--tile-index) * 55ms);
-  content-visibility: auto;
-  contain-intrinsic-size: auto calc(716 * var(--px));
+  transform-origin: center;
 }
 
+.cases,
 .footer { content-visibility: auto; }
 
 /* auto — браузер запоминает настоящую высоту секции: она теперь разная у
    каждой категории, и одно число тут только дёргало бы полосу прокрутки. */
+.cases { contain-intrinsic-size: auto calc(1552 * var(--px)); }
 .footer { contain-intrinsic-size: calc(622 * var(--px)); }
 
 .case-tile::after {
@@ -211,6 +213,14 @@
   height: 100%;
   overflow: visible;
   animation: case-hint-spin 12s linear infinite;
+}
+
+/* На время прокрутки кольцо замирает — см. scrollActivity.ts. Плитка в этот
+   момент наклоняется в перспективе, и бесконечная анимация внутри неё не даёт
+   слою успокоиться ни на кадр: замер показал 325 мс провалов против 67 мс,
+   когда кольцо стоит. Вращения при пролистывании всё равно не разобрать. */
+.is-scrolling .case-tile__hint-ring {
+  animation-play-state: paused;
 }
 
 .case-tile__hint-ring text {
@@ -303,7 +313,7 @@
 .case-tile__cta-arrow { display: none; }
 
 @keyframes case-tile-in {
-  from { opacity: 0; transform: translateY(calc(24 * var(--px))); }
+  from { opacity: 0; transform: translateY(calc(24 * var(--px))) rotateX(4deg); }
   to { opacity: 1; transform: none; }
 }
 

@@ -116,7 +116,7 @@
   /* Дальний план: в макете эти две ничем не выделены, но на десктопе глубина
      задаётся размытием — оставляем её, чтобы мобильный читался тем же языком. */
   .hero__media-card--7,
-  .hero__media-card--8 { z-index: 1; opacity: .4; }
+  .hero__media-card--8 { z-index: 1; opacity: .4; filter: blur(8px) brightness(.62) saturate(.7); }
   .hero__media-card--7 { left: 59.1%; top: -7.3%; width: calc(94 * var(--mpx)); height: calc(171 * var(--mpx)); }
   .hero__media-card--8 { left: 37.4%; top: 72.8%; width: calc(97 * var(--mpx)); height: calc(179 * var(--mpx)); }
   .hero__media-card--2,
@@ -404,7 +404,8 @@
     justify-content: center;
     gap: calc(9 * var(--mpx));
     border-radius: 999px;
-    background: rgba(49, 49, 49, .92);
+    background: rgba(49, 49, 49, .74);
+    backdrop-filter: blur(12px);
     opacity: 1;
     pointer-events: auto;
     transition: opacity .2s ease, scale .32s var(--ease);
@@ -882,7 +883,9 @@
     inset: 0;
     display: block;
     padding: 0;
-    background: rgba(13, 13, 13, .86);
+    background: rgba(13, 13, 13, .45);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
   /* Маркер размечен десктопным --px и в портрете схлопывался в 2 px. */
   .case-page__fact li img {
@@ -902,7 +905,9 @@
     padding: calc(12 * var(--mpx));
     gap: calc(10 * var(--mpx));
     border-radius: calc(40 * var(--mpx));
-    background: rgba(31, 31, 31, .94);
+    background: rgba(255, 255, 255, .05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   .case-page__back,
   .case-page__about,

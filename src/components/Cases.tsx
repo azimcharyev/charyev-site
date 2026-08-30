@@ -5,6 +5,7 @@ import filterPhoto from '../assets/icons/cases-photo.svg';
 import filterShort from '../assets/icons/cases-reels.svg';
 import filterVideo from '../assets/icons/cases-video.svg';
 import { CASES_BY_ID, CASE_GALLERY, getCaseHref } from '../data/caseDetails';
+import { useGalleryMotion } from '../hooks/useGalleryMotion';
 import { SilentVideo } from './SilentVideo';
 
 type FilterId = keyof typeof CASE_GALLERY;
@@ -21,6 +22,7 @@ export function Cases() {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const items = CASE_GALLERY[activeFilter];
+  useGalleryMotion(activeFilter);
 
   useEffect(() => {
     const section = sectionRef.current;

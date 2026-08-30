@@ -33,6 +33,7 @@ export function SilentVideo({
     const video = videoRef.current;
     if (!video) return;
 
+    let isVisible = false;
     let isHovered = !playOnHover;
     let hasSource = false;
     const hoverHost = playOnHover ? video.closest<HTMLElement>('.case-tile') : null;
@@ -43,10 +44,7 @@ export function SilentVideo({
         return;
       }
 
-      /* После подключения источник играет постоянно, в том числе за краем
-         экрана. Это намеренное поведение портфолио: при возврате к ролику он
-         не стартует заново и не показывает стоп-кадр во время прокрутки. */
-      if (hasSource && active && isHovered && !document.hidden) {
+      if (hasSource && active && isVisible && isHovered && !document.hidden) {
         void video.play().catch(() => undefined);
       } else {
         video.pause();
@@ -86,11 +84,25 @@ export function SilentVideo({
       { rootMargin: '600px 0px', threshold: 0 },
     );
 
+    /* Стоп-кадру наблюдатель воспроизведения не нужен: играть он всё равно не
+       будет, а лишний IntersectionObserver на каждую карточку — это лишние
+       пересечения на каждой прокрутке. */
+    const playbackObserver = still ? null : new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) loadSource();
+        syncPlayback();
+      },
+      { rootMargin: '0px', threshold: .2 },
+    );
+
     if (eager) loadSource();
     else loadObserver.observe(video);
+    playbackObserver?.observe(video);
 
     return () => {
       loadObserver.disconnect();
+      playbackObserver?.disconnect();
       hoverHost?.removeEventListener('pointerenter', onEnter);
       hoverHost?.removeEventListener('pointerleave', onLeave);
       hoverHost?.removeEventListener('focusin', onEnter);

@@ -1,10 +1,6 @@
-import { useState, type CSSProperties } from 'react';
-import {
-  getHeroBackgroundMedia,
-  HERO_CASE_MEDIA,
-  HERO_FIXED_MEDIA,
-  HERO_MEDIA,
-} from '../data/heroMedia';
+import { useRef, useState, type CSSProperties } from 'react';
+import { HERO_CASE_MEDIA, HERO_FIXED_MEDIA, HERO_MEDIA } from '../data/heroMedia';
+import { useHeroParallax } from '../hooks/useHeroParallax';
 import { SilentVideo } from './SilentVideo';
 
 type HeroLayer = 'foreground' | 'midground' | 'background';
@@ -245,12 +241,12 @@ function createHeroLayout(): HeroCardLayout[] {
   }
 
   /* Не тасуем: индексы фиксируют слой (0-3 foreground, 4-5 midground, 6-13
-     background), а вместе с ним — разрешение и глубину карточки.
+     background), а вместе с ним — играет карточка или показывает стоп-кадр.
      На десктопе стекинг задаёт z-index по слою в hero.css, порядок в DOM
      ничего не решает. На мобильном виден фиксированный набор индексов
-     (--1, --2, --5, --6 — основные; --7, --8 — размытые фоновые), и без
+     (--1, --2, --5, --6 — играющие; --7, --8 — размытые фоновые), и без
      тасовки рандом не подкидывает background в передний план — иначе
-     карточка получила бы не тот размер и слой. */
+     карточка стоит стоп-кадром там, где ей положено играть. */
   return placed;
 }
 
@@ -280,18 +276,20 @@ function pickRandomVideos() {
     const primary = primaryByIndex.get(index);
     if (primary) return { src: primary };
 
-    const src = getHeroBackgroundMedia(backgroundVideos[backgroundIndex]);
+    const src = backgroundVideos[backgroundIndex];
     backgroundIndex += 1;
     return { src };
   });
 }
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
   const [heroMedia] = useState(pickRandomVideos);
   const [heroLayout] = useState(createHeroLayout);
+  useHeroParallax(heroRef);
 
   return (
-    <section className="hero" aria-labelledby="hero-title">
+    <section className="hero" aria-labelledby="hero-title" ref={heroRef}>
       <div className="hero__content">
         <div className="hero__intro">
           <h1 className="hero__title" id="hero-title">
@@ -325,7 +323,11 @@ export function Hero() {
           key={src}
         >
           <div className="hero__media-card-frame">
-            <SilentVideo src={src} eager preload="auto" />
+            {/* Дальний план держит стоп-кадр: он размыт на 9 px и притушен до
+                46%, движения там почти не разобрать, зато каждый его кадр
+                заставлял пересчитывать размытие. Восемь из четырнадцати
+                карточек — как раз он. */}
+            <SilentVideo src={src} eager preload="auto" still={layout.layer === 'background'} />
           </div>
         </div>
         );

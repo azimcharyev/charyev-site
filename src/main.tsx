@@ -2,6 +2,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import { startPreloader } from './preloader';
+/* Ради побочного действия: вешает на <html> класс is-scrolling, по которому
+   замирает кольцо на плитках кейсов. Подробности — в самом модуле. */
+import './hooks/scrollActivity';
+
+import 'lenis/dist/lenis.css';
 import './styles/base.css';
 import './styles/preloader.css';
 import './styles/hero.css';

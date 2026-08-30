@@ -4,6 +4,7 @@ import bullet from '../assets/icons/case-bullet.svg';
 import externalLink from '../assets/icons/external-link.svg';
 import instagram from '../assets/icons/case-instagram.svg';
 import { CASE_DETAILS, CASES_BY_ID, type CaseMedia } from '../data/caseDetails';
+import { useCaseScrollMotion } from '../hooks/useCaseScrollMotion';
 import { Footer } from './Footer';
 import { SilentVideo } from './SilentVideo';
 
@@ -25,7 +26,7 @@ function ProjectMedia({ media }: { media: CaseMedia }) {
     return (
       <SilentVideo
         src={media.src}
-        style={{ objectPosition: media.position }}
+        style={{ objectPosition: media.position, filter: media.tone === 'dark' ? 'brightness(.58)' : undefined }}
       />
     );
   }
@@ -50,6 +51,7 @@ export function CaseDetail() {
      кнопке «Описание» фон уходит в размытие и поверх него выезжает карточка.
      На десктопе карточка видна всегда, и состояние ни на что не влияет. */
   const [isAboutOpen, setAboutOpen] = useState(false);
+  useCaseScrollMotion();
 
   useEffect(() => {
     document.title = `${caseData.title} — кейс Азима Чарыева`;
@@ -166,7 +168,7 @@ export function CaseDetail() {
                 className="case-page__media-row case-page__media-row--horizontal"
                 key={`${media.src}-${index}`}
               >
-                <figure className={`case-page__visual${media.tone === 'dark' ? ' case-page__visual--dark' : ''}`}>
+                <figure className="case-page__visual">
                   <ProjectMedia media={media} />
                 </figure>
               </div>
@@ -175,20 +177,14 @@ export function CaseDetail() {
             <>
               <div className="case-page__media-row case-page__media-row--top">
                 {caseData.media.slice(0, 2).map((media, index) => (
-                  <figure
-                    className={`case-page__visual${media.tone === 'dark' ? ' case-page__visual--dark' : ''}`}
-                    key={`${media.src}-${index}`}
-                  >
+                  <figure className="case-page__visual" key={`${media.src}-${index}`}>
                     <ProjectMedia media={media} />
                   </figure>
                 ))}
               </div>
               <div className="case-page__media-row case-page__media-row--bottom">
                 {caseData.media.slice(2).map((media, index) => (
-                  <figure
-                    className={`case-page__visual${media.tone === 'dark' ? ' case-page__visual--dark' : ''}`}
-                    key={`${media.src}-${index}`}
-                  >
+                  <figure className="case-page__visual" key={`${media.src}-${index}`}>
                     <ProjectMedia media={media} />
                   </figure>
                 ))}

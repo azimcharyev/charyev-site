@@ -3,7 +3,6 @@ param(
   [string]$FfmpegPath,
   [double]$DetailDuration = 18,
   [double]$PreviewDuration = 12,
-  [switch]$SkipPhotos,
   [switch]$Force
 )
 
@@ -70,13 +69,7 @@ function Convert-Video {
     -c:v libx264 `
     -preset slow `
     -crf $Crf `
-    -profile:v high `
-    -level:v 3.1 `
-    -refs 3 `
-    -bf 2 `
     -pix_fmt yuv420p `
-    -tag:v avc1 `
-    -fps_mode cfr `
     -movflags '+faststart' `
     $Destination
 
@@ -118,30 +111,28 @@ $rolfPhotos = @(
   @{ Source = 'grdr 2023-06-15 143723.740.JPG'; Destination = 'rolf-production-02-web.jpg' }
 )
 
-if (-not $SkipPhotos) {
-  foreach ($photo in $rolfPhotos) {
-    $source = Join-Path (Join-Path $SourceRoot 'Рольф') $photo.Source
-    $destination = Join-Path $rolfImageRoot $photo.Destination
+foreach ($photo in $rolfPhotos) {
+  $source = Join-Path (Join-Path $SourceRoot 'Рольф') $photo.Source
+  $destination = Join-Path $rolfImageRoot $photo.Destination
 
-    if ((Test-Path -LiteralPath $destination) -and -not $Force) {
-      Write-Host "Пропуск готового файла: $destination"
-      continue
-    }
+  if ((Test-Path -LiteralPath $destination) -and -not $Force) {
+    Write-Host "Пропуск готового файла: $destination"
+    continue
+  }
 
-    Write-Host "Оптимизация фото: $destination"
-    & $FfmpegPath `
-      -hide_banner `
-      -loglevel error `
-      -y `
-      -i $source `
-      -vf 'scale=1280:-2:flags=lanczos' `
-      -frames:v 1 `
-      -q:v 3 `
-      $destination
+  Write-Host "Оптимизация фото: $destination"
+  & $FfmpegPath `
+    -hide_banner `
+    -loglevel error `
+    -y `
+    -i $source `
+    -vf 'scale=1280:-2:flags=lanczos' `
+    -frames:v 1 `
+    -q:v 3 `
+    $destination
 
-    if ($LASTEXITCODE -ne 0) {
-      throw "FFmpeg завершился с кодом ${LASTEXITCODE}: $source"
-    }
+  if ($LASTEXITCODE -ne 0) {
+    throw "FFmpeg завершился с кодом ${LASTEXITCODE}: $source"
   }
 }
 
