@@ -6,6 +6,7 @@ import filterShort from '../assets/icons/cases-reels.svg';
 import filterVideo from '../assets/icons/cases-video.svg';
 import { CASES_BY_ID, CASE_GALLERY, getCaseHref } from '../data/caseDetails';
 import { useGalleryMotion } from '../hooks/useGalleryMotion';
+import { typographText } from '../utils/typography';
 import { SilentVideo } from './SilentVideo';
 
 type FilterId = keyof typeof CASE_GALLERY;
@@ -183,8 +184,8 @@ export function Cases() {
               </span>
               <span className="case-tile__overlay">
                 <span className="case-tile__copy">
-                  <strong>{caseData.title}</strong>
-                  <span>{caseData.teaser}</span>
+                  <strong>{typographText(caseData.title)}</strong>
+                  <span>{typographText(caseData.teaser)}</span>
                 </span>
                 {/* На десктопе это подпись, на мобильном — компактная пилюля
                     со стрелкой (макет, node 331:408). Разметка одна, лишнее

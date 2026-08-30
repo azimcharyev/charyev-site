@@ -3,6 +3,7 @@ import { SERVICES, type Service } from '../data/services';
 import { ServiceBlock } from './ServiceBlock';
 import navArrow from '../assets/icons/tariffs-nav-arrow.svg';
 import tariffsIcon from '../assets/icons/tariffs-arrow.svg';
+import { typographText } from '../utils/typography';
 
 /* Десктоп (Figma, node 365:1192): шапка «Тарифы» с подписью и парой стрелок,
    под ней ряд из трёх карточек. Направлений пять, и лента ходит по кругу —
@@ -104,7 +105,7 @@ export function Services() {
           <div className="services__intro">
             <h2 className="services__title">Тарифы</h2>
             <p className="services__note">
-              Конечная стоимость проекта обсуждается после брифинга
+              {typographText('Конечная стоимость проекта обсуждается после брифинга')}
             </p>
           </div>
 

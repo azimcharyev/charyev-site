@@ -1,6 +1,8 @@
 import { useRef, useState, type CSSProperties } from 'react';
+import { HERO_LEAD } from '../data/hero';
 import { HERO_CASE_MEDIA, HERO_FIXED_MEDIA, HERO_MEDIA } from '../data/heroMedia';
 import { useHeroParallax } from '../hooks/useHeroParallax';
+import { typographText } from '../utils/typography';
 import { SilentVideo } from './SilentVideo';
 
 type HeroLayer = 'foreground' | 'midground' | 'background';
@@ -297,9 +299,7 @@ export function Hero() {
             <span>Чарыев</span>
           </h1>
           <p className="hero__copy">
-            Мне всегда было мало просто красивого кадра. В&nbsp;людях, брендах и&nbsp;местах я&nbsp;ищу
-            характер — то, что невозможно выдумать, но можно почувствовать. Моя задача — заметить
-            его первым и&nbsp;превратить в&nbsp;образ, которому доверяют.
+            {typographText(HERO_LEAD)}
           </p>
         </div>
       </div>

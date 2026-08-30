@@ -3,9 +3,10 @@ import type { CSSProperties } from 'react';
 import { APPROACH_TEXT } from '../data/hero';
 import { APPROACH_SHAPES } from '../data/approach';
 import { useScrollProgress } from '../hooks/useScrollProgress';
+import { typographText } from '../utils/typography';
 
 /** Слова загораются по одному: каждое вспыхивает целиком. */
-const WORDS = APPROACH_TEXT.split(' ');
+const WORDS = typographText(APPROACH_TEXT).split(' ');
 
 const DIM = 0.16;
 /** Пауза перед началом вспышек после появления блока, мс. */

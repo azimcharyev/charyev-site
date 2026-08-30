@@ -5,6 +5,7 @@ import externalLink from '../assets/icons/external-link.svg';
 import instagram from '../assets/icons/case-instagram.svg';
 import { CASE_DETAILS, CASES_BY_ID, type CaseMedia } from '../data/caseDetails';
 import { useCaseScrollMotion } from '../hooks/useCaseScrollMotion';
+import { typographText } from '../utils/typography';
 import { Footer } from './Footer';
 import { SilentVideo } from './SilentVideo';
 
@@ -14,7 +15,7 @@ function FactList({ items }: { items: string[] }) {
       {items.map((item) => (
         <li key={item}>
           <img src={bullet} alt="" />
-          <span>{item}</span>
+          <span>{typographText(item)}</span>
         </li>
       ))}
     </ul>
@@ -75,13 +76,13 @@ export function CaseDetail() {
             id="case-about"
           >
             <div className="case-page__summary">
-              <h1>{caseData.title}</h1>
-              <p className="case-page__intro">{caseData.intro}</p>
+              <h1>{typographText(caseData.title)}</h1>
+              <p className="case-page__intro">{typographText(caseData.intro)}</p>
             </div>
 
             {caseData.facts.map((fact) => (
               <section className="case-page__fact" key={fact.title}>
-                <h2>{fact.title}</h2>
+                <h2>{typographText(fact.title)}</h2>
                 <FactList items={fact.items} />
               </section>
             ))}

@@ -6,7 +6,7 @@ import telegram from '../assets/icons/telegram.svg';
 import whatsapp from '../assets/icons/whatsapp.svg';
 import youtube from '../assets/icons/youtube.svg';
 
-const PHONE_PRETTY = '+7 (919) 186 - 52 - 08';
+const PHONE_PRETTY = '+7\u00a0(919)\u00a0186-52-08';
 const PHONE_DESKTOP = '+7\u00a0(919)\u00a0186-52-08';
 const PHONE_HREF = 'tel:+79191865208';
 const PRIVACY_HREF = '/privacy.html';

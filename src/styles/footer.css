@@ -293,7 +293,8 @@
   height: calc(317 * var(--fpx));
   padding-block: calc(20 * var(--fpx));
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: calc(10 * var(--fpx));
   border-radius: calc(40 * var(--fpx));
   background: var(--surface);
   transition: background .25s ease, transform .25s var(--ease);

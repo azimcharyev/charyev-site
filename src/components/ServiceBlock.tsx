@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { getTelegramHref, type Service } from '../data/services';
 import bullet from '../assets/icons/bullet.svg';
+import { typographText } from '../utils/typography';
 
 type ServiceBlockProps = {
   service: Service;
@@ -33,7 +34,7 @@ export function ServiceBlock({
       aria-labelledby={`service-${service.id}`}
     >
       <div className="service-card__head">
-        <h2 className="service-card__title" id={`service-${service.id}`}>{service.title}</h2>
+        <h2 className="service-card__title" id={`service-${service.id}`}>{typographText(service.title)}</h2>
         {picker}
       </div>
 
@@ -50,7 +51,7 @@ export function ServiceBlock({
               aria-controls={panelId}
               onClick={() => onTierChange(item.id)}
             >
-              {item.label}
+              {typographText(item.label)}
             </button>
           ))}
         </div>
@@ -70,7 +71,7 @@ export function ServiceBlock({
           {tier.features.map((feature) => (
             <li key={feature}>
               <img src={bullet} alt="" />
-              <span>{feature}</span>
+              <span>{typographText(feature)}</span>
             </li>
           ))}
         </ul>
@@ -78,7 +79,7 @@ export function ServiceBlock({
         <div className="service-card__summary">
           <div className="service-card__price">
             <span>Цена:</span>
-            <strong>{tier.price}</strong>
+            <strong>{typographText(tier.price)}</strong>
           </div>
           {/* Ссылка, а не кнопка: ведёт в телеграм Азима с уже набранным
               сообщением — см. getTelegramHref. */}
