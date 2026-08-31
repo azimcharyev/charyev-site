@@ -122,8 +122,8 @@ export function Services() {
       onClick={() => cycleService(serviceId, 1)}
     >
       <svg className="service-swipe-hint__gesture" viewBox="0 0 48 48" aria-hidden="true">
-        <path className="service-swipe-hint__arrow service-swipe-hint__arrow--left" d="m12 14-6 6 6 6" />
-        <path className="service-swipe-hint__arrow service-swipe-hint__arrow--right" d="m36 14 6 6-6 6" />
+        <path className="service-swipe-hint__arrow service-swipe-hint__arrow--left" d="m8 14-6 6 6 6" />
+        <path className="service-swipe-hint__arrow service-swipe-hint__arrow--right" d="m40 14 6 6-6 6" />
         <g transform="translate(6.5 8)">
           <g className="service-swipe-hint__hand">
             <path d="M12 14V6.5a2 2 0 0 1 4 0V13" />
