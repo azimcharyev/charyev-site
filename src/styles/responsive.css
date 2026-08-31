@@ -196,6 +196,7 @@
     height: auto;
     min-height: calc(640 * var(--mpx));
     gap: calc(16 * var(--mpx));
+    overflow: clip;
   }
   /* Заголовки этих двух длиннее прочих и занимают в шапке две строки —
      уменьшаем их, чтобы карточки укладывались в общую высоту. Кегль пунктов
@@ -204,13 +205,41 @@
   .service-card--social .service-card__title,
   .service-card--analysis .service-card__title { font-size: max(20px, calc(28 * var(--mpx))); }
   .service-card--social .service-card__features { gap: calc(10 * var(--mpx)); }
-  .service-card:not(.is-active) { display: none; }
+  .service-card:not(.is-active):not(.is-leave-next):not(.is-leave-previous) { display: none; }
+  .service-card.is-leave-next,
+  .service-card.is-leave-previous { pointer-events: none; }
+  .service-card.is-leave-next .service-card__head,
+  .service-card.is-leave-previous .service-card__head { visibility: hidden; }
   /* Шаг между блоками задаёт gap самой карточки, поэтому отступ шапки снимаем. */
-  .service-card__head { margin-bottom: 0; align-items: center; gap: calc(10 * var(--mpx)); }
+  .service-card__head {
+    flex: 0 0 calc(56 * var(--mpx));
+    min-height: calc(56 * var(--mpx));
+    margin-bottom: 0;
+    align-items: center;
+    gap: calc(10 * var(--mpx));
+  }
   /* Десктопная ширина размечена через --spx, а он считается от --px — в
      портрете тот равен 0,217 реального пикселя, и заголовок сжимался бы до
      69 px. Здесь переносить нечего, ширину отпускаем. */
   .service-card__title { max-width: none; font-size: max(24px, calc(40 * var(--mpx))); line-height: 1; }
+  .service-card__content {
+    gap: calc(16 * var(--mpx));
+    will-change: transform, opacity;
+  }
+  .service-card.is-enter-next .service-card__content {
+    animation: service-content-enter-next .55s var(--ease) both;
+  }
+  .service-card.is-leave-next .service-card__content {
+    animation: service-content-leave-next .55s var(--ease) both;
+  }
+  .service-card.is-enter-previous .service-card__content {
+    animation: service-content-enter-previous .55s var(--ease) both;
+  }
+  .service-card.is-leave-previous .service-card__content {
+    animation: service-content-leave-previous .55s var(--ease) both;
+  }
+  .service-card[class*='is-enter-'] .service-card__body,
+  .service-card[class*='is-leave-'] .service-card__body { animation: none; }
   .service-card__tabs { gap: calc(10 * var(--mpx)); margin-bottom: 0; }
   .service-card__tab {
     position: relative;
@@ -295,7 +324,7 @@
     stroke-linejoin: round;
   }
   .service-swipe-hint__hand {
-    animation: service-swipe-hand 2.4s var(--ease) infinite;
+    animation: service-swipe-hand 3.2s var(--ease) infinite;
   }
   .service-swipe-hint__arrow {
     stroke-width: 2.2;
@@ -303,10 +332,10 @@
     stroke-linejoin: miter;
   }
   .service-swipe-hint__arrow--left {
-    animation: service-swipe-arrow-left 2.4s steps(1, end) infinite;
+    animation: service-swipe-arrow-left 3.2s steps(1, end) infinite;
   }
   .service-swipe-hint__arrow--right {
-    animation: service-swipe-arrow-right 2.4s steps(1, end) infinite;
+    animation: service-swipe-arrow-right 3.2s steps(1, end) infinite;
   }
   .service-swipe-hint:hover,
   .service-swipe-hint:focus-visible {
@@ -315,16 +344,36 @@
   }
 
   @keyframes service-swipe-hand {
-    0%, 8%, 92%, 100% { translate: calc(-2 * var(--mpx)) 0; }
-    38%, 50% { translate: calc(3 * var(--mpx)) 0; }
+    0%, 12.5% { translate: 0 0; }
+    25%, 37.5% { translate: calc(4 * var(--mpx)) 0; }
+    50%, 62.5% { translate: 0 0; }
+    75%, 87.5% { translate: calc(-4 * var(--mpx)) 0; }
+    100% { translate: 0 0; }
   }
   @keyframes service-swipe-arrow-left {
-    0%, 49.99% { opacity: 1; }
-    50%, 100% { opacity: 0; }
+    0%, 12.49%, 37.51%, 100% { opacity: 0; }
+    12.5%, 37.5% { opacity: 1; }
   }
   @keyframes service-swipe-arrow-right {
-    0%, 49.99% { opacity: 0; }
-    50%, 100% { opacity: 1; }
+    0%, 62.49%, 87.51%, 100% { opacity: 0; }
+    62.5%, 87.5% { opacity: 1; }
+  }
+
+  @keyframes service-content-enter-next {
+    from { transform: translateX(100%); opacity: .5; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes service-content-leave-next {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-100%); opacity: .5; }
+  }
+  @keyframes service-content-enter-previous {
+    from { transform: translateX(-100%); opacity: .5; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes service-content-leave-previous {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: .5; }
   }
 
   /* Кейсы идут обычным потоком страницы: плитка 400x640 с шагом 20, как в

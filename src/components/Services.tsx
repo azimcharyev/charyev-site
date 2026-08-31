@@ -35,7 +35,10 @@ export function Services() {
   /* Стартуем со средней копии, чтобы круг сразу был доступен в обе стороны. */
   const [start, setStart] = useState(COUNT);
   const [animated, setAnimated] = useState(true);
+  const [leavingService, setLeavingService] = useState<Service['id'] | null>(null);
+  const [mobileDirection, setMobileDirection] = useState<1 | -1>(1);
   const swipeStartX = useRef<number | null>(null);
+  const transitionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* Лента ходит только на десктопе. После поворота в портрет сдвиг надо
      вернуть в среднюю копию, иначе вернувшись в ландшафт пользователь увидит
@@ -51,6 +54,10 @@ export function Services() {
     reset();
     portrait.addEventListener('change', reset);
     return () => portrait.removeEventListener('change', reset);
+  }, []);
+
+  useEffect(() => () => {
+    if (transitionTimer.current) clearTimeout(transitionTimer.current);
   }, []);
 
   const shift = (delta: number) => {
@@ -79,7 +86,14 @@ export function Services() {
   const cycleService = (serviceId: Service['id'], delta: number) => {
     const currentIndex = SERVICES.findIndex((service) => service.id === serviceId);
     const nextIndex = (currentIndex + delta + COUNT) % COUNT;
+    if (transitionTimer.current) clearTimeout(transitionTimer.current);
+    setLeavingService(serviceId);
+    setMobileDirection(delta > 0 ? 1 : -1);
     setActiveService(SERVICES[nextIndex].id);
+    transitionTimer.current = setTimeout(() => {
+      setLeavingService(null);
+      transitionTimer.current = null;
+    }, 560);
   };
 
   const startSwipe = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -171,11 +185,20 @@ export function Services() {
                  она, у неё же живёт подсказка свайпа. Копии по краям нужны ради круга и
                  в портрете скрыты — там прячется всё, кроме активной. */
               const isPrimary = copy === 1;
+              const isActive = isPrimary && activeService === service.id;
+              const isLeaving = isPrimary && leavingService === service.id;
+              const direction = mobileDirection > 0 ? 'next' : 'previous';
+              const motion = isLeaving
+                ? (`leave-${direction}` as const)
+                : isActive && leavingService
+                  ? (`enter-${direction}` as const)
+                  : undefined;
 
               return (
                 <ServiceBlock
                   service={service}
-                  active={isPrimary && activeService === service.id}
+                  active={isActive}
+                  motion={motion}
                   activeTierId={tierByService[service.id]}
                   onTierChange={(tierId) => selectTier(service.id, tierId)}
                   picker={isPrimary ? renderSwipeHint(service.id) : undefined}
