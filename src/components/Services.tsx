@@ -2,21 +2,14 @@ import { useEffect, useState, type CSSProperties, type TransitionEvent } from 'r
 import { SERVICES, type Service } from '../data/services';
 import { ServiceBlock } from './ServiceBlock';
 import navArrow from '../assets/icons/tariffs-nav-arrow.svg';
-import tariffsIcon from '../assets/icons/tariffs-arrow.svg';
 import { typographText } from '../utils/typography';
 
 /* Десктоп (Figma, node 365:1192): шапка «Тарифы» с подписью и парой стрелок,
    под ней ряд из трёх карточек. Направлений пять, и лента ходит по кругу —
    обе стрелки активны всегда, конца у ряда нет.
 
-   Мобильный макет (node 278:2318) не рисует ни ряда, ни стрелок: секция там
-   занята одной карточкой, а направление выбирается пилюлей «Тарифы» в шапке.
-
-   За пилюлей стоит настоящий <select>, растянутый поверх неё и прозрачный.
-   Так по нажатию открывается системный список: на айфоне — барабан Safari, на
-   андроиде — свой диалог. Самодельная панель этого не даёт: нативный список
-   рисуется поверх страницы средствами ОС, ощущается частью телефона, а не
-   сайта, и бесплатно приносит прокрутку, жесты и доступность. */
+   В мобильной версии видна одна карточка, а две стрелки в её шапке циклически
+   переключают направления тем же способом, что и десктопная навигация. */
 
 const COUNT = SERVICES.length;
 
@@ -75,26 +68,30 @@ export function Services() {
     setTierByService((previous) => ({ ...previous, [serviceId]: tierId }));
   };
 
-  /* Свой пикер у каждой карточки, а не один на активную. Иначе при выборе
-     React уничтожает тот самый <select>, который пользователь только что
-     трогал, вместе с уходящей карточкой — а на телефоне поверх него в этот
-     момент стоит системный список. Рисуем его только у средней копии: на
-     мобильном видна именно она, а плодить лишние <select> ради копий,
-     которых там не видно, незачем. */
-  const renderPicker = (serviceId: Service['id']) => (
-    <div className="service-picker">
-      <img src={tariffsIcon} alt="" />
-      <span>Тарифы</span>
-      <select
-        className="service-picker__select"
-        aria-label="Направление услуг"
-        value={serviceId}
-        onChange={(event) => setActiveService(event.target.value)}
+  const cycleService = (serviceId: Service['id'], delta: number) => {
+    const currentIndex = SERVICES.findIndex((service) => service.id === serviceId);
+    const nextIndex = (currentIndex + delta + COUNT) % COUNT;
+    setActiveService(SERVICES[nextIndex].id);
+  };
+
+  const renderMobileSwitcher = (serviceId: Service['id']) => (
+    <div className="service-switcher" aria-label="Переключение направлений">
+      <button
+        className="service-switcher__button"
+        type="button"
+        aria-label="Предыдущее направление"
+        onClick={() => cycleService(serviceId, -1)}
       >
-        {SERVICES.map((service) => (
-          <option value={service.id} key={service.id}>{service.title}</option>
-        ))}
-      </select>
+        <img src={navArrow} alt="" />
+      </button>
+      <button
+        className="service-switcher__button service-switcher__button--next"
+        type="button"
+        aria-label="Следующее направление"
+        onClick={() => cycleService(serviceId, 1)}
+      >
+        <img src={navArrow} alt="" />
+      </button>
     </div>
   );
 
@@ -137,7 +134,7 @@ export function Services() {
           >
             {LOOP.map(({ service, copy }) => {
               /* Средняя копия — основная: на мобильном показывается только
-                 она, у неё же живёт пикер. Копии по краям нужны ради круга и
+                 она, у неё же живут стрелки. Копии по краям нужны ради круга и
                  в портрете скрыты — там прячется всё, кроме активной. */
               const isPrimary = copy === 1;
 
@@ -147,7 +144,7 @@ export function Services() {
                   active={isPrimary && activeService === service.id}
                   activeTierId={tierByService[service.id]}
                   onTierChange={(tierId) => selectTier(service.id, tierId)}
-                  picker={isPrimary ? renderPicker(service.id) : undefined}
+                  picker={isPrimary ? renderMobileSwitcher(service.id) : undefined}
                   key={`${service.id}-${copy}`}
                 />
               );

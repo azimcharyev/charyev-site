@@ -134,9 +134,9 @@
 }
 
 /* Шапка карточки. На десктопе в ней только заголовок, на мобильном справа
-   встаёт пилюля «Тарифы» — см. портретный блок в responsive.css. */
+   встают стрелки переключения направлений — см. responsive.css. */
 .service-card__head { width: 100%; display: flex; align-items: center; justify-content: space-between; }
-.service-picker { display: none; }
+.service-switcher { display: none; }
 /* Ширина из макета: длинные названия («Маркетинговый анализ», «Ведение
    соцсетей») переносятся на вторую строку, как нарисовано. */
 .service-card__title {

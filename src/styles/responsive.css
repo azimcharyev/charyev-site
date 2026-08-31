@@ -156,8 +156,8 @@
   .services__shell.reveal {
     transition: opacity .85s var(--ease);
   }
-  /* Шапки со стрелками в мобильном макете нет: секция там занята одной
-     карточкой, а направление выбирается пилюлей «Тарифы» в её шапке. */
+  /* Общая десктопная шапка скрыта: мобильные стрелки стоят прямо возле
+     названия активного направления. */
   .services__head { display: none; }
   /* Окно карусели ничего не режет: карточки лежат стопкой, видна одна.
      Отрицательные поля размечены через --spx, а он считается от --px — в
@@ -260,48 +260,29 @@
     font-size: max(14px, calc(18 * var(--mpx)));
   }
 
-  /* Пилюля «Тарифы» — из макета: высота 40, радиус 100, акцентный фон,
-     иконка 24, подпись 14 акцентным.
-
-     Списка в макете нет, и рисовать его мы не будем: за пилюлей стоит обычный
-     <select>, растянутый поверх неё и прозрачный. Нажатие попадает по нему, и
-     список открывает сама система — на айфоне барабан Safari, на андроиде свой
-     диалог. Он рисуется поверх страницы средствами ОС, поэтому ощущается
-     частью телефона, а не сайта, и приносит с собой прокрутку, жесты и
-     доступность. */
-  .service-picker {
-    position: relative;
+  /* Стрелки масштабируются от мобильного макета 440 px. На самом узком
+     поддерживаемом экране остаются больше минимальной зоны касания. */
+  .service-switcher {
     flex: 0 0 auto;
-    /* Ровно по макету, без запаса на палец: зону нажатия держит <select>. */
-    height: calc(40 * var(--mpx));
-    padding: 0 calc(12 * var(--mpx));
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: calc(4 * var(--mpx));
+    gap: calc(8 * var(--mpx));
+  }
+  .service-switcher__button {
+    width: calc(78 * var(--mpx));
+    min-width: 48px;
+    height: calc(48 * var(--mpx));
+    min-height: 44px;
+    display: grid;
+    place-items: center;
     border-radius: 999px;
     background: rgba(8, 194, 188, .3);
-    color: var(--accent);
-    font-size: max(12px, calc(14 * var(--mpx)));
-    white-space: nowrap;
+    transition: background .24s ease;
   }
-  .service-picker img { width: max(20px, calc(24 * var(--mpx))); height: max(20px, calc(24 * var(--mpx))); }
-  .service-picker__select {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    /* Пилюля по макету 40, пальцу нужно 44 — тянем сам контрол, он же и есть
-       зона нажатия. */
-    height: max(100%, 44px);
-    translate: 0 -50%;
-    appearance: none;
-    border: 0;
-    background: none;
-    /* Кегль меньше 16 заставил бы Safari зумить страницу по тапу. */
-    font-size: 16px;
-    opacity: 0;
-  }
+  .service-switcher__button img { width: calc(28 * var(--mpx)); height: calc(28 * var(--mpx)); }
+  .service-switcher__button--next img { rotate: 180deg; }
+  .service-switcher__button:hover,
+  .service-switcher__button:focus-visible { background: rgba(8, 194, 188, .55); }
 
   /* Кейсы идут обычным потоком страницы: плитка 400x640 с шагом 20, как в
      макете (node 278:2375). Раньше лента жила в собственном скролл-контейнере
