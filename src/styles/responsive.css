@@ -208,8 +208,8 @@
   .service-card:not(.is-active):not(.is-leave-next):not(.is-leave-previous) { display: none; }
   .service-card.is-leave-next,
   .service-card.is-leave-previous { pointer-events: none; }
-  .service-card.is-leave-next .service-card__head,
-  .service-card.is-leave-previous .service-card__head { visibility: hidden; }
+  .service-card.is-leave-next .service-swipe-hint,
+  .service-card.is-leave-previous .service-swipe-hint { visibility: hidden; }
   /* Шаг между блоками задаёт gap самой карточки, поэтому отступ шапки снимаем. */
   .service-card__head {
     flex: 0 0 calc(56 * var(--mpx));
@@ -240,6 +240,14 @@
   }
   .service-card.is-leave-previous .service-card__content {
     animation: service-content-leave-previous .55s var(--ease) both;
+  }
+  .service-card.is-enter-next .service-card__title,
+  .service-card.is-enter-previous .service-card__title {
+    animation: service-title-enter .55s var(--ease) both;
+  }
+  .service-card.is-leave-next .service-card__title,
+  .service-card.is-leave-previous .service-card__title {
+    animation: service-title-leave .55s var(--ease) both;
   }
   .service-card__tabs { gap: calc(10 * var(--mpx)); margin-bottom: 0; }
   .service-card__tab {
@@ -377,6 +385,14 @@
   @keyframes service-content-leave-previous {
     from { transform: translateX(0); opacity: 1; }
     to { transform: translateX(calc(100% + var(--service-page-gap))); opacity: 0; }
+  }
+  @keyframes service-title-enter {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes service-title-leave {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
   /* Кейсы идут обычным потоком страницы: плитка 400x640 с шагом 20, как в
