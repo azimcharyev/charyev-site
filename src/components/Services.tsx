@@ -1,4 +1,11 @@
-import { useEffect, useState, type CSSProperties, type TransitionEvent } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+  type TransitionEvent,
+} from 'react';
 import { SERVICES, type Service } from '../data/services';
 import { ServiceBlock } from './ServiceBlock';
 import navArrow from '../assets/icons/tariffs-nav-arrow.svg';
@@ -8,8 +15,8 @@ import { typographText } from '../utils/typography';
    под ней ряд из трёх карточек. Направлений пять, и лента ходит по кругу —
    обе стрелки активны всегда, конца у ряда нет.
 
-   В мобильной версии видна одна карточка, а две стрелки в её шапке циклически
-   переключают направления тем же способом, что и десктопная навигация. */
+   В мобильной версии видна одна карточка: направления переключаются свайпом,
+   а анимированная плашка в шапке подсказывает жест. */
 
 const COUNT = SERVICES.length;
 
@@ -28,6 +35,7 @@ export function Services() {
   /* Стартуем со средней копии, чтобы круг сразу был доступен в обе стороны. */
   const [start, setStart] = useState(COUNT);
   const [animated, setAnimated] = useState(true);
+  const swipeStartX = useRef<number | null>(null);
 
   /* Лента ходит только на десктопе. После поворота в портрет сдвиг надо
      вернуть в среднюю копию, иначе вернувшись в ландшафт пользователь увидит
@@ -74,25 +82,40 @@ export function Services() {
     setActiveService(SERVICES[nextIndex].id);
   };
 
-  const renderMobileSwitcher = (serviceId: Service['id']) => (
-    <div className="service-switcher" aria-label="Переключение направлений">
-      <button
-        className="service-switcher__button"
-        type="button"
-        aria-label="Предыдущее направление"
-        onClick={() => cycleService(serviceId, -1)}
-      >
-        <img src={navArrow} alt="" />
-      </button>
-      <button
-        className="service-switcher__button service-switcher__button--next"
-        type="button"
-        aria-label="Следующее направление"
-        onClick={() => cycleService(serviceId, 1)}
-      >
-        <img src={navArrow} alt="" />
-      </button>
-    </div>
+  const startSwipe = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!window.matchMedia('(orientation: portrait)').matches) return;
+    if ((event.target as Element).closest('button, a, select')) return;
+    swipeStartX.current = event.clientX;
+  };
+
+  const finishSwipe = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (swipeStartX.current === null) return;
+    const distance = event.clientX - swipeStartX.current;
+    swipeStartX.current = null;
+    if (Math.abs(distance) < 40) return;
+    cycleService(activeService, distance < 0 ? 1 : -1);
+  };
+
+  const cancelSwipe = () => {
+    swipeStartX.current = null;
+  };
+
+  const renderSwipeHint = (serviceId: Service['id']) => (
+    <button
+      className="service-swipe-hint"
+      type="button"
+      aria-label="Следующее направление. Можно также провести по карточке влево или вправо"
+      onClick={() => cycleService(serviceId, 1)}
+    >
+      <svg className="service-swipe-hint__gesture" viewBox="0 0 32 32" aria-hidden="true">
+        <path className="service-swipe-hint__chevron" d="M22.5 4.5 19 8l3.5 3.5" />
+        <path d="M12 14V6.5a2 2 0 0 1 4 0V13" />
+        <path d="M16 11.5a2 2 0 0 1 4 0V14" />
+        <path d="M20 13a2 2 0 0 1 4 0v2" />
+        <path d="M24 15a2 2 0 0 1 4 0v5.5c0 5-3.3 8.5-8.5 8.5h-2.2a8 8 0 0 1-6.1-2.8L6.5 20.7a2.2 2.2 0 0 1 3.2-3l2.3 2.1V14" />
+      </svg>
+      <span>Swipe</span>
+    </button>
   );
 
   return (
@@ -126,7 +149,13 @@ export function Services() {
           </div>
         </header>
 
-        <div className="services__viewport">
+        <div
+          className="services__viewport"
+          onPointerDown={startSwipe}
+          onPointerUp={finishSwipe}
+          onPointerCancel={cancelSwipe}
+          onPointerLeave={cancelSwipe}
+        >
           <div
             className={`services__cards${animated ? '' : ' is-static'}`}
             style={{ '--tariff-start': start } as CSSProperties}
@@ -134,7 +163,7 @@ export function Services() {
           >
             {LOOP.map(({ service, copy }) => {
               /* Средняя копия — основная: на мобильном показывается только
-                 она, у неё же живут стрелки. Копии по краям нужны ради круга и
+                 она, у неё же живёт подсказка свайпа. Копии по краям нужны ради круга и
                  в портрете скрыты — там прячется всё, кроме активной. */
               const isPrimary = copy === 1;
 
@@ -144,7 +173,7 @@ export function Services() {
                   active={isPrimary && activeService === service.id}
                   activeTierId={tierByService[service.id]}
                   onTierChange={(tierId) => selectTier(service.id, tierId)}
-                  picker={isPrimary ? renderMobileSwitcher(service.id) : undefined}
+                  picker={isPrimary ? renderSwipeHint(service.id) : undefined}
                   key={`${service.id}-${copy}`}
                 />
               );
