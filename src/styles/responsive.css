@@ -285,7 +285,7 @@
     transition: background .24s ease, color .24s ease;
   }
   .service-swipe-hint__gesture {
-    width: max(20px, calc(24 * var(--mpx)));
+    width: max(22px, calc(28 * var(--mpx)));
     height: max(20px, calc(24 * var(--mpx)));
     overflow: visible;
     fill: none;
@@ -293,18 +293,38 @@
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
-    animation: service-swipe-gesture 1.8s var(--ease) infinite;
   }
-  .service-swipe-hint__chevron { stroke-width: 2.2; }
+  .service-swipe-hint__hand {
+    animation: service-swipe-hand 2.4s var(--ease) infinite;
+  }
+  .service-swipe-hint__arrow {
+    stroke-width: 2.2;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+  .service-swipe-hint__arrow--left {
+    animation: service-swipe-arrow-left 2.4s steps(1, end) infinite;
+  }
+  .service-swipe-hint__arrow--right {
+    animation: service-swipe-arrow-right 2.4s steps(1, end) infinite;
+  }
   .service-swipe-hint:hover,
   .service-swipe-hint:focus-visible {
     background: rgba(8, 194, 188, .2);
     color: var(--accent);
   }
 
-  @keyframes service-swipe-gesture {
-    0%, 18%, 100% { translate: calc(3 * var(--mpx)) 0; opacity: .65; }
-    55%, 72% { translate: calc(-3 * var(--mpx)) 0; opacity: 1; }
+  @keyframes service-swipe-hand {
+    0%, 8%, 92%, 100% { translate: calc(-2 * var(--mpx)) 0; }
+    38%, 50% { translate: calc(3 * var(--mpx)) 0; }
+  }
+  @keyframes service-swipe-arrow-left {
+    0%, 49.99% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @keyframes service-swipe-arrow-right {
+    0%, 49.99% { opacity: 0; }
+    50%, 100% { opacity: 1; }
   }
 
   /* Кейсы идут обычным потоком страницы: плитка 400x640 с шагом 20, как в
