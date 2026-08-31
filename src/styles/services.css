@@ -178,7 +178,6 @@
   flex-direction: column;
   justify-content: space-between;
   gap: calc(20 * var(--spx));
-  animation: service-swap .55s var(--ease) both;
 }
 
 .service-card__features {
@@ -218,13 +217,4 @@
 @supports not (text-box: trim-both cap alphabetic) {
   .service-card__features { gap: calc(15 * var(--spx)); }
   .service-card__price { gap: calc(12 * var(--spx)); }
-}
-
-/* Только прозрачность и подольше. Раньше содержимое ещё и подъезжало снизу,
-   и вместе с мгновенной сменой высоты списка (в «Продакшне» это 4 пункта
-   против 8) выходил двойной рывок: текст ехал вверх, а плашка под ним
-   прыгала. Спокойное проявление этот скачок скрывает. */
-@keyframes service-swap {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }

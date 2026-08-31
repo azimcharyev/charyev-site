@@ -238,8 +238,6 @@
   .service-card.is-leave-previous .service-card__content {
     animation: service-content-leave-previous .55s var(--ease) both;
   }
-  .service-card[class*='is-enter-'] .service-card__body,
-  .service-card[class*='is-leave-'] .service-card__body { animation: none; }
   .service-card__tabs { gap: calc(10 * var(--mpx)); margin-bottom: 0; }
   .service-card__tab {
     position: relative;
@@ -314,9 +312,9 @@
     transition: background .24s ease, color .24s ease;
   }
   .service-swipe-hint__gesture {
-    width: max(22px, calc(28 * var(--mpx)));
-    height: max(20px, calc(24 * var(--mpx)));
-    overflow: visible;
+    width: max(22px, calc(26 * var(--mpx)));
+    height: max(22px, calc(26 * var(--mpx)));
+    overflow: hidden;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.8;
@@ -324,7 +322,7 @@
     stroke-linejoin: round;
   }
   .service-swipe-hint__hand {
-    animation: service-swipe-hand 3.2s var(--ease) infinite;
+    animation: service-swipe-hand 4s ease-in-out infinite;
   }
   .service-swipe-hint__arrow {
     stroke-width: 2.2;
@@ -332,10 +330,10 @@
     stroke-linejoin: miter;
   }
   .service-swipe-hint__arrow--left {
-    animation: service-swipe-arrow-left 3.2s steps(1, end) infinite;
+    animation: service-swipe-arrow-left 4s ease-in-out infinite;
   }
   .service-swipe-hint__arrow--right {
-    animation: service-swipe-arrow-right 3.2s steps(1, end) infinite;
+    animation: service-swipe-arrow-right 4s ease-in-out infinite;
   }
   .service-swipe-hint:hover,
   .service-swipe-hint:focus-visible {
@@ -344,36 +342,38 @@
   }
 
   @keyframes service-swipe-hand {
-    0%, 12.5% { translate: 0 0; }
-    25%, 37.5% { translate: calc(4 * var(--mpx)) 0; }
-    50%, 62.5% { translate: 0 0; }
-    75%, 87.5% { translate: calc(-4 * var(--mpx)) 0; }
-    100% { translate: 0 0; }
+    0%, 10% { translate: 0 0; }
+    22%, 32% { translate: calc(5 * var(--mpx)) 0; }
+    44%, 56% { translate: 0 0; }
+    68%, 78% { translate: calc(-5 * var(--mpx)) 0; }
+    90%, 100% { translate: 0 0; }
   }
   @keyframes service-swipe-arrow-left {
-    0%, 12.49%, 37.51%, 100% { opacity: 0; }
-    12.5%, 37.5% { opacity: 1; }
+    0%, 10% { opacity: 0; }
+    22%, 32% { opacity: 1; }
+    44%, 100% { opacity: 0; }
   }
   @keyframes service-swipe-arrow-right {
-    0%, 62.49%, 87.51%, 100% { opacity: 0; }
-    62.5%, 87.5% { opacity: 1; }
+    0%, 56% { opacity: 0; }
+    68%, 78% { opacity: 1; }
+    90%, 100% { opacity: 0; }
   }
 
   @keyframes service-content-enter-next {
-    from { transform: translateX(100%); opacity: .5; }
-    to { transform: translateX(0); opacity: 1; }
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
   }
   @keyframes service-content-leave-next {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(-100%); opacity: .5; }
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
   }
   @keyframes service-content-enter-previous {
-    from { transform: translateX(-100%); opacity: .5; }
-    to { transform: translateX(0); opacity: 1; }
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
   }
   @keyframes service-content-leave-previous {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: .5; }
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
   }
 
   /* Кейсы идут обычным потоком страницы: плитка 400x640 с шагом 20, как в
