@@ -133,7 +133,7 @@ export function Services() {
           </g>
         </g>
       </svg>
-      <span>Swipe</span>
+      <span>Листай</span>
     </button>
   );
 
