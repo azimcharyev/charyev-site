@@ -223,6 +223,9 @@
      69 px. Здесь переносить нечего, ширину отпускаем. */
   .service-card__title { max-width: none; font-size: max(24px, calc(40 * var(--mpx))); line-height: 1; }
   .service-card__content {
+    /* 40 единиц — двойной отступ 20 между кнопкой «Выбрать» и краем панели.
+       Он остаётся постоянным между уходящей и входящей страницами. */
+    --service-page-gap: calc(40 * var(--mpx));
     gap: calc(16 * var(--mpx));
     will-change: transform, opacity;
   }
@@ -360,20 +363,20 @@
   }
 
   @keyframes service-content-enter-next {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
+    from { transform: translateX(calc(100% + var(--service-page-gap))); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
   }
   @keyframes service-content-leave-next {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(calc(-100% - var(--service-page-gap))); opacity: 0; }
   }
   @keyframes service-content-enter-previous {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0); }
+    from { transform: translateX(calc(-100% - var(--service-page-gap))); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
   }
   @keyframes service-content-leave-previous {
-    from { transform: translateX(0); }
-    to { transform: translateX(100%); }
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(calc(100% + var(--service-page-gap))); opacity: 0; }
   }
 
   /* Кейсы идут обычным потоком страницы: плитка 400x640 с шагом 20, как в
