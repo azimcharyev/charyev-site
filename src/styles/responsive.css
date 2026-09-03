@@ -1000,6 +1000,10 @@
     background: rgba(255, 255, 255, .05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    opacity: var(--case-nav-exit-opacity, 1);
+    transform: scale(var(--case-nav-exit-scale, 1));
+    transform-origin: center bottom;
+    will-change: transform, opacity;
   }
   .case-page__back,
   .case-page__about,

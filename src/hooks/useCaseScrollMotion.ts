@@ -21,6 +21,64 @@ export function useCaseScrollMotion() {
   const portrait = usePortrait();
 
   useEffect(() => {
+    if (!portrait) return;
+
+    const nav = document.querySelector<HTMLElement>('.case-page__nav');
+    const footer = document.querySelector<HTMLElement>('.case-site > .footer');
+    if (!nav || !footer) return;
+
+    let animationFrame = 0;
+    let renderedOpacity = -1;
+    let renderedScale = -1;
+    let controlsHidden = false;
+
+    const updateNavExit = () => {
+      animationFrame = 0;
+      const navHeight = nav.getBoundingClientRect().height;
+      const footerTop = footer.getBoundingClientRect().top;
+      /* Анимация начинается ровно при появлении верхней кромки футера и
+         проходит за расстояние примерно в полторы высоты острова. */
+      const exitDistance = Math.max(navHeight * 1.5, window.innerHeight * 0.14);
+      const progress = Math.max(0, Math.min(1, (window.innerHeight - footerTop) / exitDistance));
+      const easedProgress = progress * progress * (3 - 2 * progress);
+      const opacity = 1 - easedProgress;
+      const scale = 1 - easedProgress * 0.32;
+
+      if (Math.abs(renderedOpacity - opacity) > 0.002) {
+        nav.style.setProperty('--case-nav-exit-opacity', opacity.toFixed(4));
+        renderedOpacity = opacity;
+      }
+      if (Math.abs(renderedScale - scale) > 0.002) {
+        nav.style.setProperty('--case-nav-exit-scale', scale.toFixed(4));
+        renderedScale = scale;
+      }
+
+      const shouldHideControls = progress >= 0.98;
+      if (controlsHidden !== shouldHideControls) {
+        nav.toggleAttribute('inert', shouldHideControls);
+        controlsHidden = shouldHideControls;
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (!animationFrame) animationFrame = requestAnimationFrame(updateNavExit);
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    scheduleUpdate();
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      nav.style.removeProperty('--case-nav-exit-opacity');
+      nav.style.removeProperty('--case-nav-exit-scale');
+      nav.removeAttribute('inert');
+    };
+  }, [portrait]);
+
+  useEffect(() => {
     /* На мобильном страница кейса — обычный столбец кадров: ни наклонов, ни
        липкого сайдбара макет не предполагает. */
     if (portrait) return;
